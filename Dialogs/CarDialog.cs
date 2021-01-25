@@ -16,6 +16,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class CarDialog : CancelAndHelpDialog
     {
 
+        private CardDialogDetails cardDialogDetails;
+
         public CarDialog()
             : base(nameof(CarDialog))
         {
@@ -35,12 +37,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             // The initial child Dialog to run.
             InitialDialogId = nameof(WaterfallDialog);
         }
-
        
-
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: 1111 \r\nPlaca: OEK-8859\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
+            cardDialogDetails = (CardDialogDetails)stepContext.Options;
+
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: "+ cardDialogDetails.Renavam + " \r\nPlaca: OEK-8859\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 

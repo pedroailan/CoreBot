@@ -3,15 +3,17 @@
 
 using System;
 
-namespace Microsoft.BotBuilderSamples.Dialogs
+namespace Microsoft.BotBuilderSamples
 {
-    public class CarDialogDetails
+    public class CardDialogDetails
     {
         public string Renavam { get; set; }
-        public static explicit operator CarDialogDetails(string v)
+
+        public string SecureCode { get; set; }
+
+        public static explicit operator CardDialogDetails(string v)
         {
             throw new NotImplementedException();
         }
-
     }
 }

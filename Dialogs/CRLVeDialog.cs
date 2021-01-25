@@ -70,8 +70,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             var info = "Aqui está o seu CRLV-e!\r\n" +
                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
-                       " - PDF\r\n" +
-                       " - Código de Barras";
+                       " - PDF";
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken);
         }

@@ -15,7 +15,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class BaneseLicenseDialog : CancelAndHelpDialog
     {
-        public CarDialogDetails carDialogDetails;
+    
         public BaneseLicenseDialog()
             : base(nameof(BaneseLicenseDialog))
         {
@@ -41,9 +41,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         
 
         private async Task<DialogTurnResult> RenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        { 
+        {
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Para iniciarmos o processo, vou precisar de algumas informações."), cancellationToken);
-            var promptMessage = MessageFactory.Text("Informe seu RENAVAM" , InputHints.ExpectingInput);
+            var promptMessage = MessageFactory.Text("Informe seu RENAVAM", InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
         }
 

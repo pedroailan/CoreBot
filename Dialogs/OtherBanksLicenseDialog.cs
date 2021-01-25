@@ -13,11 +13,14 @@ using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using Newtonsoft.Json.Linq;
+using static System.Net.WebRequestMethods;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class OtherBanksLicenseDialog : CancelAndHelpDialog
     {
+
+        private CardDialogDetails cardDialogDetails;
 
         public OtherBanksLicenseDialog()
             : base(nameof(OtherBanksLicenseDialog))
@@ -61,6 +64,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            cardDialogDetails = (CardDialogDetails)stepContext.Options;
+            cardDialogDetails.Renavam = stepContext.Result.ToString();
+
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Agora, informe o código de segurança"), cancellationToken);
             string messagetext = null;
             var secureCode = MessageFactory.Text(messagetext, InputHints.ExpectingInput);
@@ -70,19 +76,33 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            cardDialogDetails = (CardDialogDetails)stepContext.Options;
+            cardDialogDetails.SecureCode = stepContext.Result.ToString();
+
             var renv = stepContext.Result.ToString();
 
             switch (stepContext.Result.ToString())
             {
                 case "1111":
-                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cardDialogDetails, cancellationToken);
                 case "2222":
-                    return await stepContext.BeginDialogAsync(nameof(TruckDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(TruckDialog), cardDialogDetails, cancellationToken);
                 default:
-                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cardDialogDetails, cancellationToken);
             }
         }
 
+
+
+        //private static async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        //{
+        //    var info = "Aqui está o sua via para pagamento no BANESE!\r\n" +
+        //               "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
+        //               " - PDF\r\n" +
+        //               " - Código de Barras: 00001222 222525 56599595 5544444";
+        //    await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
+        //    return await stepContext.EndDialogAsync(cancellationToken);
+        //}
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
@@ -128,5 +148,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 cancellationToken);
         }
 
+
     }
+
 }

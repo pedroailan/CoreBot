@@ -70,7 +70,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 case "licenciamento banese":
                     return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cardDialogDetails, cancellationToken);
                 case "licenciamento outros bancos":
-                    return await stepContext.BeginDialogAsync(nameof(OtherBanksLicenseDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(OtherBanksLicenseDialog), cardDialogDetails, cancellationToken);
                 case "emitir crlv-e":
                     return await stepContext.BeginDialogAsync(nameof(CRLVeDialog), cancellationToken);
                 default:

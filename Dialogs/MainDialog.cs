@@ -57,6 +57,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            var cardDialogDetails = new CardDialogDetails();
+
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
             switch (stepContext.Values["choice"].ToString().ToLower())
@@ -66,7 +68,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 case "licenciamento banese":
-                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cardDialogDetails, cancellationToken);
                 case "licenciamento outros bancos":
                     return await stepContext.BeginDialogAsync(nameof(OtherBanksLicenseDialog), cancellationToken);
                 case "emitir crlv-e":
@@ -79,7 +81,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
                     return await stepContext.BeginDialogAsync(nameof(MainDialog),cancellationToken);
             }
-            
+
 
             /*var officeLessDetails = new OfficeLessDetails();
             officeLessDetails.Nome = stepContext.Result.ToString();

@@ -15,7 +15,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class BaneseLicenseDialog : CancelAndHelpDialog
     {
-    
+
+        private CardDialogDetails cardDialogDetails;
+
         public BaneseLicenseDialog()
             : base(nameof(BaneseLicenseDialog))
         {
@@ -58,6 +60,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            cardDialogDetails = (CardDialogDetails)stepContext.Options;
+            cardDialogDetails.Renavam = stepContext.Result.ToString();
+
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Agora, informe o código de segurança"), cancellationToken);
             string messagetext = null;
             var secureCode = MessageFactory.Text(messagetext, InputHints.ExpectingInput);
@@ -67,16 +72,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            cardDialogDetails = (CardDialogDetails)stepContext.Options;
+            cardDialogDetails.SecureCode = stepContext.Result.ToString();
+
             var renv = stepContext.Result.ToString();
 
             switch (stepContext.Result.ToString())
             {
                 case "1111":
-                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cardDialogDetails, cancellationToken);
                 case "2222":
-                    return await stepContext.BeginDialogAsync(nameof(TruckDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(TruckDialog), cardDialogDetails, cancellationToken);
                 default:
-                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cardDialogDetails, cancellationToken);
             }
         }
 

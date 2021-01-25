@@ -23,11 +23,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new DateResolverDialog());
+            AddDialog(new CarDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 RenavamStepAsync,
-                ValidatorStepAsync,
+                //ValidatorStepAsync,
                 SecureCodeStepAsync,
+                OptionStepAsync,
                 FinalStepAsync
                 
             }));
@@ -36,41 +38,43 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
-   
+        
 
         private async Task<DialogTurnResult> RenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Você optou pela opção BANESE"), cancellationToken);
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Para iniciarmos a negociação, vou precisar de algumas informações."), cancellationToken);
-            return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text("Você pode fornecer seu Renavam?") }, cancellationToken);
-
+        { 
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Para iniciarmos o processo, vou precisar de algumas informações."), cancellationToken);
+            var promptMessage = MessageFactory.Text("Informe seu RENAVAM" , InputHints.ExpectingInput);
+            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
         }
 
-        private async Task<DialogTurnResult> ValidatorStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            if ((bool)stepContext.Result == true)
-            {
-
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe seu Renavam"), cancellationToken);
-                string messagetext = null;
-                var promptMessage = MessageFactory.Text( messagetext , InputHints.ExpectingInput);
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
-            }
-            else
-            {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Ok, infelizmente para seguir com o fluxo eu precisaria de tal informação. :-(."), cancellationToken);
-                return await stepContext.EndDialogAsync(cancellationToken);
-            }
-        }
+        //private async Task<DialogTurnResult> ValidatorStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        //{
+        //        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Ok, infelizmente para seguir com o fluxo eu precisaria de tal informação. :-(."), cancellationToken);
+        //        return await stepContext.EndDialogAsync(cancellationToken);
+    
+        //}
 
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Agora, informe o código de segurança"), cancellationToken);
             string messagetext = null;
             var secureCode = MessageFactory.Text(messagetext, InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = secureCode }, cancellationToken);
 
+        }
+
+        private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            switch (stepContext.Result.ToString())
+            {
+                case "1111":
+                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
+
+                default:
+                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
+            }
         }
 
 

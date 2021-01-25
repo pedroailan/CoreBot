@@ -48,7 +48,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Banese", "Licenciamento Outros Bancos", "Habilitação", "Nenhuma das alternativas" }),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Banese", "Licenciamento Outros Bancos", "Emitir CRLV-e", "Nenhuma das alternativas" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

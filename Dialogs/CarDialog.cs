@@ -17,7 +17,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     {
 
         public CarDialog()
-            : base(nameof(OtherBanksLicenseDialog))
+            : base(nameof(CarDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));

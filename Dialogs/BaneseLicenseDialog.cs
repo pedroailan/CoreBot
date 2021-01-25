@@ -67,13 +67,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+
             switch (stepContext.Result.ToString())
             {
                 case "1111":
                     return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
 
+                case "2222":
+                    return await stepContext.BeginDialogAsync(nameof(TruckDialog), cancellationToken);
                 default:
-                    return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cancellationToken);
             }
         }
 

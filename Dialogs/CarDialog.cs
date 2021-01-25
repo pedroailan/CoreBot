@@ -28,12 +28,15 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 InfoStepAsync,
                 YearStepAsync,
                 VencimentoStepAsync,
+                TaxStepAsync
 
             }));
 
             // The initial child Dialog to run.
             InitialDialogId = nameof(WaterfallDialog);
         }
+
+       
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
@@ -64,5 +67,24 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         }
 
+        private async Task<DialogTurnResult> TaxStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            String text = "Foram detectadas alguma(s) multa(s):\r\n " +
+                          "________________________________________\r\n" +
+                          "Auto: H 591988\r\n " +
+                          "Data de Autuação: 08/12/2019\r\n " +
+                          "Orgão Autuador: SMTT AJU\r\n" +
+                          "Compotência: SMTT AJU\r\n" +
+                          "Valor: R$ 195,25\r\n" +
+                          "________________________________________" +
+                          "\r\nDeseja adiciona-la(s) à via para pagamento?";
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text(text),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+            };
+
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+        }
     }
 }

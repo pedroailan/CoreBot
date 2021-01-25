@@ -24,6 +24,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new DateResolverDialog());
             AddDialog(new CarDialog());
+            AddDialog(new TruckDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 RenavamStepAsync,
@@ -83,10 +84,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private static async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var info = "Aqui está o seu Licenciamento!\r\n" +
+            var info = "Aqui está o sua via para pagamento no BANESE!\r\n" +
                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
                        " - PDF\r\n" +
-                       " - Código de Barras";
+                       " - Código de Barras: 00001222 222525 56599595 5544444";
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken);
         }

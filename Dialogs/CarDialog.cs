@@ -15,6 +15,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class CarDialog : CancelAndHelpDialog
     {
+        private CarDialogDetails cardDialogDetails;
 
         public CarDialog()
             : base(nameof(CarDialog))
@@ -37,14 +38,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: 49494949\nPlaca: OEK-8859\nProprietário: JOSÉ DA SILVA"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: 1111\r\nPlaca: OEK-8859\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 
         private async Task<DialogTurnResult> YearStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var year = MessageFactory.Text("Qual o ano de exercicio?", InputHints.ExpectingInput);
-            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = year }, cancellationToken);
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text($"Qual ano de exercicio?"),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "2021" }),
+            };
+
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
         }
 
         private async Task<DialogTurnResult> VencimentoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
@@ -52,7 +58,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Qual dia você quer pagar?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "Terça-Feira", "Quarta-Feira", "Quinta-Feira"}),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Terça-Feira", "Quarta-Feira", "Quinta-Feira",}),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

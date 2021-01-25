@@ -15,7 +15,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class BaneseLicenseDialog : CancelAndHelpDialog
     {
-
+        public CarDialogDetails carDialogDetails;
         public BaneseLicenseDialog()
             : base(nameof(BaneseLicenseDialog))
         {
@@ -57,7 +57,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Agora, informe o código de segurança"), cancellationToken);
             string messagetext = null;
             var secureCode = MessageFactory.Text(messagetext, InputHints.ExpectingInput);
@@ -67,12 +66,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            var renv = stepContext.Result.ToString();
 
             switch (stepContext.Result.ToString())
             {
                 case "1111":
                     return await stepContext.BeginDialogAsync(nameof(CarDialog), cancellationToken);
-
                 case "2222":
                     return await stepContext.BeginDialogAsync(nameof(TruckDialog), cancellationToken);
                 default:
@@ -84,9 +83,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private static async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Aqui está:"), cancellationToken);
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("- PDF"), cancellationToken);
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("- Codigo de Barras"), cancellationToken);
+            var info = "Aqui está o seu Licenciamento!\r\n" +
+                       "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
+                       " - PDF\r\n" +
+                       " - Código de Barras";
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken);
         }
 

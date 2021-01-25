@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+
 namespace Microsoft.BotBuilderSamples
 {
     public class OfficeLessDetails
@@ -11,5 +13,10 @@ namespace Microsoft.BotBuilderSamples
         public string Origin { get; set; }
 
         public string TravelDate { get; set; }
+
+        public static explicit operator OfficeLessDetails(string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

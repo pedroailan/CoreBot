@@ -32,6 +32,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new OfficeLessDialog());
             AddDialog(new BaneseLicenseDialog());
             AddDialog(new OtherBanksLicenseDialog());
+            AddDialog(new CRLVeDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 IntroStepAsync,
@@ -68,10 +69,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cancellationToken);
                 case "licenciamento outros bancos":
                     return await stepContext.BeginDialogAsync(nameof(OtherBanksLicenseDialog), cancellationToken);
-                case "habilitacao":
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Que pena! Mas entre em contato com nossa equipe de atendimento que ela vai te ajudar :)"), cancellationToken);
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
-                    return await stepContext.EndDialogAsync(cancellationToken);
+                case "emitir crlv-e":
+                    return await stepContext.BeginDialogAsync(nameof(CRLVeDialog), cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {

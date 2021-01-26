@@ -38,7 +38,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: 2222\r\nPlaca: OEK-8859\r\nProprietário/Arrecadário: ANTONIO SILVEIRA SANTOS"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: 2222\r\nPlaca: ZDC-0202\r\nProprietário/Arrecadário: ANTONIO SILVEIRA SANTOS"), cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 

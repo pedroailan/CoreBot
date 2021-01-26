@@ -83,9 +83,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             switch (stepContext.Result.ToString())
             {
-                case "1111":
+                case "50515253545":
                     return await stepContext.BeginDialogAsync(nameof(CarDialog), cardDialogDetails, cancellationToken);
-                case "2222":
+                case "49505152535":
                     return await stepContext.BeginDialogAsync(nameof(TruckDialog), cardDialogDetails, cancellationToken);
                 default:
                     return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cardDialogDetails, cancellationToken);

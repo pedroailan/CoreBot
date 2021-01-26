@@ -4,13 +4,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AdaptiveCards;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -66,13 +69,47 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 
-        private static async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+
             var info = "Aqui está o seu CRLV-e!\r\n" +
-                       "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
-                       " - PDF";
+                       "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n";
+
+            var code = "Código de Barras: 00001222 222525 56599595 5544444";
+
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
-            return await stepContext.EndDialogAsync(cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
+
+
+            // Define choices
+            var choices = new[] { "Baixar PDF" };
+
+            // Create card
+            var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
+            {
+                // Use LINQ to turn the choices into submit actions
+                Actions = choices.Select(choice => new AdaptiveOpenUrlAction
+                {
+                    Title = choice,
+                    Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1")
+
+                }).ToList<AdaptiveAction>(),
+            };
+
+            // Prompt
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            {
+                Prompt = (Activity)MessageFactory.Attachment(new Attachment
+                {
+                    ContentType = AdaptiveCard.ContentType,
+                    // Convert the AdaptiveCard to a JObject
+                    Content = JObject.FromObject(card),
+                }),
+                Choices = ChoiceFactory.ToChoices(choices),
+                // Don't render the choices outside the card
+                Style = ListStyle.None,
+            },
+                cancellationToken);
         }
 
     }

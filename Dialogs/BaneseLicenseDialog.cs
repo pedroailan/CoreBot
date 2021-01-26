@@ -108,7 +108,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
 
-            var info = "Aqui está o sua via para pagamento no BANESE!\r\n" +
+            var info = "Aqui está sua via para pagamento no BANESE!\r\n" +
                         "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n";
 
             var code = "Código de Barras: 00001222 222525 56599595 5544444";

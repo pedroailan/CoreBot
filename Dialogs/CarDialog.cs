@@ -76,7 +76,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                           "Auto: H 591988\r\n " +
                           "Data de Autuação: 08/12/2019\r\n " +
                           "Orgão Autuador: SMTT AJU\r\n" +
-                          "Compotência: SMTT AJU\r\n" +
+                          "Competência: SMTT AJU\r\n" +
                           "Valor: R$ 195,25\r\n" +
                           "________________________________________" +
                           "\r\nDeseja adiciona-la(s) à via para pagamento?";

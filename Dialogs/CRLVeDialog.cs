@@ -73,12 +73,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
 
             var info = "Aqui está o seu CRLV-e!\r\n" +
-                       "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n";
+                       "\r\n";
 
-            var code = "Código de Barras: 00001222 222525 56599595 5544444";
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
 
 
             // Define choices

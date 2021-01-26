@@ -107,7 +107,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
 
-            var info = "Aqui está o sua via para pagamento em OUTROS BANCOS!\r\n" +
+            var info = "Aqui está sua via para pagamento em OUTROS BANCOS!\r\n" +
                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
                        "(Compensação em 4 dias úteis e custo adicional de R$ 2,00)\r\n";
 

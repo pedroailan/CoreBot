@@ -42,7 +42,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             cardDialogDetails = (CardDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: "+ cardDialogDetails.Renavam + " \r\nPlaca: OEK-8859\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: "+ cardDialogDetails.Renavam + " \r\nPlaca: ZDC-0101\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 

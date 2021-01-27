@@ -12,6 +12,8 @@ namespace Microsoft.BotBuilderSamples
         public string SecureCode { get; set; }
         public string MarcaModelo { get; internal set; }
         public string AnoExercicio { get; internal set; }
+        public string Placa { get; internal set; }
+        public string NomeProprietario { get; internal set; }
 
         public static explicit operator CarDialogDetails(string v)
         {

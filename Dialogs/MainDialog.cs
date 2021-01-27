@@ -33,6 +33,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new BaneseLicenseDialog());
             AddDialog(new OtherBanksLicenseDialog());
             AddDialog(new CRLVeDialog());
+            AddDialog(new RootDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 IntroStepAsync,
@@ -49,7 +50,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Banese", "Licenciamento Outros Bancos", "Emitir CRLV-e", "Nenhuma das alternativas" }),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Anual (BANESE)", "Licenciamento Anual (Outros Bancos)", "Emitir Documento de Circulação (CRLV-e)", "Nenhuma das alternativas" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -57,7 +58,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var cardDialogDetails = new CardDialogDetails();
+            var carDialogDetails = new CarDialogDetails();
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
@@ -67,11 +68,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Que pena! Mas entre em contato com nossa equipe de atendimento que ela vai te ajudar :)"), cancellationToken);
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
                     return await stepContext.EndDialogAsync(cancellationToken);
-                case "licenciamento banese":
-                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), cardDialogDetails, cancellationToken);
-                case "licenciamento outros bancos":
-                    return await stepContext.BeginDialogAsync(nameof(OtherBanksLicenseDialog), cardDialogDetails, cancellationToken);
-                case "emitir crlv-e":
+                case "licenciamento anual (banese)":
+                    return await stepContext.BeginDialogAsync(nameof(RootDialog), carDialogDetails, cancellationToken);
+                case "licenciamento anual (outros bancos)":
+                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), carDialogDetails, cancellationToken);
+                case "emitir documento de circulação crlv-e":
                     return await stepContext.BeginDialogAsync(nameof(CRLVeDialog), cancellationToken);
                 default:
                     var promptOptions = new PromptOptions

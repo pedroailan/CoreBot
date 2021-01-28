@@ -16,15 +16,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RenavamDialog : CancelAndHelpDialog
     {
 
-        private CarDialogDetails carDialogDetails;
+        private LicenseDialogDetails carDialogDetails;
 
         public RenavamDialog()
-            : base(nameof(CarDialog))
+            : base(nameof(RenavamDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InfoStepAsync,
@@ -40,7 +39,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            carDialogDetails = (CarDialogDetails)stepContext.Options;
+            carDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: " + carDialogDetails.Renavam + " \r\nPlaca: ZDC-0101\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);

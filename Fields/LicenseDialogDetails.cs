@@ -5,7 +5,7 @@ using System;
 
 namespace Microsoft.BotBuilderSamples
 {
-    public class CarDialogDetails
+    public class LicenseDialogDetails
     {
         public string Renavam { get; set; }
 
@@ -15,7 +15,7 @@ namespace Microsoft.BotBuilderSamples
         public string Placa { get; internal set; }
         public string NomeProprietario { get; internal set; }
 
-        public static explicit operator CarDialogDetails(string v)
+        public static explicit operator LicenseDialogDetails(string v)
         {
             throw new NotImplementedException();
         }

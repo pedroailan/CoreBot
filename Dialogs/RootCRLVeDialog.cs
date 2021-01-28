@@ -17,16 +17,15 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class CRLVeDialog : CancelAndHelpDialog
+    public class RootCRLVeDialog : CancelAndHelpDialog
     {
 
-        public CRLVeDialog()
-            : base(nameof(CRLVeDialog))
+        public RootCRLVeDialog()
+            : base(nameof(RootCRLVeDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 PlateLicenseStepAsync,

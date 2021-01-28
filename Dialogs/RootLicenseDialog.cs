@@ -18,21 +18,19 @@ using static System.Net.WebRequestMethods;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class RootDialog : CancelAndHelpDialog
+    public class RootLicenseDialog : CancelAndHelpDialog
     {
 
-        private CarDialogDetails carDialogDetails;
+        private LicenseDialogDetails carDialogDetails;
 
-        public RootDialog()
-            : base(nameof(RootDialog))
+        public RootLicenseDialog()
+            : base(nameof(RootLicenseDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new DateResolverDialog());
-            AddDialog(new CarDialog());
             AddDialog(new TruckDialog());
-            AddDialog(new SecureCodeDialog());
+            AddDialog(new SpecificationsDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 SecureCodeQuestionStepAsync,
@@ -119,12 +117,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SendSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            carDialogDetails = (CarDialogDetails)stepContext.Options;
+            carDialogDetails = (LicenseDialogDetails)stepContext.Options;
             carDialogDetails.SecureCode = stepContext.Result.ToString();
 
             if (SecureCode.ValidationSecureCode(carDialogDetails.SecureCode) == true)
             {
-                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), carDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), carDialogDetails, cancellationToken);
             }
             else
             {

@@ -17,23 +17,23 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class SecureCodeDialog : CancelAndHelpDialog
+    public class SpecificationsDialog : CancelAndHelpDialog
     {
 
-        private CarDialogDetails carDialogDetails;
+        private LicenseDialogDetails LicenseDialogDetails;
 
-        public SecureCodeDialog()
-            : base(nameof(SecureCodeDialog))
+        public SpecificationsDialog()
+            : base(nameof(SpecificationsDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InfoStepAsync,
                 ConfirmDataAsync,
                 YearStepAsync,
+                VehicleStepAsync,
                 FinalStepAsync
                 //TaxStepAsync
 
@@ -45,11 +45,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            carDialogDetails = (CarDialogDetails)stepContext.Options;
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + carDialogDetails.MarcaModelo + 
-                                                                            "\r\nPlaca: " + carDialogDetails.Placa + 
-                                                                            "\r\nProprietário: " + carDialogDetails.NomeProprietario), 
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo + 
+                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa + 
+                                                                            "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario), 
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {
@@ -70,7 +70,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                return await stepContext.BeginDialogAsync(nameof(RootDialog), cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), cancellationToken);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> YearStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            if(SecureCode.Pendency(carDialogDetails.SecureCode) == true)
+            if(SecureCode.Pendency(LicenseDialogDetails.SecureCode) == true)
             {
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
@@ -95,6 +95,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             
         }
+
+        private async Task<DialogTurnResult> VehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            if (VehicleType.ValidationVehicleType(LicenseDialogDetails.SecureCode) == true)
+            {
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+            }
+            else
+            {
+                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails,cancellationToken);
+
+            }
+
+        }
+
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {

@@ -29,11 +29,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-BR"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new OfficeLessDialog());
-            AddDialog(new BaneseLicenseDialog());
-            AddDialog(new OtherBanksLicenseDialog());
-            AddDialog(new CRLVeDialog());
-            AddDialog(new RootDialog());
+            AddDialog(new RootCRLVeDialog());
+            AddDialog(new RootLicenseDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 IntroStepAsync,
@@ -58,7 +55,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var carDialogDetails = new CarDialogDetails();
+            var carDialogDetails = new LicenseDialogDetails();
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
@@ -69,11 +66,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 case "licenciamento anual (banese)":
-                    return await stepContext.BeginDialogAsync(nameof(RootDialog), carDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), carDialogDetails, cancellationToken);
                 case "licenciamento anual (outros bancos)":
-                    return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), carDialogDetails, cancellationToken);
-                case "emitir documento de circulação crlv-e":
-                    return await stepContext.BeginDialogAsync(nameof(CRLVeDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), carDialogDetails, cancellationToken);
+                case "emitir documento de circulação (crlv-e)":
+                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {

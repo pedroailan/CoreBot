@@ -14,9 +14,9 @@ namespace Microsoft.BotBuilderSamples
 {
     public static class LuisHelper
     {
-        public static async Task<OfficeLessDetails> ExecuteLuisQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
+        public static async Task<LicenseDialogDetails> ExecuteLuisQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            var bookingDetails = new OfficeLessDetails();
+            var bookingDetails = new LicenseDialogDetails();
 
             try
             {
@@ -36,12 +36,12 @@ namespace Microsoft.BotBuilderSamples
                 if (intent == "Book_flight")
                 {
                     // We need to get the result from the LUIS JSON which at every level returns an array.
-                    bookingDetails.Destination = recognizerResult.Entities["To"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
-                    bookingDetails.Origin = recognizerResult.Entities["From"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
+                    bookingDetails.AnoExercicio = recognizerResult.Entities["To"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
+                    bookingDetails.MarcaModelo = recognizerResult.Entities["From"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
 
                     // This value will be a TIMEX. And we are only interested in a Date so grab the first result and drop the Time part.
                     // TIMEX is a format that represents DateTime expressions that include some ambiguity. e.g. missing a Year.
-                    bookingDetails.TravelDate = recognizerResult.Entities["datetime"]?.FirstOrDefault()?["timex"]?.FirstOrDefault()?.ToString().Split('T')[0];
+                    bookingDetails.Placa = recognizerResult.Entities["datetime"]?.FirstOrDefault()?["timex"]?.FirstOrDefault()?.ToString().Split('T')[0];
                 }
             }
             catch (Exception e)

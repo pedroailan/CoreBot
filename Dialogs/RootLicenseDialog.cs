@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,15 +22,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RootLicenseDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails carDialogDetails;
+        private LicenseDialogDetails LicenseDialogDetails;
 
         public RootLicenseDialog()
             : base(nameof(RootLicenseDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new TruckDialog());
+            AddDialog(new RenavamDialog());
             AddDialog(new SpecificationsDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
@@ -98,6 +100,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            //stepContext.Values["choice"].ToString().ToLower();
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -110,23 +115,25 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                return await stepContext.EndDialogAsync(cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
             }
         }
 
 
         private async Task<DialogTurnResult> SendSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            carDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            carDialogDetails.SecureCode = stepContext.Result.ToString();
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
+            //await stepContext.Context.SendActivityAsync(LicenseDialogDetails.SecureCode);
 
-            if (SecureCode.ValidationSecureCode(carDialogDetails.SecureCode) == true)
+            if (SecureCode.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), carDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
-                return await stepContext.EndDialogAsync(cancellationToken);
+                await stepContext.Context.SendActivityAsync("Este código de segurança é inválido, vamos repetir o processo, ok!?");
+                return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails,cancellationToken);
             }
             
         }
@@ -138,8 +145,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         //private async Task<DialogTurnResult> RenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         //{
-        //    carDialogDetails = (CarDialogDetails)stepContext.Options;
-        //    carDialogDetails.Renavam = stepContext.Result.ToString();
+        //    LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+        //    LicenseDialogDetails.Renavam = stepContext.Result.ToString();
 
         //    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Agora, informe o código de segurança"), cancellationToken);
         //    string messagetext = null;
@@ -150,19 +157,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         //private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         //{
-        //    carDialogDetails = (CarDialogDetails)stepContext.Options;
-        //    carDialogDetails.SecureCode = stepContext.Result.ToString();
+        //    LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+        //    LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
 
         //    var renv = stepContext.Result.ToString();
 
         //    switch (stepContext.Result.ToString())
         //    {
         //        case "50515253545":
-        //            return await stepContext.BeginDialogAsync(nameof(CarDialog), carDialogDetails, cancellationToken);
+        //            return await stepContext.BeginDialogAsync(nameof(CarDialog), LicenseDialogDetails, cancellationToken);
         //        case "49505152535":
-        //            return await stepContext.BeginDialogAsync(nameof(TruckDialog), carDialogDetails, cancellationToken);
+        //            return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
         //        default:
-        //            return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), carDialogDetails, cancellationToken);
+        //            return await stepContext.BeginDialogAsync(nameof(BaneseLicenseDialog), LicenseDialogDetails, cancellationToken);
         //    }
         //}
 

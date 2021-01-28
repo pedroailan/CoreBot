@@ -32,10 +32,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 InfoStepAsync,
                 ConfirmDataAsync,
-                YearStepAsync,
+                PendencyStepAsync,
                 VehicleStepAsync,
-                FinalStepAsync
-                //TaxStepAsync
+                FinalStepAsync,
+                EndStepAsync
 
             }));
 
@@ -43,13 +43,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
+
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo + 
-                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa + 
-                                                                            "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario), 
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
+                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa +
+                                                                            "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {
@@ -70,6 +71,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
+                await stepContext.Context.SendActivityAsync("Beleza, vamos tentar mais uma vez!");
                 return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), cancellationToken);
             }
         }
@@ -77,34 +79,63 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
 
 
-        private async Task<DialogTurnResult> YearStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            if(SecureCode.Pendency(LicenseDialogDetails.SecureCode) == true)
+            string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
+            string anoAtual = DateTime.Now.Year.ToString();
+
+            if (Pendecies.Pendency(LicenseDialogDetails.SecureCode) == true)
             {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
+                await stepContext.Context.SendActivityAsync("Você possui pendências!");
+                await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
+                                                            "Valor: "+ "R$ 2.000,00\r\n");
+                
+                await stepContext.Context.SendActivityAsync("Ano: " + anoAtual + "\r\n" +
+                                                            "Valor: " + "R$ 1.000,00");
+               
+
+                var promptOptions = new PromptOptions
+                {
+                    Prompt = MessageFactory.Text($"Deseja imprimir boleto para qual ano?"),
+                    Choices = ChoiceFactory.ToChoices(choices: new List<string> { anoAnterior, anoAtual }),
+                };
+                return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
             }
             else
             {
-                var promptOptions = new PromptOptions
-                {
-                    Prompt = MessageFactory.Text($"Qual ano de exercicio?"),
-                    Choices = ChoiceFactory.ToChoices(new List<string> { "2020" , "2021" }),
-                };
-
-                return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+                return await stepContext.ContinueDialogAsync(cancellationToken);
             }
-            
+
         }
 
         private async Task<DialogTurnResult> VehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            LicenseDialogDetails.AnoExercicio = stepContext.Values["choice"].ToString();
+
+            Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
+
+            //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
+            
+
+            await stepContext.Context.SendActivitiesAsync(new Activity[] 
+            {
+                MessageFactory.Text(""),
+                new Activity { Type = ActivityTypes.Typing },
+                new Activity { Type = "delay", Value= 3000 },
+                MessageFactory.Text(""),
+
+            }, cancellationToken);
+
             if (VehicleType.ValidationVehicleType(LicenseDialogDetails.SecureCode) == true)
             {
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
             else
             {
-                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails,cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
 
             }
 
@@ -114,7 +145,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
 
-            var info = "Aqui está sua via para pagamento no BANESE!\r\n" +
+            var info = "Aqui está sua via para pagamento no " + LicenseDialogDetails.Banco +"!\r\n" +
                         "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n";
 
             var code = "Código de Barras: 00001222 222525 56599595 5544444";
@@ -152,6 +183,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 Style = ListStyle.None,
             },
                 cancellationToken);
+        }
+
+        private async Task<DialogTurnResult> EndStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            return await stepContext.EndDialogAsync(cancellationToken);
         }
 
     }

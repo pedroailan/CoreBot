@@ -32,6 +32,7 @@ namespace Microsoft.BotBuilderSamples.Bots
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
+            turnContext.Activity.Locale = "pt-BR";
             await base.OnTurnAsync(turnContext, cancellationToken);
 
             // Save any state changes that might have occured during the turn.

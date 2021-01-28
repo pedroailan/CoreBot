@@ -10,10 +10,12 @@ namespace Microsoft.BotBuilderSamples
         public string Renavam { get; set; }
 
         public string SecureCode { get; set; }
-        public string MarcaModelo { get; internal set; }
-        public string AnoExercicio { get; internal set; }
-        public string Placa { get; internal set; }
-        public string NomeProprietario { get; internal set; }
+        public string MarcaModelo { get; set; }
+        public string AnoExercicio { get; set; }
+        public string Placa { get; set; }
+        public string NomeProprietario { get; set; }
+        public string Banco { get; set; }
+
 
         public static explicit operator LicenseDialogDetails(string v)
         {

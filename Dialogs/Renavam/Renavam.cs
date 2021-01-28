@@ -10,26 +10,26 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
+using CoreBot.Models;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class RenavamDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails carDialogDetails;
+        private LicenseDialogDetails LicenseDialogDetails;
 
         public RenavamDialog()
             : base(nameof(RenavamDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "Pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
-                InfoStepAsync,
-                YearStepAsync,
-                VencimentoStepAsync,
-                TaxStepAsync
+                RenavamStepAsync,
+                ValidationRenavamStepAsync,
+                VerificationSecureCodeStepAsync,
 
             }));
 
@@ -37,55 +37,53 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
-        private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> RenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            carDialogDetails = (LicenseDialogDetails)stepContext.Options;
-
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: " + carDialogDetails.Renavam + " \r\nPlaca: ZDC-0101\r\nProprietário: JOSÉ DA SILVA"), cancellationToken);
-            return await stepContext.ContinueDialogAsync(cancellationToken);
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM"), cancellationToken);
+            var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
+            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = renavam }, cancellationToken);
         }
 
-        private async Task<DialogTurnResult> YearStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> ValidationRenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var promptOptions = new PromptOptions
-            {
-                Prompt = MessageFactory.Text($"Qual ano de exercicio?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "2021" }),
-            };
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+            LicenseDialogDetails.Renavam = stepContext.Result.ToString();
+
+            if (Renavam.ValidationRenavam(LicenseDialogDetails.Renavam) ==  true)
+            {
+                if (Renavam.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
+                {
+                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vamos precisar dessa informação");
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                }
+                else
+                {
+                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+                }
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync("Opa, Renavam Inválido. Vamos repetir esse trecho, ok?");
+                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+            }
         }
 
-        private async Task<DialogTurnResult> VencimentoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var promptOptions = new PromptOptions
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
+
+            if (SecureCode.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
-                Prompt = MessageFactory.Text($"Qual dia você quer pagar?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "Terça-Feira", "Quarta-Feira", "Quinta-Feira", }),
-            };
-
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
-
-        }
-
-        private async Task<DialogTurnResult> TaxStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            String text = "Foram detectadas alguma(s) multa(s):\r\n " +
-                          "________________________________________\r\n" +
-                          "Auto: H 591988\r\n " +
-                          "Data de Autuação: 08/12/2019\r\n " +
-                          "Orgão Autuador: SMTT AJU\r\n" +
-                          "Competência: SMTT AJU\r\n" +
-                          "Valor: R$ 195,25\r\n" +
-                          "________________________________________" +
-                          "\r\nDeseja adiciona-la(s) à via para pagamento?";
-            var promptOptions = new PromptOptions
+                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+            }
+            else
             {
-                Prompt = MessageFactory.Text(text),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
-            };
+                return await stepContext.EndDialogAsync(cancellationToken);
+            }
 
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
         }
     }
 }

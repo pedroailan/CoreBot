@@ -55,7 +55,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var carDialogDetails = new LicenseDialogDetails();
+            var LicenseDialogDetails = new LicenseDialogDetails();
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
@@ -66,9 +66,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 case "licenciamento anual (banese)":
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), carDialogDetails, cancellationToken);
+                    LicenseDialogDetails.Banco = "BANESE";
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (outros bancos)":
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), carDialogDetails, cancellationToken);
+                    LicenseDialogDetails.Banco = "OUTROS BANCOS";
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
                     return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), cancellationToken);
                 default:

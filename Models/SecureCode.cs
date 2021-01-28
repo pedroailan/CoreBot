@@ -9,12 +9,13 @@ namespace CoreBot.Models
     {
         public static bool ValidationSecureCode(string SecureCode)
         {
-            return true;       
+            if (SecureCode == "1234") return true;
+            return false;       
         }
-
-        public static bool Pendency(string SecureCode)
+        public static bool ValidationSecureCode(string SecureCode, string Renavam)
         {
-            return true;
+            if (SecureCode == "1234") return true;
+            return false;
         }
     }
 }

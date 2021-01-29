@@ -64,11 +64,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         new AdaptiveImage()
                         {
                             Type = "Image",
-                              Size = AdaptiveImageSize.Auto,
-                              Style = AdaptiveImageStyle.Default,
-                              HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
-                              Separator = true,
-                              Url = new Uri("https://www.detran.se.gov.br/portal/images/crlve_instrucoes_renavam_placa.jpeg")
+                            Size = AdaptiveImageSize.Auto,
+                            Style = AdaptiveImageStyle.Default,
+                            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                            Separator = true,
+                            Url = new Uri("https://www.detran.se.gov.br/portal/images/crlve_instrucoes_renavam_placa.jpeg")
                         }
                     }
             };
@@ -115,7 +115,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
             }
         }
 
@@ -128,12 +128,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             if (SecureCode.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
                 await stepContext.Context.SendActivityAsync("Este código de segurança é inválido, vamos repetir o processo, ok!?");
-                return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails,cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails,cancellationToken);
             }
             
         }

@@ -21,6 +21,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     {
 
         private LicenseDialogDetails LicenseDialogDetails;
+        private RootLicenseDialog RootLicenseStep;
 
         public SpecificationsDialog()
             : base(nameof(SpecificationsDialog))
@@ -63,6 +64,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ConfirmDataAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -72,7 +74,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Beleza, vamos tentar mais uma vez!");
-                return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog.RootLicenseStep.), LicenseDialogDetails, cancellationToken);
             }
         }
 

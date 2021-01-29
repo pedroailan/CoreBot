@@ -56,7 +56,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 if (Renavam.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
                 {
                     await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vamos precisar dessa informação");
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Opa, Renavam Inválido. Vamos repetir esse trecho, ok?");
-                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
             }
         }
 

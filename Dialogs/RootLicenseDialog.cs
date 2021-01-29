@@ -33,12 +33,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new TruckDialog());
             AddDialog(new RenavamDialog());
             AddDialog(new SpecificationsDialog());
+            AddDialog(new SecureCodeDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 SecureCodeQuestionStepAsync,
                 SecureCodeStepAsync,
                 //ValidationSecureCodeStepAsync,
-                SendSecureCodeStepAsync
+                //SendSecureCodeStepAsync
                 //RenavamStepAsync,
                 //ValidatorStepAsync,
                 //OptionStepAsync,
@@ -68,7 +69,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                             Style = AdaptiveImageStyle.Default,
                             HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
                             Separator = true,
-                            Url = new Uri("https://www.detran.se.gov.br/portal/images/crlve_instrucoes_renavam_placa.jpeg")
+                            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
                         }
                     }
             };
@@ -106,12 +107,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe o CÓDIGO DE SEGURANÇA"), cancellationToken);
-                var secureCode = MessageFactory.Text(null, InputHints.ExpectingInput);
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = secureCode }, cancellationToken);
-                //await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe o CÓDIGO DE SEGURANÇA"));
-                //var secureCode = MessageFactory.Text(null, InputHints.ExpectingInput);
-                //return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = secureCode }, cancellationToken);
+                
+                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                
             }
             else
             {
@@ -120,23 +118,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         }
 
 
-        private async Task<DialogTurnResult> SendSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
-            //await stepContext.Context.SendActivityAsync(LicenseDialogDetails.SecureCode);
-
-            if (SecureCode.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
-            {
-                return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
-            }
-            else
-            {
-                await stepContext.Context.SendActivityAsync("Este código de segurança é inválido, vamos repetir o processo, ok!?");
-                return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails,cancellationToken);
-            }
-            
-        }
+       
 
 
 

@@ -11,6 +11,8 @@ using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using CoreBot.Models;
+using AdaptiveCards;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -25,11 +27,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "Pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
+            AddDialog(new SecureCodeDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 RenavamStepAsync,
                 ValidationRenavamStepAsync,
-                VerificationSecureCodeStepAsync,
 
             }));
 
@@ -39,6 +41,30 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> RenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            AdaptiveCard card = new AdaptiveCard("1.0")
+            {
+                Body =
+                    {
+                        new AdaptiveImage()
+                        {
+                            Type = "Image",
+                            Size = AdaptiveImageSize.Auto,
+                            Style = AdaptiveImageStyle.Default,
+                            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                            Separator = true,
+                            Url = new Uri("https://www.detran.se.gov.br/portal/images/crlve_instrucoes_renavam_placa.jpeg")
+                        }
+                    }
+            };
+
+            await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
+            {
+                Content = card,
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Name = "cardName"
+            }
+            ), cancellationToken);
+
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM"), cancellationToken);
             var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
@@ -55,8 +81,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (Renavam.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
                 {
-                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vamos precisar dessa informação");
-                    return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
+                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails,cancellationToken);
                 }
                 else
                 {
@@ -65,25 +91,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Opa, Renavam Inválido. Vamos repetir esse trecho, ok?");
+                await stepContext.Context.SendActivityAsync("Opa, Renavam Inválido. Acho que você digitou errado!");
                 return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
             }
-        }
-
-        private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
-
-            if (SecureCode.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
-            {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
-            }
-            else
-            {
-                return await stepContext.EndDialogAsync(cancellationToken);
-            }
-
         }
     }
 }

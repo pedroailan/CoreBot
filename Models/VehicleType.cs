@@ -7,9 +7,18 @@ namespace CoreBot.Models
 {
     public class VehicleType
     {
-        public static bool ValidationVehicleType(string SecureCode)
+        public static string ValidationVehicleType(string SecureCode)
         {
-            return true;
+            if(SecureCode == "Caminhão")
+            {
+                return SecureCode;
+            }
+            else
+            {
+                SecureCode = "Carro";
+                return SecureCode;
+            }
+            
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     {
 
         private LicenseDialogDetails LicenseDialogDetails;
-        private RootLicenseDialog RootLicenseStep;
+        
 
         public SpecificationsDialog()
             : base(nameof(SpecificationsDialog))
@@ -33,6 +33,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 InfoStepAsync,
                 ConfirmDataAsync,
+                TypeVehicleAsync,
                 PendencyStepAsync,
                 VehicleStepAsync,
                 FinalStepAsync,
@@ -47,6 +48,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            if (SecureCode.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 1)
+            {
+                LicenseDialogDetails.Vehicle = "Caminhão";
+            } else
+            {
+                LicenseDialogDetails.Vehicle = "Carro";
+            }
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
@@ -74,11 +83,23 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Beleza, vamos tentar mais uma vez!");
-                return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog.RootLicenseStep.), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
             }
         }
 
 
+        private async Task<DialogTurnResult> TypeVehicleAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            if (VehicleType.ValidationVehicleType(LicenseDialogDetails.SecureCode) == "Caminhão")
+            {
+                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
+            }
+            else
+            {
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+            }
+        }
 
 
         private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
@@ -90,9 +111,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 await stepContext.Context.SendActivityAsync("Você possui pendências!");
                 await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
-                                                            "Valor: "+ "R$ 2.000,00\r\n");
-                
-                await stepContext.Context.SendActivityAsync("Ano: " + anoAtual + "\r\n" +
+                                                            "Valor: "+ "R$ 2.000,00\r\n" +
+                                                            "Ano: " + anoAtual + "\r\n" +
                                                             "Valor: " + "R$ 1.000,00");
                
 
@@ -130,17 +150,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 MessageFactory.Text(""),
 
             }, cancellationToken);
-
-            if (VehicleType.ValidationVehicleType(LicenseDialogDetails.SecureCode) == true)
-            {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
-            }
-            else
-            {
-                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
-
-            }
-
+            return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 
 

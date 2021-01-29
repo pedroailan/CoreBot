@@ -23,9 +23,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
-                InfoStepAsync,
-                YearStepAsync,
-                VencimentoStepAsync,
                 AuthorizationStepAsync,
                 AuthorizationNumberStepAsync,
                 AuthorizationDataStepAsync,
@@ -33,34 +30,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             // The initial child Dialog to run.
             InitialDialogId = nameof(WaterfallDialog);
-        }
-
-        private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: 2222\r\nPlaca: ZDC-0202\r\nProprietário/Arrecadário: ANTONIO SILVEIRA SANTOS"), cancellationToken);
-            return await stepContext.ContinueDialogAsync(cancellationToken);
-        }
-
-        private async Task<DialogTurnResult> YearStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var promptOptions = new PromptOptions
-            {
-                Prompt = MessageFactory.Text($"Deseja pagar o licenciamento de qual ano?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "2021" }),
-            };
-
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
-        }
-
-        private async Task<DialogTurnResult> VencimentoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var promptOptions = new PromptOptions
-            {
-                Prompt = MessageFactory.Text($"Quer que eu gere o pagamento para qual dia?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "Terça-Feira", "Quarta-Feira", "Quinta-Feira", }),
-            };
-
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
         }
 
         private async Task<DialogTurnResult> AuthorizationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)

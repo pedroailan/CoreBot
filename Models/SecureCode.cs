@@ -7,15 +7,18 @@ namespace CoreBot.Models
 {
     public class SecureCode
     {
-        public static bool ValidationSecureCode(string SecureCode)
+        public static int ValidationSecureCode(string SecureCode)
         {
-            if (SecureCode == "1234") return true;
-            return false;       
+            if (SecureCode == "1234") return 1;
+            else if (SecureCode == "1235")
+            {
+                return 2;
+            }
+            else
+            {
+                return 0;
+            }
         }
-        public static bool ValidationSecureCode(string SecureCode, string Renavam)
-        {
-            if (SecureCode == "1234") return true;
-            return false;
-        }
+        
     }
 }

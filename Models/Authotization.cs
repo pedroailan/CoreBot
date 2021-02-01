@@ -11,15 +11,5 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             return true;
         }
-
-        internal static bool ValidationNumber(string numeroDeAutorizacao)
-        {
-            return true;
-        }
-
-        internal static bool ValidationDate(string dataDeAutorizacao)
-        {
-            return true;
-        }
     }
 }

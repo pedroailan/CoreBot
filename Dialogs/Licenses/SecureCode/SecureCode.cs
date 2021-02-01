@@ -85,8 +85,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync(" Este CÓDIGO DE SEGURANÇA é inválido!");
-                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido! Vamos repetir o processo.");
+                if(LicenseDialogDetails.SecureCodeBool == true)
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                }
+                else
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                }
+                
             }
         }
 

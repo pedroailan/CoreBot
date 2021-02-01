@@ -81,6 +81,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (Renavam.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
                 {
+                    LicenseDialogDetails.SecureCodeBool = true;
                     await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
                     return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails,cancellationToken);
                 }

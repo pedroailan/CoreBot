@@ -36,8 +36,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 TypeVehicleAsync,
                 PendencyStepAsync,
                 VehicleStepAsync,
-                FinalStepAsync,
-                EndStepAsync
+                FinalStepAsync
 
             }));
 
@@ -158,7 +157,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
 
             var info = "Aqui está sua via para pagamento no " + LicenseDialogDetails.Banco +"!\r\n" +
-                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n";
+                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
+                        "Após a compensação do pagamento você pode voltar aqui para emitir seu documento de circulação (CRLV-e).";
 
             var code = "Código de Barras: 00001222 222525 56599595 5544444";
 
@@ -194,7 +194,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             };
 
             // Prompt
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
             {
                 Prompt = (Activity)MessageFactory.Attachment(new Attachment
                 {
@@ -207,10 +207,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 Style = ListStyle.None,
             },
                 cancellationToken);
-        }
 
-        private async Task<DialogTurnResult> EndStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
             return await stepContext.EndDialogAsync(cancellationToken);
         }
 

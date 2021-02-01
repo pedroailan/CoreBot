@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -71,7 +72,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.DataDeAutorizacao = stepContext.Result.ToString();
             ///Valida tipo da autorização
-            if (Authotization.ValidationType(LicenseDialogDetails.TipoDeAutorização, LicenseDialogDetails.NumeroDeAutorizacao, LicenseDialogDetails.DataDeAutorizacao) == true)
+            if (Vehicle.ValidationType(LicenseDialogDetails.TipoDeAutorização, LicenseDialogDetails.NumeroDeAutorizacao, LicenseDialogDetails.DataDeAutorizacao) == true)
             {
 
                 return await stepContext.EndDialogAsync(LicenseDialogDetails, cancellationToken);

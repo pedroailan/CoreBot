@@ -12,19 +12,18 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class SpecificationsDialog : CancelAndHelpDialog
+    public class SpecificationsCRLVeDialog : CancelAndHelpDialog
     {
 
         private LicenseDialogDetails LicenseDialogDetails;
-        
 
-        public SpecificationsDialog()
-            : base(nameof(SpecificationsDialog))
+
+        public SpecificationsCRLVeDialog()
+            : base(nameof(SpecificationsCRLVeDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
@@ -33,9 +32,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 InfoStepAsync,
                 ConfirmDataAsync,
-                TypeVehicleAsync,
-                PendencyStepAsync,
-                VehicleStepAsync,
                 FinalStepAsync
 
             }));
@@ -47,14 +43,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 1)
-            {
-                LicenseDialogDetails.Vehicle = "Caminhão";
-            } else
-            {
-                LicenseDialogDetails.Vehicle = "Carro";
-            }
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.Vehicle +
@@ -77,97 +65,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 return await stepContext.ContinueDialogAsync(cancellationToken);
-
             }
             else
             {
                 await stepContext.Context.SendActivityAsync("Beleza, vamos repetir o processo para outro veículo");
-                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), LicenseDialogDetails, cancellationToken);
             }
-        }
-
-
-        private async Task<DialogTurnResult> TypeVehicleAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (LicenseDialogDetails.Vehicle == "Caminhão")
-            {
-                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
-            }
-            else
-            {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
-            }
-        }
-
-
-        private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
-            string anoAtual = DateTime.Now.Year.ToString();
-
-            if (Vehicle.Pendency(LicenseDialogDetails.SecureCode) == true)
-            {
-                await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
-                await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
-                                                            "Valor: "+ "R$ 2.000,00\r\n" +
-                                                            "Ano: " + anoAtual + "\r\n" +
-                                                            "Valor: " + "R$ 1.000,00");
-               
-
-                var promptOptions = new PromptOptions
-                {
-                    Prompt = MessageFactory.Text($"Quais deseja pagar? (A escolha do ano atual já tráz acumulado o ano anterior)"),
-                    Choices = ChoiceFactory.ToChoices(choices: new List<string> { anoAnterior, anoAtual }),
-                };
-                return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
-            }
-            else
-            {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
-            }
-
-        }
-
-        private async Task<DialogTurnResult> VehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-
-            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            LicenseDialogDetails.AnoExercicio = stepContext.Values["choice"].ToString();
-
-            Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
-
-            //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
-            
-
-            await stepContext.Context.SendActivitiesAsync(new Activity[] 
-            {
-                MessageFactory.Text(""),
-                new Activity { Type = ActivityTypes.Typing },
-                new Activity { Type = "delay", Value= 3000 },
-                MessageFactory.Text(""),
-
-            }, cancellationToken);
-            return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-
-            var info = "Aqui está sua via para pagamento no " + LicenseDialogDetails.Banco +"!\r\n" +
-                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
-                        "Após a compensação do pagamento você pode voltar aqui para emitir seu documento de circulação (CRLV-e).";
-
-            var code = "Código de Barras: 00001222 222525 56599595 5544444";
-
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
-
-
             // Define choices
-            var choices = new[] { "Baixar Documento de Arrecadação (DUA)" };
+            var choices = new[] { "Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)" };
 
             // Create card
             var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))

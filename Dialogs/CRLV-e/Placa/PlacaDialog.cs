@@ -2,32 +2,29 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using CoreBot.Models;
 using AdaptiveCards;
-using Microsoft.Extensions.Options;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class RenavamDialog : CancelAndHelpDialog
+    public class PlacaDialog : CancelAndHelpDialog
     {
 
         private LicenseDialogDetails LicenseDialogDetails;
 
-        public RenavamDialog()
-            : base(nameof(RenavamDialog))
+        public PlacaDialog()
+            : base(nameof(PlacaDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "Pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new SecureCodeDialog());
+            AddDialog(new SpecificationsCRLVeDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 RenavamStepAsync,
@@ -66,7 +63,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             ), cancellationToken);
 
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe a PLACA do seu veículo"), cancellationToken);
             var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = renavam }, cancellationToken);
         }
@@ -75,25 +72,33 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            LicenseDialogDetails.Renavam = stepContext.Result.ToString();
+            LicenseDialogDetails.Placa = stepContext.Result.ToString();
 
-            if (Vehicle.ValidationRenavam(LicenseDialogDetails.Renavam) ==  true)
+            if (Vehicle.ValidationPlaca(LicenseDialogDetails.Placa) == true)
             {
-                if (Vehicle.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
+                if (Vehicle.Situation(LicenseDialogDetails.Placa) == true)
                 {
-                    LicenseDialogDetails.SecureCodeBool = true;
-                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
-                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails,cancellationToken);
+                    if (Vehicle.ExistSecureCodePlaca(LicenseDialogDetails.Placa) == true)
+                    {
+                        LicenseDialogDetails.SecureCodeBool = true;
+                        await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
+                        return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                    }
+                    else
+                    {
+                        return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                    }
                 }
                 else
                 {
-                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+                    await stepContext.Context.SendActivityAsync("Veículo não autorizado: motivo(s)");
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
-                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                await stepContext.Context.SendActivityAsync("Opa, Esta placa é inválida");
+                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), LicenseDialogDetails, cancellationToken);
             }
         }
     }

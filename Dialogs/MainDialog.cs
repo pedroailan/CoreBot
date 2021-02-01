@@ -72,7 +72,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     LicenseDialogDetails.Banco = "OUTROS BANCOS";
                     return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
-                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), LicenseDialogDetails, cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {

@@ -16,22 +16,22 @@ using Microsoft.Extensions.Options;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class RenavamDialog : CancelAndHelpDialog
+    public class SecureCodeCRLVeDialog : CancelAndHelpDialog
     {
 
         private LicenseDialogDetails LicenseDialogDetails;
 
-        public RenavamDialog()
-            : base(nameof(RenavamDialog))
+        public SecureCodeCRLVeDialog()
+            : base(nameof(SecureCodeCRLVeDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "Pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new SecureCodeDialog());
+            AddDialog(new SpecificationsCRLVeDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
-                RenavamStepAsync,
-                ValidationRenavamStepAsync,
+                SecureCodeRequiredStepAsync,
+                VerificationSecureCodeStepAsync
 
             }));
 
@@ -39,7 +39,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
-        private async Task<DialogTurnResult> RenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> SecureCodeRequiredStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             AdaptiveCard card = new AdaptiveCard("1.0")
             {
@@ -52,7 +52,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                             Style = AdaptiveImageStyle.Default,
                             HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
                             Separator = true,
-                            Url = new Uri("https://www.detran.se.gov.br/portal/images/crlve_instrucoes_renavam_placa.jpeg")
+                            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
                         }
                     }
             };
@@ -66,35 +66,37 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             ), cancellationToken);
 
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM"), cancellationToken);
-            var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
-            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = renavam }, cancellationToken);
+            //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            //stepContext.Values["choice"].ToString().ToLower();
+
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe o CÓDIGO DE SEGURANÇA"), cancellationToken);
+            var secureCode = MessageFactory.Text(null, InputHints.ExpectingInput);
+            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = secureCode }, cancellationToken);
         }
 
-        private async Task<DialogTurnResult> ValidationRenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
 
-            LicenseDialogDetails.Renavam = stepContext.Result.ToString();
-
-            if (Vehicle.ValidationRenavam(LicenseDialogDetails.Renavam) ==  true)
+            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 1 || Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 2)
             {
-                if (Vehicle.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
-                {
-                    LicenseDialogDetails.SecureCodeBool = true;
-                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
-                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails,cancellationToken);
-                }
-                else
-                {
-                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
-                }
+                return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), LicenseDialogDetails ,cancellationToken);
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
-                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido! Vamos repetir o processo.");
+                if(LicenseDialogDetails.SecureCodeBool == true)
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                }
+                else
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                }
+                
             }
         }
+
     }
 }

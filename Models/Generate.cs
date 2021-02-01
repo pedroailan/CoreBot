@@ -11,5 +11,10 @@ namespace CoreBot.Models
         {
             return true;
         }
+
+        internal static void GenerateCRLVe(string anoExercicio)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

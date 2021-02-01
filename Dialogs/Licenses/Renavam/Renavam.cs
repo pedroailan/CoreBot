@@ -91,7 +91,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Opa, Renavam Inválido. Acho que você digitou errado!");
+                await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
                 return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
             }
         }

@@ -58,8 +58,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
-                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa +
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.Vehicle +
+                                                                            "\r\nPlaca: " + LicenseDialogDetails.Renavam +
                                                                             "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
@@ -82,7 +82,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Beleza, vamos tentar mais uma vez!");
+                await stepContext.Context.SendActivityAsync("Beleza, vamos repetir o processo para outro veículo");
                 return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
             }
         }
@@ -91,7 +91,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> TypeVehicleAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (VehicleType.ValidationVehicleType(LicenseDialogDetails.SecureCode) == "Caminhão")
+            if (LicenseDialogDetails.Vehicle == "Caminhão")
             {
                 return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
             }
@@ -109,7 +109,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             if (Pendecies.Pendency(LicenseDialogDetails.SecureCode) == true)
             {
-                await stepContext.Context.SendActivityAsync("Você possui pendências!");
+                await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
                 await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
                                                             "Valor: "+ "R$ 2.000,00\r\n" +
                                                             "Ano: " + anoAtual + "\r\n" +
@@ -118,7 +118,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
                 var promptOptions = new PromptOptions
                 {
-                    Prompt = MessageFactory.Text($"Deseja imprimir boleto para qual ano?"),
+                    Prompt = MessageFactory.Text($"Quais deseja pagar? (A escolha do ano atual já tráz acumulado o ano anterior)"),
                     Choices = ChoiceFactory.ToChoices(choices: new List<string> { anoAnterior, anoAtual }),
                 };
                 return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -167,12 +167,24 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
 
             // Define choices
-            var choices = new[] { "Baixar PDF" };
+            var choices = new[] { "Baixar Documento de Arrecadação (DUA)" };
 
             // Create card
             var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
             {
                 // Use LINQ to turn the choices into submit actions
+                Body =
+                {
+                    new AdaptiveImage()
+                    {
+                        Type = "Image",
+                        Size = AdaptiveImageSize.Auto,
+                        Style = AdaptiveImageStyle.Default,
+                        HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                        Separator = true,
+                        Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+                    }
+                },
                 Actions = choices.Select(choice => new AdaptiveOpenUrlAction
                 {
                     Title = choice,

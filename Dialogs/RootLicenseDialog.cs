@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using Newtonsoft.Json.Linq;
 using static System.Net.WebRequestMethods;
@@ -27,6 +30,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         public RootLicenseDialog()
             : base(nameof(RootLicenseDialog))
         {
+
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
@@ -34,15 +38,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new RenavamDialog());
             AddDialog(new SpecificationsDialog());
             AddDialog(new SecureCodeDialog());
+
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
+                OptionStepAsync,
+                OptionValidationStepAsync,
                 SecureCodeQuestionStepAsync,
                 SecureCodeStepAsync,
                 //ValidationSecureCodeStepAsync,
                 //SendSecureCodeStepAsync
                 //RenavamStepAsync,
-                //ValidatorStepAsync,
-                //OptionStepAsync,
+                //ValidatorStepAsync
                 //FinalStepAsync
 
             }));
@@ -51,6 +57,47 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
+
+        private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
+            await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
+                                                        "O documento gerado aqui é do documento de arrecadação (DUA).");
+            if(LicenseDialogDetails.Banco == "BANESE")
+            {
+                await stepContext.Context.SendActivityAsync("Você optou por banese");
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync("você optou por outros bancos");
+            }
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text($"Deseja prosseguir?"),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+            };
+
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+        }
+
+        private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            //stepContext.Values["choice"].ToString().ToLower();
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            if (stepContext.Values["choice"].ToString().ToLower() == "sim")
+            {
+
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+
+            }
+            else
+            {
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
+            }
+        }
 
 
         private async Task<DialogTurnResult> SecureCodeQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)

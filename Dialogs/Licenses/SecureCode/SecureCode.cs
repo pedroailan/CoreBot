@@ -85,7 +85,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("CÓDIGO DE SEGURANÇA inválido!");
+                await stepContext.Context.SendActivityAsync(" Este CÓDIGO DE SEGURANÇA é inválido!");
                 return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
             }
         }

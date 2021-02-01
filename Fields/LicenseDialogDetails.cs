@@ -15,7 +15,10 @@ namespace Microsoft.BotBuilderSamples
         public string Placa { get; set; }
         public string NomeProprietario { get; set; }
         public string Banco { get; set; }
-        public string Vehicle { get; internal set; }
+        public string Vehicle { get; set; }
+        public string TipoDeAutorização { get; set; }
+        public string NumeroDeAutorizacao { get; set; }
+        public string DataDeAutorizacao { get; set; }
 
         public static explicit operator LicenseDialogDetails(string v)
         {

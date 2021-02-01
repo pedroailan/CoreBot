@@ -15,6 +15,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class TruckDialog : CancelAndHelpDialog
     {
+        private LicenseDialogDetails LicenseDialogDetails;
         public TruckDialog()
             : base(nameof(TruckDialog))
         {
@@ -26,6 +27,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 AuthorizationStepAsync,
                 AuthorizationNumberStepAsync,
                 AuthorizationDataStepAsync,
+                AuthorizationValidationStepAsync
             }));
 
             // The initial child Dialog to run.
@@ -45,14 +47,43 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> AuthorizationNumberStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var promptMessage = MessageFactory.Text("Por favor, informe a data de validade da autorização", InputHints.ExpectingInput);
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            LicenseDialogDetails.TipoDeAutorização = stepContext.Values["choice"].ToString().ToLower();
+            var promptMessage = MessageFactory.Text("Para continuarmos informe o número da autorização", InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
         }
 
         private async Task<DialogTurnResult> AuthorizationDataStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var promptMessage = MessageFactory.Text("Me diga também o número da autorização", InputHints.ExpectingInput);
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.NumeroDeAutorizacao = stepContext.Result.ToString();
+            
+            var promptMessage = MessageFactory.Text("Por fim, informe a data de validade da autorização\r\n" +
+                                                     "Exemplo: 12/12/2021", InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
+            
         }
+
+
+        private async Task<DialogTurnResult> AuthorizationValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.DataDeAutorizacao = stepContext.Result.ToString();
+            ///Valida tipo da autorização
+            if (Authotization.ValidationType(LicenseDialogDetails.TipoDeAutorização, LicenseDialogDetails.NumeroDeAutorizacao, LicenseDialogDetails.DataDeAutorizacao) == true)
+            {
+
+                return await stepContext.EndDialogAsync(LicenseDialogDetails, cancellationToken);
+
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync("Os dados informados não estão de acordo com o sistema!\r\n" +
+                                                           "Vou ter que repetir algumas perguntas, ok?");
+                return await stepContext.ReplaceDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
+            }
+        }
+
     }
 }

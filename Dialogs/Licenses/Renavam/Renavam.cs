@@ -13,6 +13,8 @@ using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using CoreBot.Models;
 using AdaptiveCards;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -32,6 +34,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 RenavamStepAsync,
                 ValidationRenavamStepAsync,
+                OptionValidationStepAsync,
 
             }));
 
@@ -82,8 +85,39 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 if (Vehicle.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
                 {
                     LicenseDialogDetails.SecureCodeBool = true;
-                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
-                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails,cancellationToken);
+                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo");
+
+                    AdaptiveCard card = new AdaptiveCard("1.0")
+                    {
+                        Body =
+                    {
+                        new AdaptiveImage()
+                        {
+                            Type = "Image",
+                            Size = AdaptiveImageSize.Auto,
+                            Style = AdaptiveImageStyle.Default,
+                            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                            Separator = true,
+                            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+                        }
+                    }
+                    };
+
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
+                    {
+                        Content = card,
+                        ContentType = "application/vnd.microsoft.card.adaptive",
+                        Name = "cardName"
+                    }
+                    ), cancellationToken);
+
+                    var promptOptions = new PromptOptions
+                    {
+                        Prompt = MessageFactory.Text("Você localizou?"),
+                        Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                    };
+
+                    return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
                 }
                 else
                 {
@@ -94,6 +128,53 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
                 return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+            }
+        }
+
+        private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+         
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            if (stepContext.Values["choice"].ToString().ToLower() == "sim")
+            {
+
+                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync("Infelizmente preciso dessa informação para prosseguir. " +
+                                                            "Nesse caso, será necessário entrar em contato com o nosso atendimento!");
+                var choices = new[] { "Ir para o site" };
+                var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
+                {
+                    // Use LINQ to turn the choices into submit actions
+               
+                    Actions = choices.Select(choice => new AdaptiveOpenUrlAction
+                    {
+                        Title = choice,
+                        Url = new Uri("https://www.detran.se.gov.br/portal/?pg=atend_agendamento&pCod=1")
+
+                    }).ToList<AdaptiveAction>(),
+                };
+
+                // Prompt
+                await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+                {
+                    Prompt = (Activity)MessageFactory.Attachment(new Attachment
+                    {
+                        ContentType = AdaptiveCard.ContentType,
+                        // Convert the AdaptiveCard to a JObject
+                        Content = JObject.FromObject(card),
+                    }),
+                    Choices = ChoiceFactory.ToChoices(choices),
+                    // Don't render the choices outside the card
+                    Style = ListStyle.None,
+                },
+                    cancellationToken);
+
+                return await stepContext.EndDialogAsync(nameof(MainDialog));
             }
         }
     }

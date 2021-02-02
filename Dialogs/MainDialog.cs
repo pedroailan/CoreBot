@@ -31,6 +31,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new RootCRLVeDialog());
             AddDialog(new RootLicenseDialog());
+            AddDialog(new RootOthersServicesDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 IntroStepAsync,
@@ -62,9 +63,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             switch (stepContext.Values["choice"].ToString().ToLower())
             {
                 case "nenhuma das alternativas":
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Estamos trabalhando pra disponibilizar novos serviços em breve!"), cancellationToken);
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
-                    return await stepContext.EndDialogAsync(cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (banese)":
                     LicenseDialogDetails.Banco = "BANESE";
                     return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
@@ -108,7 +107,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //}
             //else
             //{
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Obrigado."), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Obrigada."), cancellationToken);
             //}
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }

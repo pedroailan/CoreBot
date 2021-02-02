@@ -119,6 +119,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                             Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
                         }
                     }
+            
             };
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment

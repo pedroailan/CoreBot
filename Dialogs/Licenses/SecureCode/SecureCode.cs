@@ -85,10 +85,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido! Vamos repetir o processo.");
+                await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
                 if(LicenseDialogDetails.SecureCodeBool == true)
                 {
-                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                    LicenseDialogDetails.Count += 1;
+                    if (LicenseDialogDetails.Count < 3)
+                    {
+                        return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                    }
+                    else
+                    {
+                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" + 
+                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                    "ou entre em contato com o DETRAN, para obter mais informações");
+                        return await stepContext.EndDialogAsync(cancellationToken);
+                    }
                 }
                 else
                 {

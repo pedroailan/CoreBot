@@ -20,6 +20,7 @@ namespace Microsoft.BotBuilderSamples
         public string NumeroDeAutorizacao { get; set; }
         public string DataDeAutorizacao { get; set; }
         public bool SecureCodeBool { get; set; }
+        public int Count { get; set; }
 
         public static explicit operator LicenseDialogDetails(string v)
         {

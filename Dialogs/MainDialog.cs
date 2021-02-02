@@ -62,7 +62,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             switch (stepContext.Values["choice"].ToString().ToLower())
             {
                 case "nenhuma das alternativas":
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Que pena! Mas entre em contato com nossa equipe de atendimento que ela vai te ajudar :)"), cancellationToken);
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Estamos trabalhando pra disponibilizar novos serviços em breve!"), cancellationToken);
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Obrigada!"), cancellationToken);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 case "licenciamento anual (banese)":

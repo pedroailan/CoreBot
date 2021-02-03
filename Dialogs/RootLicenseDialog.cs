@@ -150,7 +150,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 
-                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
                 
             }
             else

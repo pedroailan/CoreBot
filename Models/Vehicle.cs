@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.BotBuilderSamples;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,31 +8,22 @@ namespace CoreBot.Models
 {
     public class Vehicle
     {
-        public static string ValidationVehicleType(string SecureCode)
+        public static bool ValidationVehicleType()
         {
-            if (SecureCode == "Caminhão")
+            if (Api.BuscaJson("rtrc") == true)
             {
-                return SecureCode;
+                return true;
             }
-            else
-            {
-                SecureCode = "Carro";
-                return SecureCode;
-            }
-
+            return false;
         }
 
-        public static int ValidationSecureCode(string SecureCode)
+        public static bool ValidationSecureCode(string SecureCode)
         {
-            if (SecureCode == "1234") return 1;
-            else if (SecureCode == "1235")
+            if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
             {
-                return 2;
+                return true;
             }
-            else
-            {
-                return 0;
-            }
+            return false;
         }
 
         public static bool ExistSecureCode(string Renavam)

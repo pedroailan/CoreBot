@@ -13,11 +13,9 @@
     <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.4.3" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.4.3" />
     <PackageReference Include="Microsoft.Recognizers.Text.DataTypes.TimexExpression" Version="1.1.5" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="Refit" Version="5.2.4" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties cards_4welcomecard_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

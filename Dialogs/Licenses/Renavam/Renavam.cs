@@ -121,7 +121,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 }
                 else
                 {
-                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
                 }
             }
             else

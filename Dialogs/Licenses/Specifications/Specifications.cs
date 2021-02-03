@@ -48,7 +48,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 1)
+            if (Vehicle.ValidationVehicleType() == true)
             {
                 LicenseDialogDetails.Vehicle = "Caminhão";
             } else
@@ -57,8 +57,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.Vehicle +
-                                                                            "\r\nPlaca: " + LicenseDialogDetails.Renavam +
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
+                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa +
                                                                             "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
@@ -90,9 +90,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> TypeVehicleAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (LicenseDialogDetails.Vehicle == "Caminhão")
+            if (Vehicle.ValidationVehicleType() == true)
             {
-                return await stepContext.BeginDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -45,6 +46,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?"),
@@ -63,22 +65,22 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             switch (stepContext.Values["choice"].ToString().ToLower())
             {
                 case "nenhuma das alternativas":
-                    return await stepContext.BeginDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (banese)":
                     LicenseDialogDetails.Banco = "BANESE";
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (outros bancos)":
                     LicenseDialogDetails.Banco = "OUTROS BANCOS";
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
-                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RootCRLVeDialog), LicenseDialogDetails, cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {
                         Prompt = MessageFactory.Text("Por favor, insira uma das opções acima")
                     };
 
-                    return await stepContext.BeginDialogAsync(nameof(MainDialog),cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(MainDialog),cancellationToken);
             }
 
 

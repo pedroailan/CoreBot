@@ -13,6 +13,7 @@ using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 using CoreBot.Models;
 using AdaptiveCards;
 using Microsoft.Extensions.Options;
+using CoreBot;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -79,9 +80,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
 
-            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 1 || Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == 2)
+            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true || Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails ,cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails ,cancellationToken);
             }
             else
             {

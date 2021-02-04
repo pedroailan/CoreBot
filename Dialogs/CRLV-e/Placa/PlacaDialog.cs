@@ -94,7 +94,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                 new AdaptiveImage()
                                 {
                                     Type = "Image",
-                                    Size = AdaptiveImageSize.Large,
+                                    Size = AdaptiveImageSize.Auto,
                                     Style = AdaptiveImageStyle.Default,
                                     HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
                                     Separator = true,

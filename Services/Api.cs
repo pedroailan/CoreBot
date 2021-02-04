@@ -5,6 +5,8 @@ using Refit;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CoreBot
@@ -12,9 +14,11 @@ namespace CoreBot
     public class Api
     {
         LicenseDialogDetails LicenseDialogDetails;
-        string info;
 
-        
+
+        /// <summary>
+        /// API REMOTA
+        /// </summary>
 
         public static async Task ApiRunAsync(string renavam)
         {
@@ -31,6 +35,9 @@ namespace CoreBot
             }
         
         }
+
+        
+
 
         /// <summary>
         /// Api LOCAL
@@ -87,6 +94,7 @@ namespace CoreBot
                 if (key == "marcamodelo") LicenseDialogDetails.MarcaModelo = value;
                 if (key == "proprietario") LicenseDialogDetails.NomeProprietario = value;
                 if (key == "placa") LicenseDialogDetails.Placa = value;
+
             }
         }
 

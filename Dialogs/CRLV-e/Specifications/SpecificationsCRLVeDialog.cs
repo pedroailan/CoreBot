@@ -45,8 +45,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.Vehicle +
-                                                                            "\r\nPlaca: " + LicenseDialogDetails.Renavam +
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
+                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa +
                                                                             "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions

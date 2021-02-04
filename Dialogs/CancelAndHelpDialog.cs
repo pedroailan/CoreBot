@@ -10,6 +10,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class CancelAndHelpDialog : ComponentDialog
     {
+        LicenseDialogDetails LicenseDialogDetails;
         public CancelAndHelpDialog(string id)
             : base(id)
         {
@@ -56,6 +57,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     case "quit":
                         await innerDc.Context.SendActivityAsync($"Cancelando", cancellationToken: cancellationToken);
                         return await innerDc.CancelAllDialogsAsync();
+
+                    case "menu":
+                    case "voltar":
+                    case "reiniciar":
+                        //await innerDc.Context.SendActivityAsync($"Exibir Ajuda...", cancellationToken: cancellationToken);
+                        return await innerDc.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+
                 }
             }
 

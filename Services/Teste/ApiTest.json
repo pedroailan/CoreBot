@@ -1,9 +1,24 @@
 {
-  "renavam": "1234",
-  "codigodeseguranca": "1235",
-  "marcamodelo": "Fiat Punto",
-  "proprietario": "Luiz Carlos Brasil",
-  "placa": "HZD5000",
-  "rtrc": "false",
-  "pendencias": "false",
+  "veiculos": [
+    {
+      "renavam": "1234",
+      "codigodeseguranca": "1234",
+      "marcamodelo": "Fiat Punto",
+      "proprietario": "Luiz Carlos Brasil",
+      "placa": "HZD5000",
+      "rtrc": "false",
+      "pendencias": "false"
+    },
+
+    {
+      "renavam": "1235",
+      "codigodeseguranca": "1235",
+      "marcamodelo": "VW Gol",
+      "proprietario": "Luiz Carlos Brasil",
+      "placa": "HZD5000",
+      "rtrc": "false",
+      "pendencias": "false"
+    }
+
+  ]
 }

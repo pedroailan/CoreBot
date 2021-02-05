@@ -80,7 +80,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             LicenseDialogDetails.Renavam = stepContext.Result.ToString();
 
-            if (Vehicle.ValidationRenavam(LicenseDialogDetails.Renavam) ==  true)
+            if (Vehicle.ValidationRenavam(LicenseDialogDetails.Renavam) == true)
             {
                 if (Vehicle.ExistSecureCode(LicenseDialogDetails.Renavam) == true)
                 {
@@ -121,20 +121,31 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 }
                 else
                 {
-                    return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
                 }
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
-                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                LicenseDialogDetails.Count += 1;
+                if (LicenseDialogDetails.Count < 3)
+                {
+                    await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
+                    return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
+                                                                "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
+                                                                "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
             }
         }
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-         
+
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -150,7 +161,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
                 {
                     // Use LINQ to turn the choices into submit actions
-               
+
                     Actions = choices.Select(choice => new AdaptiveOpenUrlAction
                     {
                         Title = choice,

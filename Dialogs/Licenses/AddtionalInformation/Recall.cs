@@ -15,39 +15,28 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class RootOthersServicesDialog : CancelAndHelpDialog
+    public class RecallDialog : CancelAndHelpDialog
     {
-
         private LicenseDialogDetails LicenseDialogDetails;
-
-        public RootOthersServicesDialog()
-            : base(nameof(RootOthersServicesDialog))
+        public RecallDialog()
+            : base(nameof(RecallDialog))
         {
-
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-br"));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new RNTRCDialog());
-            AddDialog(new PlacaDialog());
-            AddDialog(new SpecificationsDialog());
-            AddDialog(new SecureCodeCRLVeDialog());
-
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 IntroStepAsync,
-                
-
+                AuthorizationStepAsync,
+                ConfirmStepAsync,
             }));
 
             // The initial child Dialog to run.
             InitialDialogId = nameof(WaterfallDialog);
         }
-
-
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Estamos trabalhando pra disponibilizar novos serviços em breve! " +
-                                                                            "Para mais serviços visite nosso site."), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Há uma chamda da montadora de seu veículo para RECALL! Para mais informações acesse o site do detran e verifique a situação do seu veículo"), cancellationToken);
             var choices = new[] { "Ir para o site" };
             var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
             {
@@ -78,6 +67,32 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             return await stepContext.EndDialogAsync(cancellationToken);
         }
 
-    }
+        private async Task<DialogTurnResult> AuthorizationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text($"Esta ciente dessa informação?"),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+            };
 
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+        }
+
+        private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            if (stepContext.Values["choice"].ToString().ToLower() == "sim")
+            {
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync("Infelizmente não podemos continuar sem esta confirmação!");
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+            }
+        }
+
+    }
 }

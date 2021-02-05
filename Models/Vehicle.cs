@@ -50,8 +50,10 @@ namespace CoreBot.Models
 
         public static bool Pendency(string SecureCode)
         {
+            return Api.LerArquivoJson("ano", SecureCode);
             return true;
         }
+            
 
 
         public static bool ValidationType(string tipoDeAutorização, string numeroDeAutorizacao, string dataDeAutorizacao)
@@ -60,6 +62,16 @@ namespace CoreBot.Models
         }
 
         public static bool Situation(string placa)
+        {
+            return true;
+        }
+
+        public static bool ValidationVehicleRecall()
+        {
+            return true;
+        }
+
+        internal static bool ValidationVehicleExemption()
         {
             return true;
         }

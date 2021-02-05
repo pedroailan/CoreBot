@@ -25,7 +25,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
-            AddDialog(new TruckDialog());
+            AddDialog(new RNTRCDialog());
             AddDialog(new PlacaDialog());
             AddDialog(new SpecificationsDialog());
             AddDialog(new SecureCodeCRLVeDialog());

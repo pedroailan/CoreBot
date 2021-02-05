@@ -79,7 +79,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
-
+          
             if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true || Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
                 return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails ,cancellationToken);
@@ -87,7 +87,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
-                if(LicenseDialogDetails.SecureCodeBool == true)
+                if(LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
                 {
                     LicenseDialogDetails.Count += 1;
                     if (LicenseDialogDetails.Count < 3)

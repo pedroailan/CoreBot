@@ -52,12 +52,14 @@ namespace CoreBot
                             ""pendencias"": ""false"",
                             }";
 
+        public static string json2 = @"{ ""renavam"":0123, ""codigodeseguranca"":""0123"", ""rtrc"":""false"", ""marcamodelo"": ""VW GOL"", ""placa"": ""HFJ96D6"", ""proprietario"": ""Ana Carla Júpiter""}";
 
-        public static bool LerArquivoJson(string tipo, string dado)
+
+    public static bool LerArquivoJson(string tipo, string dado)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            dynamic resultado = serializer.DeserializeObject(json);
+            dynamic resultado = serializer.DeserializeObject(json2);
 
             foreach (KeyValuePair<string, object> entry in resultado)
             {
@@ -85,7 +87,7 @@ namespace CoreBot
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
 
-            dynamic resultado = serializer.DeserializeObject(json);
+            dynamic resultado = serializer.DeserializeObject(json2);
 
             foreach (KeyValuePair<string, object> entry in resultado)
             {

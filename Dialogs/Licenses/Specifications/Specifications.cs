@@ -136,7 +136,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             LicenseDialogDetails.AnoExercicio = stepContext.Values["choice"].ToString();
 
-            Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
+            //Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
 
             //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
             

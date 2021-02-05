@@ -80,32 +80,41 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
           
-            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true || Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
+            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
                 return await stepContext.ReplaceDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails ,cancellationToken);
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
-                if(LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
+                if (Vehicle.Situation(LicenseDialogDetails.Placa) == true)
                 {
-                    LicenseDialogDetails.Count += 1;
-                    if (LicenseDialogDetails.Count < 3)
+                    await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
+                    if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
                     {
-                        return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                        LicenseDialogDetails.Count += 1;
+                        if (LicenseDialogDetails.Count < 3)
+                        {
+                            return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                        }
+                        else
+                        {
+                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
+                                                                        "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                        "ou entre em contato com o DETRAN, para obter mais informações");
+                            return await stepContext.EndDialogAsync(cancellationToken);
+                        }
                     }
                     else
                     {
-                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" + 
-                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
-                                                                    "ou entre em contato com o DETRAN, para obter mais informações");
-                        return await stepContext.EndDialogAsync(cancellationToken);
+                        return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
                     }
                 }
                 else
                 {
-                    return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                    await stepContext.Context.SendActivityAsync("{Informa o motivo ao cliente}");
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
+                
                 
             }
         }

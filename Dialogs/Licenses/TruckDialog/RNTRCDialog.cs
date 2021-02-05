@@ -14,11 +14,11 @@ using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class TruckDialog : CancelAndHelpDialog
+    public class RNTRCDialog : CancelAndHelpDialog
     {
         private LicenseDialogDetails LicenseDialogDetails;
-        public TruckDialog()
-            : base(nameof(TruckDialog))
+        public RNTRCDialog()
+            : base(nameof(RNTRCDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
@@ -82,7 +82,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 await stepContext.Context.SendActivityAsync("Os dados informados não estão de acordo com o sistema!\r\n" +
                                                            "Vou ter que repetir algumas perguntas, ok?");
-                return await stepContext.ReplaceDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
             }
         }
 

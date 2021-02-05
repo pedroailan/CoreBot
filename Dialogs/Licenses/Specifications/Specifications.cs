@@ -29,11 +29,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
+            AddDialog(new RNTRCDialog());
+            AddDialog(new RecallDialog());
+            AddDialog(new ExemptionDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InfoStepAsync,
                 ConfirmDataAsync,
                 TypeVehicleAsync,
+                RecallVehicleStepAsync,
+                ExemptionVehicleStepAsync,
                 PendencyStepAsync,
                 VehicleStepAsync,
                 FinalStepAsync
@@ -92,13 +97,40 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             if (Vehicle.ValidationVehicleType() == true)
             {
-                return await stepContext.ReplaceDialogAsync(nameof(TruckDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
         }
+
+        private async Task<DialogTurnResult> RecallVehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            if (Vehicle.ValidationVehicleRecall() == true)
+            {
+                return await stepContext.BeginDialogAsync(nameof(RecallDialog), LicenseDialogDetails, cancellationToken);
+            }
+            else
+            {
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+            }
+        }
+
+        private async Task<DialogTurnResult> ExemptionVehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            if (Vehicle.ValidationVehicleExemption() == true)
+            {
+                return await stepContext.BeginDialogAsync(nameof(ExemptionDialog), LicenseDialogDetails, cancellationToken);
+            }
+            else
+            {
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+            }
+        }
+
 
 
         private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
@@ -145,7 +177,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 MessageFactory.Text(""),
                 new Activity { Type = ActivityTypes.Typing },
-                new Activity { Type = "delay", Value= 3000 },
+                new Activity { Type = "delay", Value= 2000 },
                 MessageFactory.Text(""),
 
             }, cancellationToken);

@@ -50,7 +50,7 @@ namespace CoreBot.Models
 
         public static bool Pendency(string SecureCode)
         {
-            return Api.LerArquivoJson("ano", SecureCode);
+            //return Api.LerArquivoJson("ano", SecureCode);
             return true;
         }
             
@@ -71,7 +71,7 @@ namespace CoreBot.Models
             return true;
         }
 
-        internal static bool ValidationVehicleExemption()
+        public static bool ValidationVehicleExemption()
         {
             return true;
         }

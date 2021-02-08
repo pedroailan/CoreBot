@@ -1,4 +1,5 @@
-﻿using CoreBot.Services.Teste;
+﻿using CoreBot.Services.ServiceLicenciamento;
+using CoreBot.Services.Teste;
 using Microsoft.BotBuilderSamples;
 using Nancy.Json;
 using Refit;
@@ -26,7 +27,7 @@ namespace CoreBot
             {
                 var codRenavam = RestService.For<IApiService>("https://www.detra.gov-se");
 
-                var info = await codRenavam.GetInfoAsync(renavam);
+                //var info = await codRenavam.GetInfoAsync(renavam);
 
             }
             catch (Exception e)

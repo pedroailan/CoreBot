@@ -20,7 +20,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class SpecificationsDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
+        public LicenseDialogDetails LicenseDialogDetails;
         
 
         public SpecificationsDialog()
@@ -127,7 +127,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
+                return await stepContext.NextAsync(cancellationToken);
             }
         }
 

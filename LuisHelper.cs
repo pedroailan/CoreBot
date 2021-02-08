@@ -36,7 +36,7 @@ namespace Microsoft.BotBuilderSamples
                 if (intent == "Book_flight")
                 {
                     // We need to get the result from the LUIS JSON which at every level returns an array.
-                    bookingDetails.AnoExercicio = recognizerResult.Entities["To"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
+                    //bookingDetails.book = recognizerResult.Entities["To"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
                     //bookingDetails.MarcaModelo = recognizerResult.Entities["From"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
 
                     // This value will be a TIMEX. And we are only interested in a Date so grab the first result and drop the Time part.

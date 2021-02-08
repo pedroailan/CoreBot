@@ -24,6 +24,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
+            AddDialog(new RecallDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 ExemptionStepAsync,
@@ -39,7 +40,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Deseja utilizar isenção de IPVA neste veículo?"),
+                Prompt = MessageFactory.Text("Deseja utilizar isenção de IPVA neste veículo?"),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
             };
 
@@ -52,13 +53,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
-                LicenseDialogDetails.IsencaoIPVA = true;
-                return await stepContext.ContinueDialogAsync(cancellationToken);
+                LicenseDialogDetails.IsencaoIPVA = "true";
+                return await stepContext.NextAsync(LicenseDialogDetails, cancellationToken);
 
             }
             else
             {
-                LicenseDialogDetails.IsencaoIPVA = false;
+                LicenseDialogDetails.IsencaoIPVA = "false";
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
         }

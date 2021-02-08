@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.BotBuilderSamples;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,10 +8,13 @@ namespace CoreBot.Models.Generate
 {
     public class FieldsGenerate
     {
+        //public static string placa = LicenseDialogDetails.Placa;
         public static string placa = "AAA-0000";
         public static string documento = "01099101";
-        public static string nome = "RODRIGO OTAVIO SALES P.GUEDES";
-        public static string marca = "NISSAN MARCH 16S FLEX";
+        //public static string nome = LicenseDialogDetails.NomeProprietario;
+        public static string nome = "MARCOS PAULO SILVEIRA SANTOS";
+        //public static string marca = LicenseDialogDetails.MarcaModelo;
+        public static string marca = "NISSAN LIVINA";
         public static string tipo = "AUTOMÓVEL";
         public static string cor = "PRATA";
         public static string exercicio = "2021";

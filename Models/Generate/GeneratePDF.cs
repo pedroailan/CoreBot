@@ -55,14 +55,14 @@ namespace CoreBot.Models
             doc.Add(tablePendencias(FontePadrao, Subtitulo));
             doc.Add(parag);
             doc.Add(tableInfoPagamento(FontePadrao, Subtitulo));
-            doc.Add(tableVia(FontePadrao, page));
+            doc.Add(tableVia(FontePadrao, page, image));
             doc.Close();
         }
 
         public static Paragraph Header()
         {
-            DateTime thisDay = DateTime.Today;
-            string dados = "DETRAN/SE - Portal de Serviços " +  thisDay.ToString("D");
+            DateTime thisDay = DateTime.Now;
+            string dados = "DETRAN/SE - Portal de Serviços - Doc gerado eletronicamente em " +  thisDay.ToString("dd/MM/yyyy") + " às " + thisDay.ToString("HH:mm:ss");
             Paragraph cabecalho = new Paragraph(dados, new Font(Font.NORMAL, 9));
             cabecalho.Alignment = Element.ALIGN_CENTER;
             return cabecalho;
@@ -136,7 +136,7 @@ namespace CoreBot.Models
             table1.AddCell(cell6);
 
             // LINHA 3
-            PdfPCell cell7 = new PdfPCell(new Phrase("MARCA MODELO:\nI/" + FieldsGenerate.marca, FontePadrao));
+            PdfPCell cell7 = new PdfPCell(new Phrase("MARCA MODELO:\n" + FieldsGenerate.marca, FontePadrao));
             cell7.HorizontalAlignment = 0;
             cell7.Border = 1;
             table1.AddCell(cell7);
@@ -354,8 +354,9 @@ namespace CoreBot.Models
             return tablePagamento;
         }
 
-        public static PdfPTable tableVia(Font FontePadrao, Rectangle page)
+        public static PdfPTable tableVia(Font FontePadrao, Rectangle page, iTextSharp.text.Image image)
         {
+
             PdfPTable tableVia = new PdfPTable(5);
             tableVia.TotalWidth = page.Width;
 
@@ -366,8 +367,7 @@ namespace CoreBot.Models
             tableVia.AddCell(viaCellLine);
 
             PdfPCell viaCell0 = new PdfPCell();
-            //iTextSharp.text.Image imageVia = iTextSharp.text.Image.GetInstance(strLogoPath);
-            // AddImageInCell(viaCell0, imageVia, 35f, 35f, 1);
+            AddImageInCell(viaCell0, image, 35f, 35f, 1);
             viaCell0.HorizontalAlignment = 0;
             viaCell0.Border = 0;
             viaCell0.Padding = 2f;

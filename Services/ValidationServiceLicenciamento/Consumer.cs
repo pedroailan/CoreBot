@@ -17,7 +17,6 @@ namespace CoreBot.Services.ValidationServiceLicenciamento
                 var codRenavam = RestService.For<IApiServiceVD>("http://172.28.64.58:8176/wsChatbot?wsdl");
 
                 var info = await codRenavam.VServiceLicenciamento(inFields.codSeguranca, inFields.renavam, inFields.tipoDocumentoIn, inFields.anoLicenciamento);
-
             }
             catch (Exception e)
             {

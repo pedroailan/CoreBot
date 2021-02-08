@@ -3,8 +3,6 @@ using CoreBot.Services.ServiceLicenciamento;
 using Microsoft.BotBuilderSamples;
 using Refit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreBot.Services.Models
@@ -12,6 +10,7 @@ namespace CoreBot.Services.Models
     public class Consumer
     {
         static InFields inFields;
+        static LicenseDialogDetails LicenseDialogDetails;
         public static async Task ConsumerAsync()
         {
             try

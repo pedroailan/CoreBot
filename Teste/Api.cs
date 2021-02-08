@@ -14,7 +14,7 @@ namespace CoreBot
 {
     public class Api
     {
-        LicenseDialogDetails LicenseDialogDetails;
+        static LicenseDialogDetails LicenseDialogDetails;
 
 
         /// <summary>

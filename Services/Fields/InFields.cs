@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace CoreBot.Services.Fields
 {
+    
     public class InFields
     {
-        LicenseDialogDetails LicenseDialogDetails;
+        static LicenseDialogDetails LicenseDialogDetails;
 
         public int renavam = Convert.ToInt32(LicenseDialogDetails.Renavam);
-        public int codSeguranca = Convert.ToInt32(LicenseDialogDetails.SecureCode);
+        public int codSeguranca { get; set; } = Convert.ToInt32(LicenseDialogDetails.SecureCode);
         public string restricao; //será enviado com base no retorno da validação
         public int exercicioLicenciamento = Convert.ToInt32(LicenseDialogDetails.AnoExercicio);
         public string tipoAutorizacaoRNTRC = LicenseDialogDetails.TipoDeAutorização;

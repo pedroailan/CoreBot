@@ -24,7 +24,7 @@ namespace Microsoft.BotBuilderSamples
         public static string Vehicle { get; set; }
         public bool SecureCodeBool { get; set; }
         public int Count { get; set; }
-        public static string TipoDocumento { get; set; }
+        public string TipoDocumento { get; set; }
 
         /// EXCEÇÂO
         public static string Error { get; set; }

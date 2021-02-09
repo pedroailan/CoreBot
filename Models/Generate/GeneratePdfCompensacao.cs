@@ -11,18 +11,20 @@ using iTextSharp.text.pdf; // Extensão 2 - PDF
 using iTextSharp.text.html.simpleparser;
 using CoreBot.Models.Generate;
 
-namespace CoreBot.Models
+namespace CoreBot.Models.Generate
 {
-    public class GeneratePDF
+    public class GeneratePdfCompensacao
     {
-        public static void GenerateInvoice(string Ano)
+
+        public static void GenerateInvoice()
         {
             Document doc = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
 
             // Directory.GetCurrentDirectory()
-            string path = @"C:\Users\fsfalcao\Downloads\" + "CONTRATO.pdf";
+            // string path = @"C:\Users\fsfalcao\Downloads\" + "CONTRATO.pdf";
+            string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            FileStream file = new FileStream(path, FileMode.Create);
+            FileStream file = new FileStream(caminho + "/DUA - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
             PdfWriter writer = PdfWriter.GetInstance(doc, file);
 
             WriteDocument(doc, writer);
@@ -35,10 +37,13 @@ namespace CoreBot.Models
             Font Titulo = FontFactory.GetFont("Verdana", 12F, Font.BOLD, BaseColor.BLACK);
             Font Subtitulo = FontFactory.GetFont("Verdana", 9F, Font.BOLD, BaseColor.BLACK);
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
+            Font FonteVia = FontFactory.GetFont("Verdana", 6F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
             string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
+            string pathBanese = @"C:\Users\fsfalcao\Downloads\" + "banese.jpg";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
+            iTextSharp.text.Image imageBanese = iTextSharp.text.Image.GetInstance(pathBanese);
 
             doc.Add(Header());
             doc.Add(parag);
@@ -54,8 +59,7 @@ namespace CoreBot.Models
             doc.Add(parag);
             doc.Add(tablePendencias(FontePadrao, Subtitulo));
             doc.Add(parag);
-            doc.Add(tableInfoPagamento(FontePadrao, Subtitulo));
-            doc.Add(tableVia(writer, FontePadrao, page, image));
+            doc.Add(tableVia(writer, FonteVia, page, imageBanese, Subtitulo));
             doc.Close();
         }
 
@@ -71,8 +75,9 @@ namespace CoreBot.Models
         public static PdfPTable tableAlerta(Font FontePadrao)
         {
             PdfPTable tableAlerta = new PdfPTable(1);
-            PdfPCell cell = new PdfPCell(new Phrase("ALERTA: Este Documento Único de Arrecadação – DUA somente pode ser quitado no Banco do Estado de Sergipe – BANESE, por isto não se faz necessário que o código de barra e sua respectiva linha digitavel inicie com o código do banco(047).", FontePadrao));
-            cell.HorizontalAlignment = 1;
+            PdfPCell cell = new PdfPCell(new Phrase("ALERTA: Ao emitir o boleto bancário é importante checar se os três primeiros dígitos da linha digitável do código de barras começam com \"047\"." +
+                                                    "Se não, cuidado, seu computador pode estar infectado com vírus e o pagamento do boleto não será feito para o Detran/ SE.", FontePadrao));
+            cell.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
             cell.Border = 1;
             tableAlerta.AddCell(cell);
             return tableAlerta;
@@ -106,45 +111,15 @@ namespace CoreBot.Models
             table1.SetWidths(widths);
 
             // LINHA 1
-            PdfPCell cell2 = new PdfPCell(new Phrase("PLACA: " + FieldsGenerate.placa, FontePadrao));
+            PdfPCell cell2 = new PdfPCell(new Phrase("PLACA: \n" + FieldsGenerate.placa, FontePadrao));
             cell2.HorizontalAlignment = 0;
             cell2.Border = 1;
             table1.AddCell(cell2);
 
-            PdfPCell cell3 = new PdfPCell(new Phrase("DOCUMENTO: " + FieldsGenerate.documento, FontePadrao));
-            cell3.HorizontalAlignment = 0;
-            cell3.Border = 1;
-            table1.AddCell(cell3);
-
-            PdfPCell cell4 = new PdfPCell(new Phrase("FOLHA: 01", FontePadrao));
-            cell4.HorizontalAlignment = 0;
-            cell4.Border = 1;
-            cell4.Colspan = 2;
-            table1.AddCell(cell4);
-
-            // LINHA 2
-            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + FieldsGenerate.nome, FontePadrao));
-            cell5.Colspan = 2;
-            cell5.HorizontalAlignment = 0;
-            cell5.Border = 1;
-            table1.AddCell(cell5);
-
-            PdfPCell cell6 = new PdfPCell(new Phrase("CHASSI", FontePadrao));
-            cell6.Colspan = 2;
-            cell6.HorizontalAlignment = 0;
-            cell6.Border = 1;
-            table1.AddCell(cell6);
-
-            // LINHA 3
-            PdfPCell cell7 = new PdfPCell(new Phrase("MARCA MODELO:\n" + FieldsGenerate.marca, FontePadrao));
+            PdfPCell cell7 = new PdfPCell(new Phrase("MARCA/MODELO:\n" + FieldsGenerate.marca, FontePadrao));
             cell7.HorizontalAlignment = 0;
             cell7.Border = 1;
             table1.AddCell(cell7);
-
-            PdfPCell cell8 = new PdfPCell(new Phrase("TIPO:\n" + FieldsGenerate.tipo, FontePadrao));
-            cell8.HorizontalAlignment = 0;
-            cell8.Border = 1;
-            table1.AddCell(cell8);
 
             PdfPCell cell9 = new PdfPCell(new Phrase("COR:\n" + FieldsGenerate.cor, FontePadrao));
             cell9.HorizontalAlignment = 0;
@@ -156,21 +131,47 @@ namespace CoreBot.Models
             cell10.Border = 1;
             table1.AddCell(cell10);
 
-            // LINHA 4
-            PdfPCell cell11 = new PdfPCell(new Phrase("PROCESSADO:\n" + FieldsGenerate.processado, FontePadrao));
+            // LINHA 2
+            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + FieldsGenerate.nome, FontePadrao));
+            cell5.Colspan = 2;
+            cell5.HorizontalAlignment = 0;
+            cell5.Border = 1;
+            table1.AddCell(cell5);
+
+            PdfPCell cell6 = new PdfPCell(new Phrase("CHASSI: ", FontePadrao));
+            cell6.Colspan = 2;
+            cell6.HorizontalAlignment = 0;
+            cell6.Border = 1;
+            table1.AddCell(cell6);
+
+            // LINHA 3
+            PdfPCell cell8 = new PdfPCell(new Phrase("TIPO:\n" + FieldsGenerate.tipo, FontePadrao));
+            cell8.HorizontalAlignment = 0;
+            cell8.Border = 1;
+            table1.AddCell(cell8);
+
+            PdfPCell cell11 = new PdfPCell(new Phrase("VALIDADE DESTE DOC:\n" + FieldsGenerate.validade, FontePadrao));
             cell11.HorizontalAlignment = 0;
             cell11.Border = 1;
             table1.AddCell(cell11);
 
-            PdfPCell cell12 = new PdfPCell(new Phrase("EMISSÃO:\n" + FieldsGenerate.emissao, FontePadrao));
-            cell12.HorizontalAlignment = 0;
-            cell12.Border = 1;
-            table1.AddCell(cell12);
+            PdfPCell cell3 = new PdfPCell(new Phrase("NR. DOCUMENTO: \n" + FieldsGenerate.documento, FontePadrao));
+            cell3.HorizontalAlignment = 0;
+            cell3.Border = 1;
+            cell3.Colspan = 2;
+            table1.AddCell(cell3);
+
+            // LINHA 4
+
+            PdfPCell cell4 = new PdfPCell(new Phrase("DATA DO DOC:\n" + FieldsGenerate.processado, FontePadrao));
+            cell4.HorizontalAlignment = 0;
+            cell4.Border = 1;
+            table1.AddCell(cell4);
 
             PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.vencimento, FontePadrao));
             cell13.HorizontalAlignment = 0;
             cell13.Border = 1;
-            cell13.Colspan = 2;
+            cell13.Colspan = 3;
             table1.AddCell(cell13);
 
             return table1;
@@ -319,91 +320,167 @@ namespace CoreBot.Models
             return tablePendencias;
         }
 
-        public static PdfPTable tableInfoPagamento(Font FontePadrao, Font Subtitulo)
+        public static PdfPTable tableVia(PdfWriter writer, Font FontePadrao, Rectangle page, iTextSharp.text.Image image, Font Subtitulo)
         {
-            PdfPTable tablePagamento = new PdfPTable(1);
-            PdfPCell cellDisc0 = new PdfPCell(new Phrase("PAGÁVEL APENAS NO BANESE", Subtitulo));
-            cellDisc0.HorizontalAlignment = 1;
-            cellDisc0.Border = 1;
-            cellDisc0.Colspan = 2;
-            tablePagamento.AddCell(cellDisc0);
-
-            PdfPCell cellInfo1 = new PdfPCell(new Phrase("- Somente após a quitação de todo o valor correspondente ao total do licenciamento o CRLV será impresso.", FontePadrao));
-            cellInfo1.HorizontalAlignment = 0;
-            cellInfo1.Border = 0;
-            cellInfo1.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
-            tablePagamento.AddCell(cellInfo1);
-
-            PdfPCell cellInfo2 = new PdfPCell(new Phrase("- O pagamento em cheque deverá ser do proprietário e de igual valor ao constante neste documento, e somente após a compensação bancária será emitido o CRLV.", FontePadrao));
-            cellInfo2.HorizontalAlignment = 0;
-            cellInfo2.Border = 0;
-            cellInfo2.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
-            tablePagamento.AddCell(cellInfo2);
-
-            PdfPCell cellInfo3 = new PdfPCell(new Phrase("- Consulte nosso site - www.detran.se.gov.br - as informações do seu veículo estão atualizadas e disponiveis na internet.", FontePadrao));
-            cellInfo3.HorizontalAlignment = 0;
-            cellInfo3.Border = 0;
-            cellInfo3.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
-            tablePagamento.AddCell(cellInfo3);
-
-            PdfPCell cellInfo4 = new PdfPCell(new Phrase("- Ouvidoria geral: você tem mais um canal de comunicação com o DETRAN - fone:3226- 2072 - email: ouvidoria@detran.se.gov.br", FontePadrao));
-            cellInfo4.HorizontalAlignment = 0;
-            cellInfo4.Border = 0;
-            cellInfo4.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
-            tablePagamento.AddCell(cellInfo4);
-
-            return tablePagamento;
-        }
-
-        public static PdfPTable tableVia(PdfWriter writer, Font FontePadrao, Rectangle page, iTextSharp.text.Image image)
-        {
-
-            PdfPTable tableVia = new PdfPTable(5);
+            /// CABEÇALHO
+            PdfPTable tableVia = new PdfPTable(6);
             tableVia.TotalWidth = page.Width;
 
             PdfPCell viaCellLine = new PdfPCell(new Phrase("---------------------------------------------------------------------------------------------------------------------"));
             viaCellLine.HorizontalAlignment = 1;
             viaCellLine.Border = 0;
-            viaCellLine.Colspan = 5;
+            viaCellLine.Colspan = 6;
             tableVia.AddCell(viaCellLine);
+
+            PdfPCell viaCellValor = new PdfPCell(new Phrase("VALOR", Subtitulo));
+            viaCellValor.HorizontalAlignment = Element.ALIGN_CENTER;
+            viaCellValor.Colspan = 6;
+            tableVia.AddCell(viaCellValor);
 
             PdfPCell viaCell0 = new PdfPCell();
             AddImageInCell(viaCell0, image, 50f, 50f, 1);
             viaCell0.HorizontalAlignment = 0;
             viaCell0.Border = 0;
             viaCell0.Padding = 2f;
-            viaCell0.Rowspan = 3;
+            viaCell0.Colspan = 1;
             tableVia.AddCell(viaCell0);
 
+            PdfPCell viaCellConta = new PdfPCell(new Phrase("047-7", Subtitulo));
+            viaCellConta.HorizontalAlignment = Element.ALIGN_CENTER;
+            viaCellConta.Colspan = 1;
+            tableVia.AddCell(viaCellConta);
+
+            PdfPCell viaCellNum= new PdfPCell(new Phrase("04791.52449 00065.228561 00816.047484 7 85760000080458", Subtitulo));
+            viaCellNum.HorizontalAlignment = Element.ALIGN_CENTER;
+            viaCellNum.Border = 0;
+            viaCellNum.Colspan = 4;
+            tableVia.AddCell(viaCellNum);
+
             // LINHA 1 VIA
-            PdfPCell viaCell1 = new PdfPCell(new Phrase("PLACA: " + FieldsGenerate.placa, FontePadrao));
+            PdfPCell viaCell1 = new PdfPCell(new Phrase("Local de Pagamento: \nEM QUALQUER BANCO. APÓS O VENCIMENTO DESCONSIDERE ESTE DOCUMENTO", FontePadrao));
             viaCell1.HorizontalAlignment = 0;
+            viaCell1.Colspan = 5;
             tableVia.AddCell(viaCell1);
 
-            PdfPCell viaCell2 = new PdfPCell(new Phrase("VAL DUA: " + FieldsGenerate.validadeDUA, FontePadrao));
+            PdfPCell viaCell2 = new PdfPCell(new Phrase("Vencimento: \n" + FieldsGenerate.validadeDUA, FontePadrao));
             viaCell2.HorizontalAlignment = 0;
+            viaCell2.Colspan = 1;
             tableVia.AddCell(viaCell2);
 
-            PdfPCell viaCell3 = new PdfPCell(new Phrase("DOC: " + FieldsGenerate.documento, FontePadrao));
-            viaCell3.HorizontalAlignment = 0;
-            tableVia.AddCell(viaCell3);
+            // LINHA 2 
+            PdfPCell cell2 = new PdfPCell(new Phrase("Beneficiário: DEPARTAMENTO ESTADUAL DE TRÂNSITO DE SERGIPE - DETRAN/SE\n" +
+                                                    "Av.Tancredo Neves, s / n, Ponto Novo, Aracaju / SE, Cep. 49.097 - 510 - Cnpj. 01.560.393 / 0001 - 50", FontePadrao));
+            cell2.HorizontalAlignment = 0;
+            cell2.Colspan = 4;
+            tableVia.AddCell(cell2);
 
-            PdfPCell viaCell4 = new PdfPCell(new Phrase("VALOR: " + FieldsGenerate.valorTotal, FontePadrao));
-            viaCell4.HorizontalAlignment = 0;
-            tableVia.AddCell(viaCell4);
+            PdfPCell cell3 = new PdfPCell(new Phrase("Agên./Cód. Beneficiário.:\n 0xx / xx.4000xx-x" + FieldsGenerate.validadeDUA, FontePadrao));
+            cell3.HorizontalAlignment = 0;
+            cell3.Colspan = 2;
+            tableVia.AddCell(cell3);
 
-            // LINHA 2 - CÓDIGO DE BARRAS
+            // LINHA 3 
+            PdfPCell cell4 = new PdfPCell(new Phrase("Data do documento:\n" + FieldsGenerate.emissao, FontePadrao));
+            cell4.HorizontalAlignment = 0;
+            tableVia.AddCell(cell4);
+
+            PdfPCell cell5 = new PdfPCell(new Phrase("Nº Documento:\n", FontePadrao));
+            cell5.HorizontalAlignment = 0;
+            tableVia.AddCell(cell5);
+
+            PdfPCell cell6 = new PdfPCell(new Phrase("Espécie doc:\n RC", FontePadrao));
+            cell6.HorizontalAlignment = 0;
+            tableVia.AddCell(cell6);
+
+            PdfPCell cell7 = new PdfPCell(new Phrase("Aceite:\n N", FontePadrao));
+            cell7.HorizontalAlignment = 0;
+            tableVia.AddCell(cell7);
+
+            PdfPCell cell8 = new PdfPCell(new Phrase("Dt. Processamento:\n" + FieldsGenerate.processado, FontePadrao));
+            cell8.HorizontalAlignment = 0;
+            tableVia.AddCell(cell8);
+
+            PdfPCell cell9 = new PdfPCell(new Phrase("Nosso Número:\n" + FieldsGenerate.nossonum, FontePadrao));
+            cell9.HorizontalAlignment = 0;
+            tableVia.AddCell(cell9);
+
+            // LINHA 4 
+            PdfPCell cell10 = new PdfPCell(new Phrase("Uso do Banco", FontePadrao));
+            cell10.HorizontalAlignment = 0;
+            tableVia.AddCell(cell10);
+
+            PdfPCell cell11 = new PdfPCell(new Phrase("Carteira:\n CS", FontePadrao));
+            cell11.HorizontalAlignment = 0;
+            tableVia.AddCell(cell11);
+
+            PdfPCell cell12 = new PdfPCell(new Phrase("Moeda:\n R$", FontePadrao));
+            cell12.HorizontalAlignment = 0;
+            tableVia.AddCell(cell12);
+
+            PdfPCell cell13 = new PdfPCell(new Phrase("Quantidade\n -", FontePadrao));
+            cell13.HorizontalAlignment = 0;
+            tableVia.AddCell(cell13);
+
+            PdfPCell cell14 = new PdfPCell(new Phrase("Valor:\n -", FontePadrao));
+            cell14.HorizontalAlignment = 0;
+            tableVia.AddCell(cell14);
+
+            PdfPCell cell15 = new PdfPCell(new Phrase("(=) Valor do Documento: \n" + FieldsGenerate.valorTotal, FontePadrao));
+            cell15.HorizontalAlignment = 0;
+            tableVia.AddCell(cell15);
+
+            // LINHA 5
+            PdfPCell cell16 = new PdfPCell(new Phrase("Instruções" +
+                                                        "\nSR.CAIXA NÃO RECEBER APÓS O VENCIMENTO" +
+                                                        "\nESTE DUA TAMBÉM PODE SER PAGO POR CARTÕES DE CRÉDITO EM SERVIÇO DISPONIBILIZADO" +
+                                                        "\nNO SITE DO DETRAN(WWW.DETRAN.SE.GOV.BR)", FontePadrao));
+            cell16.HorizontalAlignment = 0;
+            cell16.Colspan = 4;
+            cell16.Rowspan = 5;
+            tableVia.AddCell(cell16);
+
+            PdfPCell cell17 = new PdfPCell(new Phrase("(-) Descontos/Abatimento: ", FontePadrao));
+            cell17.HorizontalAlignment = 0;
+            cell17.Colspan = 2;
+            tableVia.AddCell(cell17);
+
+            PdfPCell cell18 = new PdfPCell(new Phrase("(-) Outras deduções", FontePadrao));
+            cell18.HorizontalAlignment = 0;
+            cell18.Colspan = 2;
+            tableVia.AddCell(cell18);
+
+            PdfPCell cell19 = new PdfPCell(new Phrase("(+) Mora/Multa", FontePadrao));
+            cell19.HorizontalAlignment = 0;
+            cell19.Colspan = 2;
+            tableVia.AddCell(cell19);
+
+            PdfPCell cell20= new PdfPCell(new Phrase("(+) Outros acréscimos", FontePadrao));
+            cell20.HorizontalAlignment = 0;
+            cell20.Colspan = 2;
+            tableVia.AddCell(cell20);
+
+            PdfPCell cell21 = new PdfPCell(new Phrase("(=) Valor cobrado: " + FieldsGenerate.valorTotal, FontePadrao));
+            cell21.HorizontalAlignment = 0;
+            cell21.Colspan = 2;
+            tableVia.AddCell(cell21);
+
+            //LINHA 6
+            // 4 COL
+            //
+
+
+            // LINHA X - CÓDIGO DE BARRAS
             PdfPCell viaCell5 = new PdfPCell(BarCode(writer));
             viaCell5.HorizontalAlignment = 1;
             viaCell5.PaddingTop = 10;
-            viaCell5.Colspan = 4;
+            viaCell5.Colspan = 6;
             viaCell5.Border = 0;
             tableVia.AddCell(viaCell5);
 
-            // LINHA 3 VIA - NÚMERO CODIGO BARRA
+            // LINHA X VIA - NÚMERO CODIGO BARRA
             PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.lerCodBarras, FontePadrao));
             viaCell6.HorizontalAlignment = 1;
-            viaCell6.Colspan = 4;
+            viaCell6.Colspan = 6;
             viaCell6.Border = 0;
             tableVia.AddCell(viaCell6);
 
@@ -425,11 +502,6 @@ namespace CoreBot.Models
             bc39.Font = null;
             Image img = bc39.CreateImageWithBarcode(cb, null, null);
             return img;
-        }
-
-        internal static void GenerateCRLVe(string anoExercicio)
-        {
-            throw new NotImplementedException();
         }
     }
 }

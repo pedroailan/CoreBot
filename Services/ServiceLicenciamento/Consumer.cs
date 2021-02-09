@@ -9,10 +9,9 @@ namespace CoreBot.Services.Models
 {
     public class Consumer
     {
-        static InFields inFields;
-        static LicenseDialogDetails LicenseDialogDetails;
         public static async Task ConsumerAsync()
         {
+            var inFields = new InFields();
             try
             {
                 var codRenavam = RestService.For<IApiService>("http://172.28.64.58:8176/wsChatbot?wsdl");
@@ -22,6 +21,7 @@ namespace CoreBot.Services.Models
             }
             catch (Exception e)
             {
+
                 LicenseDialogDetails.Error = e.Message;
             }
 

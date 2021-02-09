@@ -9,9 +9,9 @@ namespace CoreBot.Services.ValidationServiceLicenciamento
 {
     public class Consumer
     {
-        static InFields inFields;
         public static async Task ConsumerAsync()
         {
+            var inFields = new InFields();
             try
             {
                 var codRenavam = RestService.For<IApiServiceVD>("http://172.28.64.58:8176/wsChatbot?wsdl");

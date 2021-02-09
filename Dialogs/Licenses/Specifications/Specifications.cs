@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Models;
+using CoreBot.Services.Models;
+using CoreBot.Services.ValidationServiceLicenciamento;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -52,6 +54,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            Consumer1.ConsumerAsyncXML().Wait();
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             if (Vehicle.ValidationVehicleType() == true)
             {

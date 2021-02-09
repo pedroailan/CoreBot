@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreBot.Services.Models
 {
-    public class Consumer
+    public class Consumer2
     {
         public static async Task ConsumerAsync()
         {

@@ -21,14 +21,14 @@ namespace CoreBot.Models
 
             // Directory.GetCurrentDirectory()
             string path = @"C:\Users\fsfalcao\Downloads\" + "CONTRATO.pdf";
-            
-            FileStream file = new FileStream(path, FileMode.Create);
-            PdfWriter.GetInstance(doc, file);
 
-            WriteDocument(doc);
+            FileStream file = new FileStream(path, FileMode.Create);
+            PdfWriter writer = PdfWriter.GetInstance(doc, file);
+
+            WriteDocument(doc, writer);
         }
 
-        public static void WriteDocument(Document doc)
+        public static void WriteDocument(Document doc, PdfWriter writer)
         {
             doc.Open();
             Rectangle page = doc.PageSize;
@@ -36,7 +36,7 @@ namespace CoreBot.Models
             Font Subtitulo = FontFactory.GetFont("Verdana", 9F, Font.BOLD, BaseColor.BLACK);
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
-            
+
             string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
 
@@ -55,14 +55,14 @@ namespace CoreBot.Models
             doc.Add(tablePendencias(FontePadrao, Subtitulo));
             doc.Add(parag);
             doc.Add(tableInfoPagamento(FontePadrao, Subtitulo));
-            doc.Add(tableVia(FontePadrao, page, image));
+            doc.Add(tableVia(writer, FontePadrao, page, image));
             doc.Close();
         }
 
         public static Paragraph Header()
         {
             DateTime thisDay = DateTime.Now;
-            string dados = "DETRAN/SE - Portal de Serviços - Doc gerado eletronicamente em " +  thisDay.ToString("dd/MM/yyyy") + " às " + thisDay.ToString("HH:mm:ss");
+            string dados = "DETRAN/SE - Portal de Serviços - Doc gerado eletronicamente em " + thisDay.ToString("dd/MM/yyyy") + " às " + thisDay.ToString("HH:mm:ss");
             Paragraph cabecalho = new Paragraph(dados, new Font(Font.NORMAL, 9));
             cabecalho.Alignment = Element.ALIGN_CENTER;
             return cabecalho;
@@ -230,9 +230,9 @@ namespace CoreBot.Models
             tableMulta.AddCell(cellDisc0);
 
             List<string> multas = new List<string>();
-            multas.Add("Infração 20/10/2020");
+            multas = FieldsGenerate.multas();
 
-            if(multas.Count > 0)
+            if (multas.Count > 0)
             {
                 for (int i = 0; i < multas.Count; i++)
                 {
@@ -242,7 +242,8 @@ namespace CoreBot.Models
                     tableMulta.AddCell(cellDisc1);
 
                 }
-            } else
+            }
+            else
             {
                 PdfPCell cellDisc1 = new PdfPCell(new Phrase("\r\n", FontePadrao));
                 cellDisc1.Border = 0;
@@ -354,7 +355,7 @@ namespace CoreBot.Models
             return tablePagamento;
         }
 
-        public static PdfPTable tableVia(Font FontePadrao, Rectangle page, iTextSharp.text.Image image)
+        public static PdfPTable tableVia(PdfWriter writer, Font FontePadrao, Rectangle page, iTextSharp.text.Image image)
         {
 
             PdfPTable tableVia = new PdfPTable(5);
@@ -367,11 +368,11 @@ namespace CoreBot.Models
             tableVia.AddCell(viaCellLine);
 
             PdfPCell viaCell0 = new PdfPCell();
-            AddImageInCell(viaCell0, image, 35f, 35f, 1);
+            AddImageInCell(viaCell0, image, 50f, 50f, 1);
             viaCell0.HorizontalAlignment = 0;
             viaCell0.Border = 0;
             viaCell0.Padding = 2f;
-            viaCell0.Rowspan = 2;
+            viaCell0.Rowspan = 3;
             tableVia.AddCell(viaCell0);
 
             // LINHA 1 VIA
@@ -391,12 +392,20 @@ namespace CoreBot.Models
             viaCell4.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell4);
 
-            // LINHA 2 VIA - CODIGO BARRA
-            PdfPCell viaCell5 = new PdfPCell(new Phrase(FieldsGenerate.numCodBarras, FontePadrao));
+            // LINHA 2 - CÓDIGO DE BARRAS
+            PdfPCell viaCell5 = new PdfPCell(BarCode(writer));
             viaCell5.HorizontalAlignment = 1;
+            viaCell5.PaddingTop = 10;
             viaCell5.Colspan = 4;
             viaCell5.Border = 0;
             tableVia.AddCell(viaCell5);
+
+            // LINHA 3 VIA - NÚMERO CODIGO BARRA
+            PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.lerCodBarras, FontePadrao));
+            viaCell6.HorizontalAlignment = 1;
+            viaCell6.Colspan = 4;
+            viaCell6.Border = 0;
+            tableVia.AddCell(viaCell6);
 
             return tableVia;
         }
@@ -406,6 +415,16 @@ namespace CoreBot.Models
             image.ScaleToFit(fitWidth, fitHight);
             image.Alignment = Alignment;
             cell.AddElement(image);
+        }
+
+        public static Image BarCode(PdfWriter writer)
+        {
+            PdfContentByte cb = writer.DirectContent;
+            Barcode128 bc39 = new Barcode128();
+            bc39.Code = FieldsGenerate.numCodBarras;
+            bc39.Font = null;
+            Image img = bc39.CreateImageWithBarcode(cb, null, null);
+            return img;
         }
 
         internal static void GenerateCRLVe(string anoExercicio)

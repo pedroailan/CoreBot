@@ -28,6 +28,10 @@ namespace CoreBot.Models.Generate
         public static string validade = "30/11/2021";
 
         public static string nossonum = "285600816";
+        public static string endereco = "RUA DOIS, TANCREDO NEVES";
+        public static string cep = "49000-000";
+        public static string cpf = "000.000.000-00";
+        public static string sacador = "AVENIDA TANCREDO NEVES, S/N, ARACAJU/SE";
 
         public static List<string> listaTaxas()
         {

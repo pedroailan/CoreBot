@@ -465,11 +465,28 @@ namespace CoreBot.Models.Generate
             tableVia.AddCell(cell21);
 
             //LINHA 6
-            // 4 COL
-            //
+            PdfPCell cell22 = new PdfPCell(new Phrase("Pagador: \n" + FieldsGenerate.nome, FontePadrao));
+            cell22.HorizontalAlignment = 0;
+            cell22.Colspan = 2;
+            tableVia.AddCell(cell22);
 
+            PdfPCell cell23 = new PdfPCell(new Phrase("Endereço \n" + FieldsGenerate.endereco, FontePadrao));
+            cell23.HorizontalAlignment = 0;
+            cell23.Colspan = 2;
+            tableVia.AddCell(cell23);
 
-            // LINHA X - CÓDIGO DE BARRAS
+            PdfPCell cell24 = new PdfPCell(new Phrase("CPF/CNPJ: \n" + FieldsGenerate.cpf, FontePadrao));
+            cell24.HorizontalAlignment = 0;
+            cell24.Colspan = 2;
+            tableVia.AddCell(cell24);
+
+            //LINHA 7
+            PdfPCell cell25 = new PdfPCell(new Phrase("Sacador/Avalista: " + FieldsGenerate.sacador, FontePadrao));
+            cell25.HorizontalAlignment = 0;
+            cell25.Colspan = 6;
+            tableVia.AddCell(cell25);
+
+            // LINHA 8 - CÓDIGO DE BARRAS
             PdfPCell viaCell5 = new PdfPCell(BarCode(writer));
             viaCell5.HorizontalAlignment = 1;
             viaCell5.PaddingTop = 10;
@@ -477,7 +494,7 @@ namespace CoreBot.Models.Generate
             viaCell5.Border = 0;
             tableVia.AddCell(viaCell5);
 
-            // LINHA X VIA - NÚMERO CODIGO BARRA
+            // LINHA 9 VIA - NÚMERO CODIGO BARRA
             PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.lerCodBarras, FontePadrao));
             viaCell6.HorizontalAlignment = 1;
             viaCell6.Colspan = 6;

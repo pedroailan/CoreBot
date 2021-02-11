@@ -48,13 +48,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            wsDetranChatBot.autenticacao pass = Authentication.Auth();
-            ObterEmissaoCRLV crlv = new ObterEmissaoCRLV();
-            wsDetranChatBot.obterEmissaoCrlvResponse response = crlv.obterEmissaoCRLV(pass, "OEP0594", 64479505448);
-            //var erro = new wsDetranChatBot.erro();
-            LicenseDialogDetails.MarcaModelo = response.obterEmissaoCrlvResult.codigoRetorno;
+            ObterEmissaoCRLV novo = new ObterEmissaoCRLV();
+            //var algo = await novo.obterEmissaoCRLV("OEK8190");
+            var algo = await novo.obterEmissaoCRLV("OEK8190", 50188645808);
+            /*var algo = await novo.obterEmissaoCRLV("", 0);*/
 
-            //var teste = result.codigoRetorno;
+            LicenseDialogDetails.MarcaModelo = algo.nomeProprietario;
 
             var promptOptions = new PromptOptions
             {

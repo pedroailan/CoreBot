@@ -7,13 +7,24 @@ namespace CoreBot.Services.WSDLService.obterEmissaoCRLV
 {
     public class ObterEmissaoCRLV
     {
-        public wsDetranChatBot.obterEmissaoCrlvResponse obterEmissaoCRLV(wsDetranChatBot.autenticacao auth, string placa, double codSeguranca)
+        public async Task<wsDetranChatBot.obterEmissaoCrlvResult> obterEmissaoCRLV(string placa, double codSeguranca)
         {
-            var consulta = new wsDetranChatBot.obterEmissaoCrlvRequest(auth, placa, codSeguranca);
-            var result = new wsDetranChatBot.obterEmissaoCrlvResult();
-            var response = new wsDetranChatBot.obterEmissaoCrlvResponse();
+            wsDetranChatBot.wsChatbotSoapClient wsClient = Authentication.WsClient();
+            wsDetranChatBot.autenticacao auth = Authentication.Auth();
 
-            return response;
+            var soap = await wsClient.obterEmissaoCrlvAsync(auth, placa, codSeguranca);
+
+            return soap.obterEmissaoCrlvResult;
+        }
+
+        public async Task<wsDetranChatBot.obterEmissaoCrlvResult> obterEmissaoCRLV(string placa)
+        {
+            wsDetranChatBot.wsChatbotSoapClient wsClient = Authentication.WsClient();
+            wsDetranChatBot.autenticacao auth = Authentication.Auth();
+
+            var soap = await wsClient.obterEmissaoCrlvAsync(auth, placa, 0);
+
+            return soap.obterEmissaoCrlvResult;
         }
     }
 }

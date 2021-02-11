@@ -80,7 +80,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
           
-            if (Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
+            if (await Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
             }

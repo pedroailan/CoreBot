@@ -1,4 +1,5 @@
-﻿using Microsoft.BotBuilderSamples;
+﻿using CoreBot.Services.WSDLService.obterEmissaoCRLV;
+using Microsoft.BotBuilderSamples;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,22 @@ namespace CoreBot.Models
             return false;
         }
 
-        public static bool ValidationSecureCode(string SecureCode)
+        public async static Task<bool> ValidationSecureCode(string SecureCode)
         {
-            if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
+            if (SecureCode.Length > 0)
             {
-                return true;
+                ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
+                var crlv = await obter.obterEmissaoCRLV("", Convert.ToDouble(SecureCode));
+                if (crlv.codigoRetorno == 0)
+                {
+                    return true;
+                }
             }
             return false;
+            //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
+            //{
+            //    return true;
+            //}
         }
 
         public static bool ExistSecureCode(string Renavam)

@@ -48,16 +48,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            ObterEmissaoCRLV novo = new ObterEmissaoCRLV();
-            //var algo = await novo.obterEmissaoCRLV("OEK8190");
-            var algo = await novo.obterEmissaoCRLV("OEK8190", 50188645808);
-            /*var algo = await novo.obterEmissaoCRLV("", 0);*/
+            //ObterEmissaoCRLV novo = new ObterEmissaoCRLV();
+            ////var algo = await novo.obterEmissaoCRLV("OEK8190");
+            //var algo = await novo.obterEmissaoCRLV("OEK8190", 50188645808);
+            ///*var algo = await novo.obterEmissaoCRLV("", 0);*/
 
-            LicenseDialogDetails.MarcaModelo = algo.nomeProprietario;
+            //LicenseDialogDetails.MarcaModelo = algo.nomeProprietario;
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?" + LicenseDialogDetails.MarcaModelo),
+                Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?"),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Anual (BANESE)", "Licenciamento Anual (Outros Bancos)", "Emitir Documento de Circulação (CRLV-e)", "Nenhuma das alternativas" }),
             };
 
@@ -75,10 +75,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 case "nenhuma das alternativas":
                     return await stepContext.ReplaceDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (banese)":
-                    LicenseDialogDetails.Banco = "BANESE";
+                    LicenseDialogDetails.Banco = "D";
                     return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (outros bancos)":
-                    LicenseDialogDetails.Banco = "OUTROS BANCOS";
+                    LicenseDialogDetails.Banco = "F";
                     return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
                     return await stepContext.ReplaceDialogAsync(nameof(RootCRLVeDialog), LicenseDialogDetails, cancellationToken);

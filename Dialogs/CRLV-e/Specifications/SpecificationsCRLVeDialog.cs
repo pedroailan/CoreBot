@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
+using CoreBot.Fields;
 using CoreBot.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -45,9 +46,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
-                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa +
-                                                                            "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario),
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + CRLVDialogDetails.renavam +
+                                                                            "\r\nPlaca: " + CRLVDialogDetails.placaOut +
+                                                                            "\r\nProprietário: " + CRLVDialogDetails.nomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {

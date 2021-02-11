@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot;
+using CoreBot.Services.WSDLService;
+using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -46,10 +48,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            
+            wsDetranChatBot.autenticacao pass = Authentication.Auth();
+            ObterEmissaoCRLV crlv = new ObterEmissaoCRLV();
+            wsDetranChatBot.obterEmissaoCrlvResponse response = crlv.obterEmissaoCRLV(pass, "OEP0594", 64479505448);
+            //var erro = new wsDetranChatBot.erro();
+            LicenseDialogDetails.MarcaModelo = response.obterEmissaoCrlvResult.codigoRetorno;
+
+            //var teste = result.codigoRetorno;
+
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?"),
+                Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo?" + LicenseDialogDetails.MarcaModelo),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Anual (BANESE)", "Licenciamento Anual (Outros Bancos)", "Emitir Documento de Circulação (CRLV-e)", "Nenhuma das alternativas" }),
             };
 

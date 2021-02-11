@@ -54,16 +54,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            //Consumer1.ConsumerAsyncXML().Wait();
-            //var bot = new wsDetranChatBot.autenticacao();
-            //bot.loginUsuario = "0";
-            //bot.senhaUsuario = "0";
-
-            //var consulta = new wsDetranChatBot.obterEmissaoCrlvRequest(bot, "OEK4680", 16736005660);
-            //var result = new wsDetranChatBot.obterEmissaoCrlvResult();
-            //var response = new wsDetranChatBot.obterEmissaoCrlvResponse();
-
-            //LicenseDialogDetails.MarcaModelo = result.renavam.ToString();
 
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             if (Vehicle.ValidationVehicleType() == true)

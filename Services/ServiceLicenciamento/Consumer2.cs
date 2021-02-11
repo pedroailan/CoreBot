@@ -3,17 +3,15 @@ using CoreBot.Services.ServiceLicenciamento;
 using Microsoft.BotBuilderSamples;
 using Refit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreBot.Services.Models
 {
-    public class Consumer
+    public class Consumer2
     {
-        static InFields inFields;
         public static async Task ConsumerAsync()
         {
+            var inFields = new InFields();
             try
             {
                 var codRenavam = RestService.For<IApiService>("http://172.28.64.58:8176/wsChatbot?wsdl");
@@ -23,6 +21,7 @@ namespace CoreBot.Services.Models
             }
             catch (Exception e)
             {
+
                 LicenseDialogDetails.Error = e.Message;
             }
 

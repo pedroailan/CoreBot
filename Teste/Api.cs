@@ -14,9 +14,8 @@ namespace CoreBot
 {
     public class Api
     {
+
         LicenseDialogDetails LicenseDialogDetails;
-
-
         /// <summary>
         /// API REMOTA
         /// </summary>
@@ -87,7 +86,7 @@ namespace CoreBot
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-
+            //var details = new LicenseDialogDetails();
             dynamic resultado = serializer.DeserializeObject(json2);
 
             foreach (KeyValuePair<string, object> entry in resultado)

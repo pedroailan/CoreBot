@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace CoreBot.Services.Fields
 {
+    
     public class InFields
     {
-        LicenseDialogDetails LicenseDialogDetails;
+        static LicenseDialogDetails LicenseDialogDetails;
 
         public int renavam = Convert.ToInt32(LicenseDialogDetails.Renavam);
         public int codSeguranca = Convert.ToInt32(LicenseDialogDetails.SecureCode);

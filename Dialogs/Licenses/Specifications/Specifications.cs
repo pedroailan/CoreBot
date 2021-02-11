@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Models;
+using CoreBot.Services.Models;
+using CoreBot.Services.ValidationServiceLicenciamento;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -52,6 +54,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            //Consumer1.ConsumerAsyncXML().Wait();
+            //var bot = new wsDetranChatBot.autenticacao();
+            //bot.loginUsuario = "0";
+            //bot.senhaUsuario = "0";
+
+            //var consulta = new wsDetranChatBot.obterEmissaoCrlvRequest(bot, "OEK4680", 16736005660);
+            //var result = new wsDetranChatBot.obterEmissaoCrlvResult();
+            //var response = new wsDetranChatBot.obterEmissaoCrlvResponse();
+
+            //LicenseDialogDetails.MarcaModelo = result.renavam.ToString();
+
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             if (Vehicle.ValidationVehicleType() == true)
             {
@@ -135,6 +148,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            
+
             string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
             string anoAtual = DateTime.Now.Year.ToString();
 

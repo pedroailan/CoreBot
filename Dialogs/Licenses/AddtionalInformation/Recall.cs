@@ -36,7 +36,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         }
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Há uma chamda da montadora de seu veículo para RECALL! Para mais informações acesse o site do detran e verifique a situação do seu veículo"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Há uma chamada da montadora de seu veículo para RECALL! Para mais informações acesse o site do detran e verifique a situação do seu veículo"), cancellationToken);
             var choices = new[] { "Ir para o site" };
             var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
             {

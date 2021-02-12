@@ -78,15 +78,15 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.SecureCode = stepContext.Result.ToString();
+            LicenseDialogDetails.codSegurancaIn = stepContext.Result.ToString();
           
-            if (await Vehicle.ValidationSecureCode(LicenseDialogDetails.SecureCode) == true)
+            if (await Vehicle.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaIn) == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
-                if (Vehicle.Situation(LicenseDialogDetails.Placa) == true)
+                if (Vehicle.Situation(LicenseDialogDetails.placa) == true)
                 {
                     await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
                     if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)

@@ -11,15 +11,15 @@ namespace CoreBot.Services.Fields
     {
         static LicenseDialogDetails LicenseDialogDetails;
 
-        public int renavam = Convert.ToInt32(LicenseDialogDetails.Renavam);
-        public int codSeguranca = Convert.ToInt32(LicenseDialogDetails.SecureCode);
+        public int renavam;
+        public int codSeguranca;
         public string restricao; //será enviado com base no retorno da validação
-        public int exercicioLicenciamento = Convert.ToInt32(LicenseDialogDetails.AnoExercicio);
-        public string tipoAutorizacaoRNTRC = LicenseDialogDetails.TipoDeAutorização;
-        public string nroAutorizacao = LicenseDialogDetails.NumeroDeAutorizacao;
-        public string dataValidadeRNTRC = LicenseDialogDetails.DataDeAutorizacao;
-        public string isencaoIPVA = LicenseDialogDetails.IsencaoIPVA;
-        public string tipoDocumentoIn = LicenseDialogDetails.TipoDocumento;
-        public int anoLicenciamento = Convert.ToInt32(LicenseDialogDetails.AnoExercicio);
+        public int exercicioLicenciamento;
+        public string tipoAutorizacaoRNTRC;
+        public string nroAutorizacao;
+        public string dataValidadeRNTRC;
+        public string isencaoIPVA;
+        public string tipoDocumentoIn;
+        public int anoLicenciamento;
     }
 }

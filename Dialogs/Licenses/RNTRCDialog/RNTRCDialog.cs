@@ -50,7 +50,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            LicenseDialogDetails.TipoDeAutorização = stepContext.Values["choice"].ToString().ToLower();
+            LicenseDialogDetails.tipoAutorizacaoRNTRCIn = stepContext.Values["choice"].ToString().ToLower();
             var promptMessage = MessageFactory.Text("Para continuarmos informe o número da autorização", InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
         }
@@ -58,7 +58,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> AuthorizationDataStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.NumeroDeAutorizacao = stepContext.Result.ToString();
+            LicenseDialogDetails.nroAutorizacaoRNTRCIn = stepContext.Result.ToString();
             
             var promptMessage = MessageFactory.Text("Por fim, informe a data de validade da autorização\r\n" +
                                                      "Exemplo: 12/12/2021", InputHints.ExpectingInput);
@@ -70,9 +70,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> AuthorizationValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.DataDeAutorizacao = stepContext.Result.ToString();
+            LicenseDialogDetails.dataValidadeRNTRC = stepContext.Result.ToString();
             ///Valida tipo da autorização
-            if (Vehicle.ValidationType(LicenseDialogDetails.TipoDeAutorização, LicenseDialogDetails.NumeroDeAutorizacao, LicenseDialogDetails.DataDeAutorizacao) == true)
+            if (Vehicle.ValidationType(LicenseDialogDetails.tipoAutorizacaoRNTRCIn, LicenseDialogDetails.nroAutorizacaoRNTRCIn, LicenseDialogDetails.dataValidadeRNTRC) == true)
             {
 
                 return await stepContext.EndDialogAsync(LicenseDialogDetails, cancellationToken);

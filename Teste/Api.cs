@@ -31,7 +31,7 @@ namespace CoreBot
             }
             catch (Exception e)
             {
-                LicenseDialogDetails.MarcaModelo = e.Message;
+                //LicenseDialogDetails.MarcaModelo = e.Message;
             }
         
         }
@@ -93,9 +93,9 @@ namespace CoreBot
             {
                 var key = entry.Key;
                 var value = entry.Value as string;
-                if (key == "marcamodelo") LicenseDialogDetails.MarcaModelo = value;
-                if (key == "proprietario") LicenseDialogDetails.NomeProprietario = value;
-                if (key == "placa") LicenseDialogDetails.Placa = value;
+                if (key == "marcamodelo") LicenseDialogDetails.marcaModelo = value;
+                if (key == "proprietario") LicenseDialogDetails.nomeProprietario = value;
+                if (key == "placa") LicenseDialogDetails.placa = value;
 
             }
         }

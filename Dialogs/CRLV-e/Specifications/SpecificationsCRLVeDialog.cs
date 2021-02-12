@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Fields;
 using CoreBot.Models;
+using CoreBot.Models.Generate.Converter;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -77,6 +78,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
+
             // Define choices
             var choices = new[] { "Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)" };
 
@@ -99,8 +102,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 Actions = choices.Select(choice => new AdaptiveOpenUrlAction
                 {
                     Title = choice,
-                    Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1")
-
+                    Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1"),
                 }).ToList<AdaptiveAction>(),
             };
 

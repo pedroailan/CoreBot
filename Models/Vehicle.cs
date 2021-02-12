@@ -21,7 +21,7 @@ namespace CoreBot.Models
 
         public async static Task<bool> ValidationSecureCode(string SecureCode)
         {
-            if (SecureCode.Length > 0)
+            if (SecureCode.Length > 0 && ValidatonFormat(SecureCode) == true)
             {
                 ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
                 var crlv = await obter.obterEmissaoCRLV(Convert.ToDouble(SecureCode));
@@ -111,6 +111,15 @@ namespace CoreBot.Models
         public static bool ValidationVehicleExemption()
         {
             return true;
+        }
+
+        internal static bool ValidatonFormat(string secureCode)
+        {
+            if (Char.IsDigit(secureCode, 0))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

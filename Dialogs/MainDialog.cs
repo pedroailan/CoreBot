@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot;
+using CoreBot.Fields;
 using CoreBot.Services.WSDLService;
 using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;
@@ -67,6 +68,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var LicenseDialogDetails = new LicenseDialogDetails();
+            var CRLVDialogDetails = new CRLVDialogDetails();
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
@@ -81,7 +83,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     LicenseDialogDetails.Banco = "F";
                     return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
-                    return await stepContext.ReplaceDialogAsync(nameof(RootCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {

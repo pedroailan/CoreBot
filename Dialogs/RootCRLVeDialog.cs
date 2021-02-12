@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
+using CoreBot.Fields;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -16,7 +17,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RootCRLVeDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
+        private CRLVDialogDetails CRLVDialogDetails;
 
         public RootCRLVeDialog()
             : base(nameof(RootCRLVeDialog))
@@ -46,7 +47,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
             await stepContext.Context.SendActivityAsync("Aqui você pode emitir o Documento de Circulação de porte obrigatório (CRVL-e).\r\n");
             
@@ -61,7 +62,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -118,19 +119,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            //stepContext.Values["choice"].ToString().ToLower();
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
 
-                return await stepContext.BeginDialogAsync(nameof(SecureCodeCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
 
             }
             else
             {
-                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
             }
         }
     }

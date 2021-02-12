@@ -20,7 +20,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class SpecificationsCRLVeDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
+        private CRLVDialogDetails CRLVDialogDetails;
 
 
         public SpecificationsCRLVeDialog()
@@ -44,9 +44,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + CRLVDialogDetails.renavam +
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: " + CRLVDialogDetails.renavam +
                                                                             "\r\nPlaca: " + CRLVDialogDetails.placaOut +
                                                                             "\r\nProprietário: " + CRLVDialogDetails.nomeProprietario),
                                                                             cancellationToken);
@@ -61,7 +61,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ConfirmDataAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -70,7 +70,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Beleza, vamos repetir o processo para outro veículo");
-                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), CRLVDialogDetails, cancellationToken);
             }
         }
 

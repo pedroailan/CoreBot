@@ -5,6 +5,10 @@ using System;
 
 namespace Microsoft.BotBuilderSamples
 {
+    /// <summary>
+    /// OBJETIVO: Classe responsável por manter atributos que recebem dados de saída do WebService mediante as entradas de CodSegurança e Placa.
+    /// AUTOR(ES): Pedro Ailan
+    /// </summary>
     public class LicenseDialogDetails
     {
         /// ENTRADA

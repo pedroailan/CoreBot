@@ -17,13 +17,13 @@ using CoreBot.Fields;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class SecureCodeCRLVeDialog : CancelAndHelpDialog
+    public class RequiredSecureCodeCRLVeDialog : CancelAndHelpDialog
     {
 
         private CRLVDialogDetails CRLVDialogDetails;
 
-        public SecureCodeCRLVeDialog()
-            : base(nameof(SecureCodeCRLVeDialog))
+        public RequiredSecureCodeCRLVeDialog()
+            : base(nameof(RequiredSecureCodeCRLVeDialog))
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "Pt-br"));
@@ -73,20 +73,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = secureCode }, cancellationToken);
         }
 
-        /// <summary>
-        /// OBJETIVO: 
-        ///     Realizar a primeira validação do código de segurança
-        ///     Se for verdade, as Fields do CRLV já estarão preenchidas em tempo de execução
-        /// </summary>
-        /// <param name="stepContext"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
-            if (await Vehicle.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
+            if (CRLVDialogDetails.codSegurancaIn == CRLVDialogDetails.codSegurançaOut) // Se for verdade, as Fields do CRLV já estarão preenchidas em tempo de execução
             {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
             }
@@ -94,10 +86,18 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
 
-                //CRLVDialogDetails.Count += 1;
-                return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
-                
-                
+                CRLVDialogDetails.Count += 1;
+                if (CRLVDialogDetails.Count < 3)
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança\r\n" +
+                                                                "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois\r\n" +
+                                                                "ou entre em contato com o DETRAN, para obter mais informações");
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
             }
         }
     }

@@ -13,13 +13,14 @@ using Microsoft.Bot.Builder.Dialogs.Choices;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using CoreBot.Fields;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class PlacaDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
+        private CRLVDialogDetails CRLVDialogDetails;
 
         public PlacaDialog()
             : base(nameof(PlacaDialog))
@@ -29,6 +30,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new SecureCodeCRLVeDialog());
             AddDialog(new SpecificationsCRLVeDialog());
+            AddDialog(new RequiredSecureCodeCRLVeDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 RenavamStepAsync,
@@ -67,7 +69,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             ), cancellationToken);
 
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe a PLACA do seu veículo"), cancellationToken);
             var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = renavam }, cancellationToken);
@@ -75,17 +77,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ValidationRenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
 
-            LicenseDialogDetails.Placa = stepContext.Result.ToString();
+            CRLVDialogDetails.placaIn = stepContext.Result.ToString();
 
-            if (Vehicle.ValidationPlaca(LicenseDialogDetails.Placa) == true)
+            if (await Vehicle.ValidationPlaca(CRLVDialogDetails.placaIn) == true) // Validação da placa
             {
-                if (Vehicle.Situation(LicenseDialogDetails.Placa) == true)
+                if (Vehicle.Situation(CRLVDialogDetails.placaIn) == true) // Caso possua alguma pendência, por hora não se aplica
                 {
-                    if (Vehicle.ExistSecureCodePlaca(LicenseDialogDetails.Placa) == true)
+                    if (Vehicle.ExistSecureCodePlaca() == true)
                     {
-                        LicenseDialogDetails.SecureCodeBool = true;
+                        //CRLVDialogDetails.secureCodeBool = true;
                         await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");
                         AdaptiveCard card = new AdaptiveCard("1.0")
                         {
@@ -120,7 +122,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     }
                     else
                     {
-                        return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                        return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
                     }
                 }
                 else
@@ -132,19 +134,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Opa, Esta placa é inválida");
-                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
             }
         }
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
 
-                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
 
             }
             else

@@ -1,4 +1,5 @@
-﻿using CoreBot.Services.WSDLService.obterEmissaoCRLV;
+﻿using CoreBot.Fields;
+using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.BotBuilderSamples;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,11 @@ namespace CoreBot.Models
             if (SecureCode.Length > 0)
             {
                 ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
-                var crlv = await obter.obterEmissaoCRLV("", Convert.ToDouble(SecureCode));
-                if (crlv.codigoRetorno == 0)
+                var crlv = await obter.obterEmissaoCRLV(Convert.ToDouble(SecureCode));
+                if (CRLVDialogDetails.Erro.codigo == 0)
                 {
                     return true;
-                }
+                } 
             }
             return false;
             //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
@@ -47,15 +48,41 @@ namespace CoreBot.Models
             return false;
         }
 
-        public static bool ValidationPlaca(string placa)
+        /// <summary>
+        /// OBJETIVO: Realizar validação da entrada PLACA com o WebService, chamando o método obterEmissaoCRLV.
+        /// </summary>
+        /// <param name="placa"></param>
+        /// <returns>True ou False, a depender do código de retorno do Webservice</returns>
+        public async static Task<bool> ValidationPlaca(string placa)
         {
-            return true;
+
+            if (placa.Length > 0)
+            {
+                ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
+                var crlv = await obter.obterEmissaoCRLV(placa);
+                if (crlv.codigoRetorno != 0)
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+
         }
 
-
-        public static bool ExistSecureCodePlaca(string placa)
+        /// <summary>
+        /// OBJETIVO: Verificar se o veículo possui código de segurança.
+        /// </summary>
+        /// <returns>True ou False, a depender se o código de segurança em CRLVDialogDetails é maior que 0.</returns>
+        public static bool ExistSecureCodePlaca()
         {
-            return true;
+            if (Convert.ToDouble(CRLVDialogDetails.codSegurançaOut) > 0)
+            {
+                CRLVDialogDetails.secureCodeBool = true;
+                return true;
+            }
+            return false;
         }
 
         public static bool Pendency(string SecureCode)
@@ -63,7 +90,7 @@ namespace CoreBot.Models
             //return Api.LerArquivoJson("ano", SecureCode);
             return true;
         }
-            
+
 
 
         public static bool ValidationType(string tipoDeAutorização, string numeroDeAutorizacao, string dataDeAutorizacao)

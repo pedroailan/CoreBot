@@ -13,9 +13,13 @@ using CoreBot.Models.Generate;
 
 namespace CoreBot.Models
 {
+    /// <summary>
+    /// OBJETIVO: Geração do PDF do Documento de Arrecadação (DUA)
+    /// AUTOR(ES): Felipe Falcão
+    /// </summary>
     public class GeneratePdfDUA
     {
-        public static void GenerateInvoice(string Ano)
+        public static void GenerateInvoice()
         {
             Document doc = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
 
@@ -38,7 +42,8 @@ namespace CoreBot.Models
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
+            //string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
+            string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
 
             doc.Add(Header());
@@ -130,7 +135,7 @@ namespace CoreBot.Models
             cell5.Border = 1;
             table1.AddCell(cell5);
 
-            PdfPCell cell6 = new PdfPCell(new Phrase("CHASSI: ", FontePadrao));
+            PdfPCell cell6 = new PdfPCell(new Phrase("CHASSI: " + FieldsGenerate.chassi, FontePadrao));
             cell6.Colspan = 2;
             cell6.HorizontalAlignment = 0;
             cell6.Border = 1;
@@ -168,7 +173,7 @@ namespace CoreBot.Models
             cell12.Border = 1;
             table1.AddCell(cell12);
 
-            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.vencimento, FontePadrao));
+            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.dataVenc, FontePadrao));
             cell13.HorizontalAlignment = 0;
             cell13.Border = 1;
             cell13.Colspan = 2;
@@ -381,7 +386,7 @@ namespace CoreBot.Models
             viaCell1.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell1);
 
-            PdfPCell viaCell2 = new PdfPCell(new Phrase("VAL DUA: " + FieldsGenerate.validadeDUA, FontePadrao));
+            PdfPCell viaCell2 = new PdfPCell(new Phrase("VAL DUA: " + FieldsGenerate.vencimento, FontePadrao));
             viaCell2.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell2);
 

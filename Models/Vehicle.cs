@@ -61,10 +61,21 @@ namespace CoreBot.Models
             return true;
         }
 
-        public static bool ValidationRenavam(string Renavam)
+        public async static Task<bool> ValidationRenavam(string Renavam)
         {
-            if (Renavam == "1234") return true;
+            if (Renavam.Length > 0 && ValidatonFormat(Renavam) == true)
+            {
+                //16736005660
+                ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
+                var crlv = await obter.validarServicoLicenciamento(Convert.ToDouble(Renavam), 0, "D", 2020);
+                if (LicenseDialogDetails.Erro.codigo == 0)
+                {
+                    return true;
+                }
+            }
             return false;
+            //if (Renavam == "1234") return true;
+            //return false;
         }
 
         /// <summary>

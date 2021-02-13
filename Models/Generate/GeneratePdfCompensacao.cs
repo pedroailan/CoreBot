@@ -13,6 +13,10 @@ using CoreBot.Models.Generate;
 
 namespace CoreBot.Models.Generate
 {
+    /// <summary>
+    /// OBJETIVO: Geração do PDF de Ficha de Compensação
+    /// AUTOR(ES): Felipe Falcão
+    /// </summary>
     public class GeneratePdfCompensacao
     {
 
@@ -24,7 +28,7 @@ namespace CoreBot.Models.Generate
             // string path = @"C:\Users\fsfalcao\Downloads\" + "CONTRATO.pdf";
             string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            FileStream file = new FileStream(caminho + "/DUA - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
+            FileStream file = new FileStream(caminho + "/Ficha de Compensação - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
             PdfWriter writer = PdfWriter.GetInstance(doc, file);
 
             WriteDocument(doc, writer);
@@ -40,8 +44,10 @@ namespace CoreBot.Models.Generate
             Font FonteVia = FontFactory.GetFont("Verdana", 6F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
-            string pathBanese = @"C:\Users\fsfalcao\Downloads\" + "banese.jpg";
+            //string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
+            //string pathBanese = @"C:\Users\fsfalcao\Downloads\" + "banese.jpg";
+            string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
+            string pathBanese = @"C:\Users\Felipe\Downloads\" + "banese.png";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
             iTextSharp.text.Image imageBanese = iTextSharp.text.Image.GetInstance(pathBanese);
 
@@ -138,7 +144,7 @@ namespace CoreBot.Models.Generate
             cell5.Border = 1;
             table1.AddCell(cell5);
 
-            PdfPCell cell6 = new PdfPCell(new Phrase("CHASSI: ", FontePadrao));
+            PdfPCell cell6 = new PdfPCell(new Phrase("CHASSI: " + FieldsGenerate.chassi, FontePadrao));
             cell6.Colspan = 2;
             cell6.HorizontalAlignment = 0;
             cell6.Border = 1;
@@ -150,7 +156,7 @@ namespace CoreBot.Models.Generate
             cell8.Border = 1;
             table1.AddCell(cell8);
 
-            PdfPCell cell11 = new PdfPCell(new Phrase("VALIDADE DESTE DOC:\n" + FieldsGenerate.validade, FontePadrao));
+            PdfPCell cell11 = new PdfPCell(new Phrase("VALIDADE DESTE DOC:\n" + FieldsGenerate.vencimento, FontePadrao));
             cell11.HorizontalAlignment = 0;
             cell11.Border = 1;
             table1.AddCell(cell11);
@@ -168,7 +174,7 @@ namespace CoreBot.Models.Generate
             cell4.Border = 1;
             table1.AddCell(cell4);
 
-            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.vencimento, FontePadrao));
+            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.dataVenc, FontePadrao));
             cell13.HorizontalAlignment = 0;
             cell13.Border = 1;
             cell13.Colspan = 3;
@@ -241,7 +247,6 @@ namespace CoreBot.Models.Generate
                     cellDisc1.HorizontalAlignment = 0;
                     cellDisc1.Border = 0;
                     tableMulta.AddCell(cellDisc1);
-
                 }
             }
             else
@@ -307,7 +312,6 @@ namespace CoreBot.Models.Generate
                     cellDisc1.HorizontalAlignment = 0;
                     cellDisc1.Border = 0;
                     tablePendencias.AddCell(cellDisc1);
-
                 }
             }
             else
@@ -362,7 +366,7 @@ namespace CoreBot.Models.Generate
             viaCell1.Colspan = 5;
             tableVia.AddCell(viaCell1);
 
-            PdfPCell viaCell2 = new PdfPCell(new Phrase("Vencimento: \n" + FieldsGenerate.validadeDUA, FontePadrao));
+            PdfPCell viaCell2 = new PdfPCell(new Phrase("Vencimento: \n" + FieldsGenerate.vencimento, FontePadrao));
             viaCell2.HorizontalAlignment = 0;
             viaCell2.Colspan = 1;
             tableVia.AddCell(viaCell2);
@@ -374,7 +378,7 @@ namespace CoreBot.Models.Generate
             cell2.Colspan = 4;
             tableVia.AddCell(cell2);
 
-            PdfPCell cell3 = new PdfPCell(new Phrase("Agên./Cód. Beneficiário.:\n 0xx / xx.4000xx-x" + FieldsGenerate.validadeDUA, FontePadrao));
+            PdfPCell cell3 = new PdfPCell(new Phrase("Agên./Cód. Beneficiário.:\n 0xx / xx.4000xx-x" + FieldsGenerate.vencimento, FontePadrao));
             cell3.HorizontalAlignment = 0;
             cell3.Colspan = 2;
             tableVia.AddCell(cell3);

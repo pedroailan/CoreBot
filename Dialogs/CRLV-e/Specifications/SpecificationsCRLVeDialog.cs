@@ -34,8 +34,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 InfoStepAsync,
                 ConfirmDataAsync,
-                FinalStepAsync
-
+                FinalStepAsync,
+                DownloadStepAsync
             }));
 
             // The initial child Dialog to run.
@@ -78,50 +78,100 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
+            //ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
 
-            // Define choices
-            var choices = new[] { "Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)" };
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Este é seu Documento de Circulação de Porte Obrigatório (CRLV-e)!"));
 
-            // Create card
-            var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
+            AdaptiveCard card = new AdaptiveCard("1.0")
             {
-                // Use LINQ to turn the choices into submit actions
                 Body =
-                {
-                    new AdaptiveImage()
                     {
-                        Type = "Image",
-                        Size = AdaptiveImageSize.Auto,
-                        Style = AdaptiveImageStyle.Default,
-                        HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
-                        Separator = true,
-                        Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+                        new AdaptiveImage()
+                        {
+                            Type = "Image",
+                            Size = AdaptiveImageSize.Auto,
+                            Style = AdaptiveImageStyle.Default,
+                            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                            Separator = true,
+                            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+                        }
                     }
-                },
-                Actions = choices.Select(choice => new AdaptiveOpenUrlAction
-                {
-                    Title = choice,
-                    Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1"),
-                }).ToList<AdaptiveAction>(),
             };
 
-            // Prompt
-            await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
             {
-                Prompt = (Activity)MessageFactory.Attachment(new Attachment
-                {
-                    ContentType = AdaptiveCard.ContentType,
-                    // Convert the AdaptiveCard to a JObject
-                    Content = JObject.FromObject(card),
-                }),
-                Choices = ChoiceFactory.ToChoices(choices),
-                // Don't render the choices outside the card
-                Style = ListStyle.None,
-            },
-                cancellationToken);
+                Content = card,
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Name = "cardName"
+            }
+            ), cancellationToken);
 
-            return await stepContext.EndDialogAsync(cancellationToken);
+
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text($"Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)?"),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+            };
+
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+
+            // Define choices
+            //var choices = new[] { "Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)" };
+
+            //// Create card
+            //var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
+            //{
+            //    // Use LINQ to turn the choices into submit actions
+            //    Body =
+            //    {
+            //        new AdaptiveImage()
+            //        {
+            //            Type = "Image",
+            //            Size = AdaptiveImageSize.Auto,
+            //            Style = AdaptiveImageStyle.Default,
+            //            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+            //            Separator = true,
+            //            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+            //        }
+            //    },
+            //    Actions = choices.Select(choice => new AdaptiveOpenUrlAction
+            //    {
+            //        Title = choice,
+            //        Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1"),
+            //    }).ToList<AdaptiveAction>(),
+            //};
+
+            //// Prompt
+            //await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            //{
+            //    Prompt = (Activity)MessageFactory.Attachment(new Attachment
+            //    {
+            //        ContentType = AdaptiveCard.ContentType,
+            //        // Convert the AdaptiveCard to a JObject
+            //        Content = JObject.FromObject(card),
+            //    }),
+            //    Choices = ChoiceFactory.ToChoices(choices),
+            //    // Don't render the choices outside the card
+            //    Style = ListStyle.None,
+            //},
+            //    cancellationToken);
+
+            //return await stepContext.EndDialogAsync(cancellationToken);
+        }
+
+        private async Task<DialogTurnResult> DownloadStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            if (stepContext.Values["choice"].ToString().ToLower() == "sim")
+            {
+                ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
+                return await stepContext.EndDialogAsync(cancellationToken);
+            }
+            else
+            {
+                return await stepContext.EndDialogAsync(cancellationToken);
+            }
         }
 
     }

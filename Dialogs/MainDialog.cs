@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoreBot;
 using CoreBot.Fields;
+using CoreBot.Models;
+using CoreBot.Models.Generate;
 using CoreBot.Services.WSDLService;
 using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;

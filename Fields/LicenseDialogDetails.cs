@@ -7,7 +7,8 @@ namespace Microsoft.BotBuilderSamples
 {
     /// <summary>
     /// OBJETIVO: Classe responsável por manter atributos que recebem dados de saída do WebService mediante as entradas de CodSegurança e Placa.
-    /// AUTOR(ES): Pedro Ailan
+    /// IN: entrada de dados pelo usuário / OUT: entrada de dados pelo WebService
+    /// AUTOR(ES): Pedro Ailan e Felipe Falcão
     /// </summary>
     public class LicenseDialogDetails
     {
@@ -15,6 +16,7 @@ namespace Microsoft.BotBuilderSamples
         public static string[] vetDescDebitos = new string[20];
         public static string marcaModelo;
         public static string placa;
+        public static string renavamOut;
 
         public class Erro
         {
@@ -24,6 +26,7 @@ namespace Microsoft.BotBuilderSamples
         }
 
         public static string codSegurancaIn;
+        public static string renavamIn;
 
         public class RecallPendente
         {
@@ -40,7 +43,7 @@ namespace Microsoft.BotBuilderSamples
         ///Saídas para o método validarServicoLicenciamento
         /// </summary>
         public static string codSegurancaOut;
-        public static string renavamOut;
+        //public static string renavamOut;
         //public static string placa;
         //public static string marcaModelo;
         public static string nomeProprietario;
@@ -74,6 +77,7 @@ namespace Microsoft.BotBuilderSamples
         public static string cpfProcurador;
         public static int numeroDocumento;
         public static string tipoDocumentoIn;
+        public static string tipoDocumentoOut;
         public static string cor;
         public static int[] vetTaxas = new int[17];
         //public static string[] vetDescDebitos = new string[20];
@@ -83,7 +87,7 @@ namespace Microsoft.BotBuilderSamples
         //public static string marcaModelo;
         public static string nome;
         //public static string placa;
-        public static string renavam;
+        //public static string renavamOut;
         public static string tipo;
         public static string[] vetValorA = new string[17];
         public static string valorApagar;

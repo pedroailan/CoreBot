@@ -30,6 +30,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "Pt-br"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new SecureCodeDialog());
+            AddDialog(new RequiredSecureCodeLicenseDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 RenavamStepAsync,
@@ -78,11 +79,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            LicenseDialogDetails.renavam = stepContext.Result.ToString();
+            LicenseDialogDetails.renavamIn = stepContext.Result.ToString();
 
-            if (Vehicle.ValidationRenavam(LicenseDialogDetails.renavam) == true)
+            if (await Vehicle.ValidationRenavam(LicenseDialogDetails.renavamIn) == true)
             {
-                if (Vehicle.ExistSecureCode(LicenseDialogDetails.renavam) == true)
+                if (Vehicle.ExistSecureCode(LicenseDialogDetails.renavamIn) == true)
                 {
                     LicenseDialogDetails.SecureCodeBool = true;
                     await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo");
@@ -149,8 +150,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
-
-                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                // SecureCodeDialog
+                return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeLicenseDialog), LicenseDialogDetails, cancellationToken);
 
             }
             else

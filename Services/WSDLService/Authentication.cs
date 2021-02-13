@@ -17,7 +17,7 @@ namespace CoreBot.Services.WSDLService
             }
             catch (Exception err)
             {
-                LicenseDialogDetails.Error = err.Message;
+                //LicenseDialogDetails.Error = err.Message;
                 return null;
             }
         }
@@ -33,7 +33,7 @@ namespace CoreBot.Services.WSDLService
             }
             catch (Exception err)
             {
-                LicenseDialogDetails.Error = err.Message;
+                //LicenseDialogDetails.Error = err.Message;
                 return null;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using CoreBot.Fields;
 using CoreBot.Services.WSDLService.obterEmissaoCRLV;
+using CoreBot.Services.WSDLService.validarServicoLicenciamento;
 using Microsoft.BotBuilderSamples;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,24 @@ namespace CoreBot.Models
                 {
                     return true;
                 } 
+            }
+            return false;
+            //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
+            //{
+            //    return true;
+            //}
+        }
+        public async static Task<bool> ValidationSecureCodeLicenciamento(string SecureCode)
+        {
+            if (SecureCode.Length > 0 && ValidatonFormat(SecureCode) == true)
+            {
+                //16736005660
+                ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
+                var crlv = await obter.validarServicoLicenciamento(499837630, Convert.ToDouble(SecureCode), "D", 2020);
+                if (LicenseDialogDetails.Erro.codigo == 0)
+                {
+                    return true;
+                }
             }
             return false;
             //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)

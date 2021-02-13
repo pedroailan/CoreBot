@@ -21,7 +21,7 @@ namespace CoreBot.Services.ValidationServiceLicenciamento
             }
             catch (Exception e)
             {
-                LicenseDialogDetails.Error = e.Message;
+                //LicenseDialogDetails.Error = e.Message;
             }
         }
 
@@ -42,9 +42,9 @@ namespace CoreBot.Services.ValidationServiceLicenciamento
                             for (int i = 0; i < reader.AttributeCount; i++)
                             {   if (reader.Name == "wsdl:message")
                                 {
-                                    LicenseDialogDetails.MarcaModelo = reader.LocalName;
-                                    LicenseDialogDetails.Placa = reader.LineNumber.ToString();
-                                    LicenseDialogDetails.NomeProprietario = reader.BaseURI;
+                                    //LicenseDialogDetails.MarcaModelo = reader.LocalName;
+                                    //LicenseDialogDetails.Placa = reader.LineNumber.ToString();
+                                    //LicenseDialogDetails.NomeProprietario = reader.BaseURI;
                                     return;
                                 }
                             }

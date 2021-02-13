@@ -22,7 +22,7 @@ namespace CoreBot.Services.Models
             catch (Exception e)
             {
 
-                LicenseDialogDetails.Error = e.Message;
+                //LicenseDialogDetails.Error = e.Message;
             }
 
         }

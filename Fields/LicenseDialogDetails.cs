@@ -11,26 +11,120 @@ namespace Microsoft.BotBuilderSamples
     /// </summary>
     public class LicenseDialogDetails
     {
-        /// ENTRADA
-        public static string Renavam { get; set; }
-        public static string SecureCode { get; set; }
-        public static string TipoDeAutorização { get; set; }
-        public static string AnoExercicio { get; set; }
-        public static string Placa { get; set; }
-        public static string NumeroDeAutorizacao { get; set; }
-        public static string DataDeAutorizacao { get; set; }
-        public string Banco { get; set; }
-        public static string IsencaoIPVA { get; set; }
+        public static int codigoRetorno;
+        public static string[] vetDescDebitos = new string[20];
+        public static string marcaModelo;
+        public static string placa;
 
-        /// SAIDA
-        public static string NomeProprietario { get; set; }
-        public static string MarcaModelo { get; set; }
-        public static string Vehicle { get; set; }
-        public bool SecureCodeBool { get; set; }
-        public int Count { get; set; }
-        public string TipoDocumento { get; set; }
+        public class Erro
+        {
+            public static int codigo;
+            public static string mensagem;
+            public static string trace;
+        }
 
-        /// EXCEÇÂO
-        public static string Error { get; set; }
+        public static string codSegurancaIn;
+
+        public class RecallPendente
+        {
+            public static int codigo;
+            public static string mensagem;
+            
+            public class listaRecall
+            {
+                public static string[] descricao;
+                public static double defeito;
+            }
+        }
+        /// <summary>
+        ///Saídas para o método validarServicoLicenciamento
+        /// </summary>
+        public static string codSegurancaOut;
+        public static string renavamOut;
+        //public static string placa;
+        //public static string marcaModelo;
+        public static string nomeProprietario;
+        public static string temRNTRC;
+        public static string tipoAutorizacaoRNTRCIn;
+        public static string tipoAutorizacaoRNTRCOut;
+        public static string nroAutorizacaoRNTRCIn;
+        public static string nroAutorizacaoRNTRCOut;
+        public static string dataValidadeRNTRC;
+        public static string temIsençãoIPVA;
+        public static string restricao;
+        public static double[] anoLicenciamento = new double[4];
+        public static double contadorAnoLicenciamento;
+        public static int contadorRegistro;
+        //public static string[] vetDescDebitos = new string[20];
+        public static double[] vetValorCotaUnica = new double[20];
+        public static double[] vetParcela1 = new double[20];
+        public static double[] vetParcela2 = new double[20];
+        public static double[] vetParcela3 = new double[20];
+        public static double totalParcela1;
+        public static double totalParcela2;
+        public static double totalParcela3;
+        public static double totalCotaUnica;
+        public static int indiceMensagem;
+        public static int[] vetCodMensagem = new int[10];
+        public static string[] vetMensagemDua = new string[80];
+
+        /// <summary>
+        ///Saídas para o método efetuarServicoLicenciamento
+        /// </summary>
+        public static string cpfProcurador;
+        public static int numeroDocumento;
+        public static string tipoDocumentoIn;
+        public static string cor;
+        public static int[] vetTaxas = new int[17];
+        //public static string[] vetDescDebitos = new string[20];
+        public static int dataProcessamento;
+        public static int exercicio;
+        public static int ind;
+        //public static string marcaModelo;
+        public static string nome;
+        //public static string placa;
+        public static string renavam;
+        public static string tipo;
+        public static string[] vetValorA = new string[17];
+        public static string valorApagar;
+        public static int vencimento;
+        public static string agencia;
+        public static string mensagem1;
+        public static string mensagem2;
+        public static string mensagem3;
+        public static string mensagem4;
+        public static string mensagem5;
+        public static string totalA;
+        public static string linhaDig;
+        public static string linhaCodBarra;
+        public static string codBarra;
+        public static string asBace1;
+        public static int indDescricao;
+        public static string[] vetDescInfracao = new string[80];
+        public static int indMensagem;
+        public static string[] vetDuaMensagem = new string[80];
+        public static string chassiSNG;
+        public static string tituloVenc;
+        public static string datsVenc;
+        public static int indParc;
+        public static int[] vetDuaParc = new int[9];
+        public static string[] vetValorA1Parc = new string[8];
+        public static string[] vetLinhaDigParc = new string[51];
+        public static string[] vetLinhaCodBarra = new string[44];
+        public static string[] vetCodBarraParc = new string[54];
+        public static string[] vetASBACE1Parc = new string[25];
+        public static string[] vetValorA2Parc = new string[8];
+        public static string[] vetValorA3Parc = new string[8];
+        public static string[] vetTotalAParc = new string[10];
+        public static int[] vetVencimentoParc = new int[8];
+        public static string flagParc1A;
+        public static string flagParc2A;
+        public static string flagParc3A;
+
+        public string Banco { get; internal set; }
+        public int Count { get; internal set; }
+        public bool SecureCodeBool { get; internal set; }
+
+        public static string IsencaoIPVA;
     }
 }

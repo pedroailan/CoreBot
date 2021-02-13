@@ -55,19 +55,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
 
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (Vehicle.ValidationVehicleType() == true)
-            {
-                LicenseDialogDetails.Vehicle = "Caminhão";
-            } else
-            {
-                LicenseDialogDetails.Vehicle = "Carro";
-            }
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //if (Vehicle.ValidationVehicleType() == true)
+            //{
+            //    LicenseDialogDetails.Vehicle = "Caminhão";
+            //} else
+            //{
+            //    LicenseDialogDetails.Vehicle = "Carro";
+            //}
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.MarcaModelo +
-                                                                            "\r\nPlaca: " + LicenseDialogDetails.Placa +
-                                                                            "\r\nProprietário: " + LicenseDialogDetails.NomeProprietario),
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.marcaModelo +
+                                                                            "\r\nPlaca: " + LicenseDialogDetails.placa +
+                                                                            "\r\nProprietário: " + LicenseDialogDetails.nomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {
@@ -143,7 +143,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
             string anoAtual = DateTime.Now.Year.ToString();
 
-            if (Vehicle.Pendency(LicenseDialogDetails.SecureCode) == true)
+            if (Vehicle.Pendency(LicenseDialogDetails.codSegurancaOut.ToString()) == true)
             {
                 await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
                 await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
@@ -171,7 +171,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            LicenseDialogDetails.AnoExercicio = stepContext.Values["choice"].ToString();
+            double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
+            LicenseDialogDetails.anoLicenciamento = data;
 
             //Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
 

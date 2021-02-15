@@ -17,6 +17,7 @@ namespace Microsoft.BotBuilderSamples
         public static string marcaModelo;
         public static string placa;
         public static string renavamOut;
+        public static bool secureCodeBool;
 
         public class Erro
         {

@@ -58,7 +58,12 @@ namespace CoreBot.Models
 
         public static bool ExistSecureCode(string Renavam)
         {
-            return true;
+            if (Convert.ToDouble(LicenseDialogDetails.codSegurancaOut) > 0)
+            {
+                LicenseDialogDetails.secureCodeBool = true;
+                return true;
+            }
+            return false;
         }
 
         public async static Task<bool> ValidationRenavam(string Renavam)
@@ -85,7 +90,6 @@ namespace CoreBot.Models
         /// <returns>True ou False, a depender do código de retorno do Webservice</returns>
         public async static Task<bool> ValidationPlaca(string placa)
         {
-
             if (placa.Length > 0)
             {
                 ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
@@ -96,9 +100,7 @@ namespace CoreBot.Models
                 }
             }
 
-
             return false;
-
         }
 
         /// <summary>

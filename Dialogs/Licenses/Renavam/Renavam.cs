@@ -81,9 +81,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             LicenseDialogDetails.renavamIn = stepContext.Result.ToString();
 
-            if (await Vehicle.ValidationRenavam(LicenseDialogDetails.renavamIn) == true)
+            if (await VehicleLicense.ValidationRenavam(LicenseDialogDetails.renavamIn) == true)
             {
-                if (Vehicle.ExistSecureCode(LicenseDialogDetails.renavamIn) == true)
+                if (VehicleLicense.ExistSecureCode() == true)
                 {
                     LicenseDialogDetails.SecureCodeBool = true;
                     await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo");

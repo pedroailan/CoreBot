@@ -14,6 +14,7 @@ using CoreBot.Models;
 using AdaptiveCards;
 using Microsoft.Extensions.Options;
 using CoreBot.Fields;
+using CoreBot.Models.Methods;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -87,7 +88,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
-            if (await Vehicle.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
+            if (await VehicleCRLV.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
             {
                 await stepContext.Context.SendActivitiesAsync(new Activity[]
                     {

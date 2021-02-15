@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using CoreBot.Fields;
+using CoreBot.Models.Methods;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -81,11 +82,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             CRLVDialogDetails.placaIn = stepContext.Result.ToString();
 
-            if (await Vehicle.ValidationPlaca(CRLVDialogDetails.placaIn) == true) // Validação da placa
+            if (await VehicleCRLV.ValidationPlaca(CRLVDialogDetails.placaIn) == true) // Validação da placa
             {
-                if (Vehicle.Situation(CRLVDialogDetails.placaIn) == true) // Caso possua alguma pendência, por hora não se aplica
+                if (VehicleLicense.Situation(CRLVDialogDetails.placaIn) == true) // Caso possua alguma pendência, por hora não se aplica
                 {
-                    if (Vehicle.ExistSecureCodePlaca() == true)
+                    if (VehicleCRLV.ExistSecureCodePlaca() == true)
                     {
                         //CRLVDialogDetails.secureCodeBool = true;
                         await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, vou precisar dessa informação");

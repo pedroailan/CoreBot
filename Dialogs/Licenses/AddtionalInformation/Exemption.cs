@@ -53,13 +53,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
-                LicenseDialogDetails.IsencaoIPVA = "true";
+                LicenseDialogDetails.IsencaoIPVA = "S";
                 return await stepContext.NextAsync(LicenseDialogDetails, cancellationToken);
 
             }
             else
             {
-                LicenseDialogDetails.IsencaoIPVA = "false";
+                LicenseDialogDetails.IsencaoIPVA = "N";
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
         }

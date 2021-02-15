@@ -80,13 +80,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.codSegurancaIn = stepContext.Result.ToString();
           
-            if (await Vehicle.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaIn) == true)
+            if (await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaIn) == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
-                if (Vehicle.Situation(LicenseDialogDetails.placa) == true)
+                if (VehicleLicense.Situation(LicenseDialogDetails.placa) == true)
                 {
                     await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
                     if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)

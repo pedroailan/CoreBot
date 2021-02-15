@@ -28,9 +28,26 @@ namespace CoreBot.Models
             string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             FileStream file = new FileStream(caminho + "/DUA - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
+
             PdfWriter writer = PdfWriter.GetInstance(doc, file);
 
             WriteDocument(doc, writer);
+        }
+
+        public static byte[] GenerateInvoice2()
+        {
+            System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+            Document document = new Document(PageSize.A4, 88f, 88f, 10f, 10f);
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+            //WriteDocument(document, writer);
+            document.Open();
+            document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
+            document.Close();
+
+            byte[] bytes = memoryStream.ToArray();
+
+            return bytes;
         }
 
         public static void WriteDocument(Document doc, PdfWriter writer)

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Models;
+using CoreBot.Models.Generate;
 using CoreBot.Services.Models;
 using CoreBot.Services.ValidationServiceLicenciamento;
 using Microsoft.Bot.Builder;
@@ -198,53 +199,57 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
                         "Após a compensação do pagamento você pode voltar aqui para emitir seu documento de circulação (CRLV-e).";
 
-            var code = "Código de Barras: 00001222 222525 56599595 5544444";
+            //var code = "Código de Barras: 00001222 222525 56599595 5544444";
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
+            //await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
+            //await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
 
 
-            // Define choices
-            var choices = new[] { "Baixar Documento de Arrecadação (DUA)" };
+            //// Define choices
+            //var choices = new[] { "Baixar Documento de Arrecadação (DUA)" };
 
-            // Create card
-            var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
-            {
-                // Use LINQ to turn the choices into submit actions
-                Body =
-                {
-                    new AdaptiveImage()
-                    {
-                        Type = "Image",
-                        Size = AdaptiveImageSize.Auto,
-                        Style = AdaptiveImageStyle.Default,
-                        HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
-                        Separator = true,
-                        Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
-                    }
-                },
-                Actions = choices.Select(choice => new AdaptiveOpenUrlAction
-                {
-                    Title = choice,
-                    Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1")
+            //// Create card
+            //var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
+            //{
+            //    // Use LINQ to turn the choices into submit actions
+            //    Body =
+            //    {
+            //        new AdaptiveImage()
+            //        {
+            //            Type = "Image",
+            //            Size = AdaptiveImageSize.Auto,
+            //            Style = AdaptiveImageStyle.Default,
+            //            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+            //            Separator = true,
+            //            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+            //        }
+            //    },
+            //    Actions = choices.Select(choice => new AdaptiveOpenUrlAction
+            //    {
+            //        Title = choice,
+            //        Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1")
 
-                }).ToList<AdaptiveAction>(),
-            };
+            //    }).ToList<AdaptiveAction>(),
+            //};
 
-            // Prompt
-            await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
-            {
-                Prompt = (Activity)MessageFactory.Attachment(new Attachment
-                {
-                    ContentType = AdaptiveCard.ContentType,
-                    // Convert the AdaptiveCard to a JObject
-                    Content = JObject.FromObject(card),
-                }),
-                Choices = ChoiceFactory.ToChoices(choices),
-                // Don't render the choices outside the card
-                Style = ListStyle.None,
-            },
-                cancellationToken);
+            //// Prompt
+            //await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            //{
+            //    Prompt = (Activity)MessageFactory.Attachment(new Attachment
+            //    {
+            //        ContentType = AdaptiveCard.ContentType,
+            //        // Convert the AdaptiveCard to a JObject
+            //        Content = JObject.FromObject(card),
+            //    }),
+            //    Choices = ChoiceFactory.ToChoices(choices),
+            //    // Don't render the choices outside the card
+            //    Style = ListStyle.None,
+            //},
+            //    cancellationToken);
+
+            var reply = MessageFactory.Text(info);
+            reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2()) };
+            await stepContext.Context.SendActivityAsync(reply);
 
             return await stepContext.EndDialogAsync(cancellationToken);
         }

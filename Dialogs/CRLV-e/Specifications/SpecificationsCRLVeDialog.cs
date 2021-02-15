@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 InfoStepAsync,
                 ConfirmDataAsync,
                 FinalStepAsync,
-                DownloadStepAsync
+                //DownloadStepAsync
             }));
 
             // The initial child Dialog to run.
@@ -70,7 +71,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Beleza, vamos repetir o processo para outro veículo");
+                await stepContext.Context.SendActivityAsync("Ok, teremos que repetir o processo.");
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog), CRLVDialogDetails, cancellationToken);
             }
         }
@@ -80,40 +81,50 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             //ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Este é seu Documento de Circulação de Porte Obrigatório (CRLV-e)!"));
 
-            AdaptiveCard card = new AdaptiveCard("1.0")
-            {
-                Body =
-                    {
-                        new AdaptiveImage()
-                        {
-                            Type = "Image",
-                            Size = AdaptiveImageSize.Auto,
-                            Style = AdaptiveImageStyle.Default,
-                            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
-                            Separator = true,
-                            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
-                        }
-                    }
-            };
+            var reply = MessageFactory.Text("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e).");
+            reply.Attachments = new List<Attachment>() { PdfOption() };
+            await stepContext.Context.SendActivityAsync(reply);
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
-            {
-                Content = card,
-                ContentType = "application/vnd.microsoft.card.adaptive",
-                Name = "cardName"
-            }
-            ), cancellationToken);
+            return await stepContext.EndDialogAsync(cancellationToken);
 
 
-            var promptOptions = new PromptOptions
-            {
-                Prompt = MessageFactory.Text($"Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
-            };
+            //await stepContext.Context.SendActivityAsync(MessageFactory.Text("Este é seu Documento de Circulação de Porte Obrigatório (CRLV-e)!"));
 
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+            //AdaptiveCard card = new AdaptiveCard("1.0")
+            //{
+            //    Body =
+            //        {
+            //            new AdaptiveImage()
+            //            {
+            //                Type = "Image",
+            //                Size = AdaptiveImageSize.Auto,
+            //                Style = AdaptiveImageStyle.Default,
+            //                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+            //                Separator = true,
+            //                Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+            //            }
+            //        }
+            //};
+
+            //await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
+            //{
+            //    Content = card,
+            //    ContentType = "application/vnd.microsoft.card.adaptive",
+            //    Name = "cardName"
+            //}
+            //), cancellationToken);
+
+
+            //var promptOptions = new PromptOptions
+            //{
+            //    Prompt = MessageFactory.Text($"Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)?"),
+            //    Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+            //};
+
+            //return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+
+            // --------------------------------------------------------------------------------------------------------------
 
             // Define choices
             //var choices = new[] { "Baixar Documento de Circulação de Porte Obrigatório (CRLV-e)" };
@@ -159,19 +170,50 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //return await stepContext.EndDialogAsync(cancellationToken);
         }
 
-        private async Task<DialogTurnResult> DownloadStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
+        //private async Task<DialogTurnResult> DownloadStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        //{
             
-            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            if (stepContext.Values["choice"].ToString().ToLower() == "sim")
+        //    stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+        //    if (stepContext.Values["choice"].ToString().ToLower() == "sim")
+        //    {
+        //        ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
+        //        var reply = MessageFactory.Text("Aqui está o seu documento");
+        //        reply.Attachments = new List<Attachment>() { pdf() };
+        //        await stepContext.Context.SendActivityAsync(reply);
+        //        return await stepContext.EndDialogAsync(cancellationToken);
+        //    }
+        //    else
+        //    {
+        //        return await stepContext.EndDialogAsync(cancellationToken);
+        //    }
+        //}
+
+        //private static Attachment GetInlineAttachment()
+        //{
+        //    var imagePath = Path.Combine(Environment.CurrentDirectory, @"Assets/App", "icon_pdf_download.png");
+        //    var imageData = Convert.ToBase64String(File.ReadAllBytes(imagePath));
+
+        //    return new Attachment
+        //    {
+        //        Name = @"Assets\App\icon_pdf_download.png",
+        //        ContentType = "image/png",
+        //        ContentUrl = $"data:image/png;base64,{imageData}",
+        //    };
+        //}
+
+        private static Attachment PdfOption()
+        {
+            //ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
+
+            //var docPath = "C:\\Users\\fsfalcao\\DownloadsCONTRATO.pdf";
+            var docData = CRLVDialogDetails.documentoCRLVePdf;
+
+            return new Attachment
             {
-                ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
-                return await stepContext.EndDialogAsync(cancellationToken);
-            }
-            else
-            {
-                return await stepContext.EndDialogAsync(cancellationToken);
-            }
+                Name = @"CRLVe_" + CRLVDialogDetails.codSegurançaOut,
+                ContentType = "application/pdf",
+                ContentUrl = $"data:application/pdf;base64,{docData}",
+            };
         }
 
     }

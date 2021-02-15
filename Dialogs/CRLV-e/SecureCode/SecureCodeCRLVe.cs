@@ -88,7 +88,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
-            if (await VehicleCRLV.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
+            if (await Vehicle.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
             {
                 await stepContext.Context.SendActivitiesAsync(new Activity[]
                     {
@@ -97,8 +97,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         new Activity { Type = "delay", Value= TaskStatus.RanToCompletion },
                         MessageFactory.Text(""),
 
-                    }, cancellationToken);
-               
+           }, cancellationToken);
+
+            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
+
+            if (await Vehicle.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
+            {            
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
             }
             else

@@ -84,20 +84,20 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         /// <returns></returns>
         private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
+            {
+                MessageFactory.Text("Estou verificando seu código de segurança, aguarde um momento."),
+                new Activity { Type = ActivityTypes.Typing },
+                new Activity { Type = "delay", Value= 8000 },
+                MessageFactory.Text(""),
+
+           }, cancellationToken);
+
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
             if (await Vehicle.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
-            {
-                await stepContext.Context.SendActivitiesAsync(new Activity[]
-                    {
-                        MessageFactory.Text(""),
-                        new Activity { Type = ActivityTypes.Typing },
-                        new Activity { Type = "delay", Value= TaskStatus.RanToCompletion },
-                        MessageFactory.Text(""),
-
-                    }, cancellationToken);
-               
+            {            
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
             }
             else

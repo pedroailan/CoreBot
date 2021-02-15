@@ -11,6 +11,7 @@ using CoreBot.Models;
 using CoreBot.Models.MethodsValidation.License;
 using CoreBot.Services.Models;
 using CoreBot.Services.ValidationServiceLicenciamento;
+using CoreBot.Services.WSDLService.efetuarServicoLicenciamento;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -179,10 +180,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
 
             //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
-            
 
-            await stepContext.Context.SendActivitiesAsync(new Activity[] 
+
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
+                //EfetuarServicoLicenciamento.efeutarServicoLicenciamento(),
                 MessageFactory.Text(""),
                 new Activity { Type = ActivityTypes.Typing },
                 new Activity { Type = "delay", Value= 2000 },
@@ -190,6 +192,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             }, cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
+
         }
 
 

@@ -1,20 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Choices;
-using Microsoft.Bot.Schema;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using CoreBot.Models;
 using AdaptiveCards;
-using Microsoft.Extensions.Options;
 using CoreBot.Fields;
 using CoreBot.Models.Methods;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Schema;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -88,21 +83,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
-            
-           await stepContext.Context.SendActivitiesAsync(new Activity[]
-            {
-                        MessageFactory.Text(""),
-                        new Activity { Type = ActivityTypes.Typing },
-                        new Activity { Type = "delay", Value= TaskStatus.RanToCompletion },
-                        MessageFactory.Text(""),
 
-           }, cancellationToken);
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
+            {
+                MessageFactory.Text(""),
+                new Activity { Type = ActivityTypes.Typing },
+                new Activity { Type = "delay", Value= TaskStatus.RanToCompletion },
+                MessageFactory.Text(""),
+
+            }, cancellationToken);
 
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
             if (await VehicleCRLV.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
-            {            
+            {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
             }
             else

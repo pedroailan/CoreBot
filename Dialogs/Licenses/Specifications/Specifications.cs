@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Models;
-using CoreBot.Models.Generate;
 using CoreBot.Services.Models;
 using CoreBot.Services.ValidationServiceLicenciamento;
 using Microsoft.Bot.Builder;
@@ -23,7 +22,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class SpecificationsDialog : CancelAndHelpDialog
     {
 
-        public LicenseDialogDetails LicenseDialogDetails;
+        LicenseDialogDetails LicenseDialogDetails;
         
 
         public SpecificationsDialog()
@@ -99,9 +98,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> TypeVehicleAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (Vehicle.ValidationVehicleType() == true)
+            if (VehicleLicenseRNTRC.ValidationVehicleType() == true)
             {
-                return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
@@ -112,7 +111,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> RecallVehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (Vehicle.ValidationVehicleRecall() == true)
+            if (VehicleLicenseRecall.ValidationVehicleRecall() == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(RecallDialog), LicenseDialogDetails, cancellationToken);
             }
@@ -125,13 +124,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> ExemptionVehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            if (Vehicle.ValidationVehicleExemption() == true)
+            if (VehicleLicenseExemption.Exemption() == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(ExemptionDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(cancellationToken);
+                return await stepContext.ContinueDialogAsync(cancellationToken);
             }
         }
 
@@ -144,7 +143,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
             string anoAtual = DateTime.Now.Year.ToString();
 
-            if (Vehicle.Pendency(LicenseDialogDetails.codSegurancaOut.ToString()) == true)
+            if (VehicleLicense.Pendency() == true)
             {
                 await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
                 await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
@@ -173,7 +172,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
-            LicenseDialogDetails.anoLicenciamento = data;
+            LicenseDialogDetails.anoLicenciamentoIn = data;
+            LicenseDialogDetails.contadorAnoLicenciamento = 1;
 
             //Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
 
@@ -199,7 +199,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
                         "Após a compensação do pagamento você pode voltar aqui para emitir seu documento de circulação (CRLV-e).";
 
-            //var code = "Código de Barras: 00001222 222525 56599595 5544444";
+            var code = "Código de Barras: 00001222 222525 56599595 5544444";
 
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);

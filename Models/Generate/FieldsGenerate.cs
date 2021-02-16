@@ -25,6 +25,7 @@ namespace CoreBot.Models.Generate
         //public static string processado = LicenseDialogDetails.dataProcessamento.ToString();
         //public static string emissao = LicenseDialogDetails.dataProcessamento.ToString();
         //public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
+        //public static string tituloVenc = LicenseDialogDetails.tituloVenc;
         //public static string valorTotal = LicenseDialogDetails.valorApagar;
         //public static string vencimento = LicenseDialogDetails.vencimento.ToString();
         //public static string numCodBarras = LicenseDialogDetails.codBarra;
@@ -40,6 +41,7 @@ namespace CoreBot.Models.Generate
         //public static string cep = "49000-000";
         //public static string cpf = "000.000.000-00";
         //public static string sacador = "AVENIDA TANCREDO NEVES, S/N, ARACAJU/SE";
+        //public static string agencia = LicenseDialogDetails.agencia;
 
         ///// <summary>
         ///// Ocorrência de listas
@@ -60,7 +62,7 @@ namespace CoreBot.Models.Generate
         //public static List<string> listaPreco()
         //{
         //    List<string> preco = new List<string>();
-        //    foreach (int value in LicenseDialogDetails.vetTaxas)
+        //    foreach (int value in LicenseDialogDetails.vetValorA)
         //    {
         //        preco.Add("R$ " + value.ToString());
         //    }
@@ -80,7 +82,7 @@ namespace CoreBot.Models.Generate
         //public static List<string> obs()
         //{
         //    List<string> obs = new List<string>();
-        //    obs.Add("- ESTE DUA TAMBÉM PODE SER PAGO POR CARTÕES DE CRÉDITO EM SERVIÇO DISPONIBILIZADO NO SITE DO DETRAN(WWW.DETRAN.SE.GOV.BR)");
+        //    obs.Add("- " + LicenseDialogDetails.mensagem1 + LicenseDialogDetails.mensagem2);
         //    return obs;
         //}
 

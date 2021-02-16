@@ -190,7 +190,7 @@ namespace CoreBot.Models
             cell12.Border = 1;
             table1.AddCell(cell12);
 
-            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.dataVenc, FontePadrao));
+            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.tituloVenc + " " + FieldsGenerate.dataVenc, FontePadrao));
             cell13.HorizontalAlignment = 0;
             cell13.Border = 1;
             cell13.Colspan = 2;
@@ -424,7 +424,7 @@ namespace CoreBot.Models
             tableVia.AddCell(viaCell5);
 
             // LINHA 3 VIA - NÚMERO CODIGO BARRA
-            PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.lerCodBarras, FontePadrao));
+            PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.linhaDig, FontePadrao));
             viaCell6.HorizontalAlignment = 1;
             viaCell6.Colspan = 4;
             viaCell6.Border = 0;
@@ -444,7 +444,7 @@ namespace CoreBot.Models
         {
             PdfContentByte cb = writer.DirectContent;
             Barcode128 bc39 = new Barcode128();
-            bc39.Code = FieldsGenerate.numCodBarras;
+            bc39.Code = FieldsGenerate.linhaDig.Replace(" ", "");
             bc39.Font = null;
             Image img = bc39.CreateImageWithBarcode(cb, null, null);
             return img;

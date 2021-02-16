@@ -34,6 +34,22 @@ namespace CoreBot.Models.Generate
             WriteDocument(doc, writer);
         }
 
+        public static byte[] GenerateInvoice2()
+        {
+            System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+            Document document = new Document(PageSize.A4, 88f, 88f, 10f, 10f);
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+            //WriteDocument(document, writer);
+            document.Open();
+            document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
+            document.Close();
+
+            byte[] bytes = memoryStream.ToArray();
+
+            return bytes;
+        }
+
         public static void WriteDocument(Document doc, PdfWriter writer)
         {
             doc.Open();
@@ -174,7 +190,7 @@ namespace CoreBot.Models.Generate
             cell4.Border = 1;
             table1.AddCell(cell4);
 
-            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.dataVenc, FontePadrao));
+            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.tituloVenc + " " + FieldsGenerate.dataVenc, FontePadrao));
             cell13.HorizontalAlignment = 0;
             cell13.Border = 1;
             cell13.Colspan = 3;
@@ -499,7 +515,7 @@ namespace CoreBot.Models.Generate
             tableVia.AddCell(viaCell5);
 
             // LINHA 9 VIA - NÚMERO CODIGO BARRA
-            PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.lerCodBarras, FontePadrao));
+            PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.codBarras, FontePadrao));
             viaCell6.HorizontalAlignment = 1;
             viaCell6.Colspan = 6;
             viaCell6.Border = 0;
@@ -519,7 +535,7 @@ namespace CoreBot.Models.Generate
         {
             PdfContentByte cb = writer.DirectContent;
             Barcode128 bc39 = new Barcode128();
-            bc39.Code = FieldsGenerate.numCodBarras;
+            bc39.Code = FieldsGenerate.linhaCodBarras;
             bc39.Font = null;
             Image img = bc39.CreateImageWithBarcode(cb, null, null);
             return img;

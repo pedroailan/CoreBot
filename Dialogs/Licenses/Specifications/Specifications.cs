@@ -134,6 +134,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
+
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
         }
@@ -193,9 +194,29 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
 
-            await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(Convert.ToDouble(LicenseDialogDetails.renavamOut), Convert.ToDouble(LicenseDialogDetails.codSegurancaIn), LicenseDialogDetails.restricao,
-                LicenseDialogDetails.exercicio, LicenseDialogDetails.tipoAutorizacaoRNTRCIn, Convert.ToDouble(LicenseDialogDetails.nroAutorizacaoRNTRCIn), LicenseDialogDetails.dataValidadeRNTRC,
-                LicenseDialogDetails.IsencaoIPVA, LicenseDialogDetails.tipoDocumentoIn);
+            //await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
+            //    Convert.ToDouble(LicenseDialogDetails.renavamOut), 
+            //    Convert.ToDouble(LicenseDialogDetails.codSegurancaOut), 
+            //    LicenseDialogDetails.restricao,
+            //    LicenseDialogDetails.exercicio, 
+            //    LicenseDialogDetails.tipoAutorizacaoRNTRCOut, 
+            //    Convert.ToDouble(LicenseDialogDetails.nroAutorizacaoRNTRCOut), 
+            //    LicenseDialogDetails.dataValidadeRNTRC,
+            //    LicenseDialogDetails.IsencaoIPVA, 
+            //    LicenseDialogDetails.tipoDocumentoIn
+            //    );
+            await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
+                499837630,
+                16736005660,
+                "N",
+                2021,
+                "",
+                0,
+                "0",
+                "N",
+                "D"
+                );
+
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {

@@ -14,10 +14,15 @@ namespace CoreBot.Models.MethodsValidation.License
             {
                return true;
             }
+            else
+            {
+                LicenseDialogDetails.dataValidadeRNTRC = "0";
+                return false;
+            }
             //return false;
             //if (Api.BuscaJson("rtrc") == true)
             //{
-            return false;
+            
             //}
             //return false;
         }

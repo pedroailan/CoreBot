@@ -71,7 +71,7 @@ namespace CoreBot.Models
 
         public static bool ValidationYear()
         {
-            if(LicenseDialogDetails.contadorAnoLicenciamento == 1)
+            if(LicenseDialogDetails.contadorAnoLicenciamento > 1)
             {
                 return true;        
             }

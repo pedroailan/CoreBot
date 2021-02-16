@@ -9,16 +9,34 @@ namespace CoreBot.Services.WSDLService.efetuarServicoLicenciamento
     public class EfetuarServicoLicenciamento
     {
 
-        public static async Task<wsDetranChatBot.efetuarServicoLicenciamentoResult> efeutarServicoLicenciamento(double renavam, double codSeguranca, string restricao, 
-            double anoExercicioLicenciamento, string tipoAutorizacaoRNTRC, double nroAutorizacaoRNTRC, string dataValidadeRNTRC, 
-            string isencaoIPVA, string tipoDocumentoIn)
+        public static async Task<wsDetranChatBot.efetuarServicoLicenciamentoResult> efeutarServicoLicenciamento(
+            double renavam, 
+            double codSeguranca, 
+            string restricao, 
+            double anoExercicioLicenciamento, 
+            string tipoAutorizacaoRNTRC, 
+            double nroAutorizacaoRNTRC, 
+            string dataValidadeRNTRC, 
+            string isencaoIPVA, 
+            string tipoDocumentoIn
+            )
         {
             wsDetranChatBot.wsChatbotSoapClient wsClient = Authentication.WsClient();
             wsDetranChatBot.autenticacao auth = Authentication.Auth();
 
-            var soap = await wsClient.efetuarServicoLicenciamentoAsync(auth, renavam, codSeguranca, restricao, 
-                anoExercicioLicenciamento, tipoAutorizacaoRNTRC, nroAutorizacaoRNTRC, dataValidadeRNTRC, 
-                isencaoIPVA, tipoDocumentoIn);
+            var soap = await wsClient.efetuarServicoLicenciamentoAsync(
+                auth, 
+                renavam, 
+                codSeguranca, 
+                restricao, 
+                anoExercicioLicenciamento, 
+                tipoAutorizacaoRNTRC, 
+                nroAutorizacaoRNTRC, 
+                dataValidadeRNTRC, 
+                isencaoIPVA, 
+                tipoDocumentoIn
+                );
+
             var result = soap.efetuarServicoLicenciamentoResult;
 
             alocarFields(result);

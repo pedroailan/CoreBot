@@ -79,10 +79,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 case "nenhuma das alternativas":
                     return await stepContext.ReplaceDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (banese)":
-                    LicenseDialogDetails.Banco = "D";
+                    LicenseDialogDetails.tipoDocumentoIn = "D";
                     return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (outros bancos)":
-                    LicenseDialogDetails.Banco = "F";
+                    LicenseDialogDetails.tipoDocumentoIn = "F";
                     return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
                     return await stepContext.ReplaceDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);

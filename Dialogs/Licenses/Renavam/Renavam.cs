@@ -130,7 +130,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseDialogDetails.Count += 1;
                 if (LicenseDialogDetails.Count < 3)
                 {
-                    await stepContext.Context.SendActivityAsync("Opa, Esse número de Renavam é inválido");
+                    await stepContext.Context.SendActivityAsync(LicenseDialogDetails.Erro.mensagem);
                     return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
                 }
                 else

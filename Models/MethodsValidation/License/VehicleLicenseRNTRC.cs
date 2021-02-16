@@ -10,14 +10,14 @@ namespace CoreBot.Models.MethodsValidation.License
     {
         public static bool ValidationVehicleType()
         {
-            //if(LicenseDialogDetails.temRNTRC == "S")
-            //{
-            //    return true;
-            //}
+            if(LicenseDialogDetails.temRNTRC == "S")
+            {
+               return true;
+            }
             //return false;
             //if (Api.BuscaJson("rtrc") == true)
             //{
-            return true;
+            return false;
             //}
             //return false;
         }
@@ -44,6 +44,7 @@ namespace CoreBot.Models.MethodsValidation.License
                 {
                     return false;
                 }
+                LicenseDialogDetails.dataValidadeRNTRC = ano.ToString() + mes.ToString() + dia.ToString();
                 return true;
             }
             else

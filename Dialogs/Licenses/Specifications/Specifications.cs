@@ -68,7 +68,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //}
             //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Marca/Modelo: " + LicenseDialogDetails.marcaModelo +
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(/*$"Marca/Modelo: " + LicenseDialogDetails.marcaModelo*/
                                                                             "\r\nPlaca: " + LicenseDialogDetails.placa +
                                                                             "\r\nProprietário: " + LicenseDialogDetails.nomeProprietario),
                                                                             cancellationToken);
@@ -127,6 +127,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> ExemptionVehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.IsencaoIPVA = "N";
             if (VehicleLicenseExemption.Exemption() == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(ExemptionDialog), LicenseDialogDetails, cancellationToken);
@@ -184,23 +185,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
-            LicenseDialogDetails.anoLicenciamentoIn = data;
+            //double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
+            LicenseDialogDetails.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
             LicenseDialogDetails.contadorAnoLicenciamento = 1;
 
             //Generate.GenerateInvoice(LicenseDialogDetails.AnoExercicio);
 
             //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
 
+            await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(Convert.ToDouble(LicenseDialogDetails.renavamOut), Convert.ToDouble(LicenseDialogDetails.codSegurancaIn), LicenseDialogDetails.restricao,
+                LicenseDialogDetails.exercicio, LicenseDialogDetails.tipoAutorizacaoRNTRCIn, Convert.ToDouble(LicenseDialogDetails.nroAutorizacaoRNTRCIn), LicenseDialogDetails.dataValidadeRNTRC,
+                LicenseDialogDetails.IsencaoIPVA, LicenseDialogDetails.tipoDocumentoIn);
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                //EfetuarServicoLicenciamento.efeutarServicoLicenciamento(),
-                MessageFactory.Text(""),
                 new Activity { Type = ActivityTypes.Typing },
-                new Activity { Type = "delay", Value= 2000 },
-                MessageFactory.Text(""),
-
             }, cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
 
@@ -214,7 +213,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
                         "Após a compensação do pagamento você pode voltar aqui para emitir seu documento de circulação (CRLV-e).";
 
-            var code = "Código de Barras: 00001222 222525 56599595 5544444";
+            var code = LicenseDialogDetails.codBarra;
 
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);

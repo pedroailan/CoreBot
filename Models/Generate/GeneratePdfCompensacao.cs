@@ -370,7 +370,7 @@ namespace CoreBot.Models.Generate
             viaCellConta.Colspan = 1;
             tableVia.AddCell(viaCellConta);
 
-            PdfPCell viaCellNum= new PdfPCell(new Phrase("04791.52449 00065.228561 00816.047484 7 85760000080458", Subtitulo));
+            PdfPCell viaCellNum= new PdfPCell(new Phrase(FieldsGenerate.codBarras, Subtitulo));
             viaCellNum.HorizontalAlignment = Element.ALIGN_CENTER;
             viaCellNum.Border = 0;
             viaCellNum.Colspan = 4;
@@ -394,7 +394,7 @@ namespace CoreBot.Models.Generate
             cell2.Colspan = 4;
             tableVia.AddCell(cell2);
 
-            PdfPCell cell3 = new PdfPCell(new Phrase("Agên./Cód. Beneficiário.:\n 0xx / xx.4000xx-x" + FieldsGenerate.vencimento, FontePadrao));
+            PdfPCell cell3 = new PdfPCell(new Phrase("Agên./Cód. Beneficiário.:\n " + FieldsGenerate.agencia, FontePadrao));
             cell3.HorizontalAlignment = 0;
             cell3.Colspan = 2;
             tableVia.AddCell(cell3);

@@ -55,7 +55,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            LicenseDialogDetails.tipoAutorizacaoRNTRCIn = stepContext.Index.ToString();
+            LicenseDialogDetails.tipoAutorizacaoRNTRCIn = stepContext.Context.Activity.Text;
             return await stepContext.ContinueDialogAsync(cancellationToken);
         }
 
@@ -117,11 +117,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> AuthorizationValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             ///Valida tipo da autorização
             if (VehicleLicenseRNTRC.ValidationNumber(LicenseDialogDetails.nroAutorizacaoRNTRCIn) == true && VehicleLicenseRNTRC.ValidationTypeAuthorization(LicenseDialogDetails.tipoAutorizacaoRNTRCIn))
             {
-                return await stepContext.EndDialogAsync(cancellationToken);
+                return await stepContext.ContinueDialogAsync(cancellationToken);
             }
             else
             {

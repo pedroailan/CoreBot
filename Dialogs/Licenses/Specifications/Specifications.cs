@@ -148,11 +148,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             if (VehicleLicense.Pendency() == true)
             {
-                await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
-                await stepContext.Context.SendActivityAsync("Ano: "+ anoAnterior + "\r\n " +
-                                                            "Valor: "+ "R$ 2.000,00\r\n" +
-                                                            "Ano: " + anoAtual + "\r\n" +
-                                                            "Valor: " + "R$ 1.000,00");
+                if(VehicleLicense.ValidationYear() == true)
+                {
+                    await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
+                    await stepContext.Context.SendActivityAsync("Ano: " + anoAnterior + "\r\n " +
+                                                                "Valor: " + LicenseDialogDetails.totalCotaUnica +" \r\n" +
+                                                                "Ano: " + anoAtual + "\r\n" +
+                                                                "Valor: " + LicenseDialogDetails.totalCotaUnica);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Valor a ser pago:");
+                    await stepContext.Context.SendActivityAsync("Ano: " + anoAtual + "\r\n" +
+                                                                "Valor: " + LicenseDialogDetails.totalCotaUnica);
+                }  
+                
                
 
                 var promptOptions = new PromptOptions

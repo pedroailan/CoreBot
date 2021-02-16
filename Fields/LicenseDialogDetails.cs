@@ -13,7 +13,7 @@ namespace Microsoft.BotBuilderSamples
     public class LicenseDialogDetails
     {
         public static int codigoRetorno;
-        public static string[] vetDescDebitos = new string[20];
+        public static string[] vetDescDebitos = new string[25];
         public static string marcaModelo;
         public static string placa;
         public static string renavamOut;

@@ -2,6 +2,7 @@
 using CoreBot.Services.WSDLService.validarServicoLicenciamento;
 using Microsoft.BotBuilderSamples;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreBot.Models
@@ -56,7 +57,7 @@ namespace CoreBot.Models
 
         public static bool Pendency()
         {
-            if(LicenseDialogDetails.anoLicenciamento != null)
+            if (LicenseDialogDetails.anoLicenciamento != null)
             {
                 return true;
             }
@@ -68,5 +69,15 @@ namespace CoreBot.Models
             return true;
         }
 
+        public static bool ValidationYear()
+        {
+            if(LicenseDialogDetails.contadorAnoLicenciamento == 1)
+            {
+                return true;        
+            }
+            return false;
+        }
     }
+
+       
 }

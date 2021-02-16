@@ -24,31 +24,10 @@ namespace CoreBot.Models.MethodsValidation.License
 
         public static bool ValidationTypeAuthorization(string tipo)
         {
-            switch (tipo)
-            {
-                case "1":
-                    //if(LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "ETC")
-                    //{
-                    //    return true;
-                    //}
-                    return true;
-                    break;
-                case "2":
-                    if (LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "CTC")
-                    {
-                        return true;
-                    }
-                    break;
-                case "3":
-                    if (LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "TAC")
-                    {
-                        return true;
-                    }
-                    break;
-                default:
-                    return false;
-            }
-            return false;
+            if (tipo == "1" && LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "ETC") return true;
+            else if (tipo == "2" && LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "CTC") return true;
+            else if (tipo == "3" && LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "TAC") return true;
+            else return false;
         }
 
         public static bool ValidationDate(string data)
@@ -61,13 +40,16 @@ namespace CoreBot.Models.MethodsValidation.License
                 var mes = date.Month;
                 var ano = date.Year;
 
-                if (mes < DateTime.Now.Month || ano < DateTime.Now.Year)
+                if (mes < DateTime.Now.Month && ano < DateTime.Now.Year)
                 {
                     return false;
                 }
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         public static bool ValidationNumber(string nroAutorizacaoRNTRCIn)
@@ -76,7 +58,7 @@ namespace CoreBot.Models.MethodsValidation.License
             {
                 return true;
             }
-            return true;
+            return false;
         }
     }
 }

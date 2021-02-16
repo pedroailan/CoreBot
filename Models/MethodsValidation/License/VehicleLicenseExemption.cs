@@ -14,7 +14,7 @@ namespace CoreBot.Models.MethodsValidation.License
             {
                 return true;
             }
-            return true;
+            return false;
         }
     }
 }

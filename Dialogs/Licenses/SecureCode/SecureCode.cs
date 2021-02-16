@@ -88,7 +88,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (VehicleLicense.Situation(LicenseDialogDetails.placa) == true)
                 {
-                    await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
+                    await stepContext.Context.SendActivityAsync(LicenseDialogDetails.Erro.mensagem);
                     if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
                     {
                         LicenseDialogDetails.Count += 1;

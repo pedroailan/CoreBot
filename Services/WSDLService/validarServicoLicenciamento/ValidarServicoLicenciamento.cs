@@ -11,9 +11,10 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
     {
         public async Task<wsDetranChatBot.validarServicoLicenciamentoResult> validarServicoLicenciamento(double renavam, double codSeguranca, string tipoDocumentoIn, double anoLicenciamentoIn)
         {
+            
             wsDetranChatBot.wsChatbotSoapClient wsClient = Authentication.WsClient();
             wsDetranChatBot.autenticacao auth = Authentication.Auth();
-
+             
             var soap = await wsClient.validarServicoLicenciamentoAsync(auth, renavam, codSeguranca, tipoDocumentoIn, anoLicenciamentoIn);
             var result = soap.validarServicoLicenciamentoResult;
 

@@ -83,7 +83,7 @@ namespace Microsoft.BotBuilderSamples
         public static int[] vetTaxas = new int[17];
         //public static string[] vetDescDebitos = new string[20];
         public static int dataProcessamento;
-        public static int exercicio;
+        public static double exercicio;
         public static int ind;
         //public static string marcaModelo;
         public static string nome;

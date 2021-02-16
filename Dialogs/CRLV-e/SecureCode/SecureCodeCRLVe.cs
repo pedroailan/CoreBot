@@ -6,6 +6,7 @@ using CoreBot.Fields;
 using CoreBot.Models.Methods;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector;
 using Microsoft.Bot.Schema;
 using System;
 using System.Threading;
@@ -83,18 +84,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
-
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text(""),
+                MessageFactory.Text("Estou processando seu código de segurança. Por favor, aguarde um pouco"),
                 new Activity { Type = ActivityTypes.Typing },
-                new Activity { Type = "delay", Value= TaskStatus.RanToCompletion },
-                MessageFactory.Text(""),
-
             }, cancellationToken);
 
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
-            CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
 
             if (await VehicleCRLV.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
             {

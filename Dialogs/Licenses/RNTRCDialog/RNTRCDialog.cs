@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot.Models;
+using CoreBot.Models.MethodsValidation.License;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -27,13 +28,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 AuthorizationStepAsync,
                 AuthorizationNumberStepAsync,
+                ValidationTypeAuthorizationStepAsync,
+                ValidationAuthorizationNumeroStepAsync,
                 AuthorizationDataStepAsync,
+                ValidationAuthorizationDataStepAsync,
                 AuthorizationValidationStepAsync
             }));
 
             // The initial child Dialog to run.
             InitialDialogId = nameof(WaterfallDialog);
         }
+
 
         private async Task<DialogTurnResult> AuthorizationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
@@ -50,37 +55,77 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            LicenseDialogDetails.tipoAutorizacaoRNTRCIn = stepContext.Values["choice"].ToString().ToLower();
-            var promptMessage = MessageFactory.Text("Para continuarmos informe o número da autorização", InputHints.ExpectingInput);
-            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
+            LicenseDialogDetails.tipoAutorizacaoRNTRCIn = stepContext.Index.ToString();
+            return await stepContext.ContinueDialogAsync(cancellationToken);
+        }
+
+        private async Task<DialogTurnResult> ValidationTypeAuthorizationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+        //    if(VehicleLicenseRNTRC.ValidationTypeAuthorization(LicenseDialogDetails.tipoAutorizacaoRNTRCIn) == true)
+        //    {
+                var promptMessage = MessageFactory.Text("Para continuarmos informe o número da autorização", InputHints.ExpectingInput);
+                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
+        //    }
+        //    else
+        //    {
+        //        await stepContext.Context.SendActivityAsync("Não é esse o tipo de autorização que consta em nossos sistemas, vamos repetir!");
+        //        return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+        //    }
+        }
+
+
+        private async Task<DialogTurnResult> ValidationAuthorizationNumeroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseDialogDetails.nroAutorizacaoRNTRCIn = stepContext.Result.ToString();
+            //if(VehicleLicenseRNTRC.ValidationNumber(LicenseDialogDetails.nroAutorizacaoRNTRCIn) == true)
+            //{
+                return await stepContext.ContinueDialogAsync(cancellationToken);
+            //}
+            //else
+            //{
+            //    await stepContext.Context.SendActivityAsync("Não é esse o numero de autorização que consta em nossos sistemas, vamos repetir!");
+            //    return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+            //}
+            
         }
 
         private async Task<DialogTurnResult> AuthorizationDataStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.nroAutorizacaoRNTRCIn = stepContext.Result.ToString();
-            
             var promptMessage = MessageFactory.Text("Por fim, informe a data de validade da autorização\r\n" +
                                                      "Exemplo: 12/12/2021", InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
             
         }
 
-
-        private async Task<DialogTurnResult> AuthorizationValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> ValidationAuthorizationDataStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.dataValidadeRNTRC = stepContext.Result.ToString();
-            ///Valida tipo da autorização
-            if (Vehicle.ValidationType(LicenseDialogDetails.tipoAutorizacaoRNTRCIn, LicenseDialogDetails.nroAutorizacaoRNTRCIn, LicenseDialogDetails.dataValidadeRNTRC) == true)
+
+            if (VehicleLicenseRNTRC.ValidationDate(LicenseDialogDetails.dataValidadeRNTRC) == true)
             {
-
-                return await stepContext.EndDialogAsync(LicenseDialogDetails, cancellationToken);
-
+                return await stepContext.ContinueDialogAsync(cancellationToken);
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Os dados informados não estão de acordo com o sistema!\r\n" +
+                await stepContext.Context.SendActivityAsync("A data informada deve ser maior que a atual, vamos repetir o processo");
+                return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+            }
+        }
+
+
+        private async Task<DialogTurnResult> AuthorizationValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            
+            ///Valida tipo da autorização
+            if (VehicleLicenseRNTRC.ValidationNumber(LicenseDialogDetails.nroAutorizacaoRNTRCIn) == true && VehicleLicenseRNTRC.ValidationTypeAuthorization(LicenseDialogDetails.tipoAutorizacaoRNTRCIn))
+            {
+                return await stepContext.EndDialogAsync(cancellationToken);
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync("Os dados informados não estão de acordo com o nosso sistema.\r\n" +
                                                            "Vou ter que repetir algumas perguntas, ok?");
                 return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
             }

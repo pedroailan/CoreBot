@@ -131,5 +131,6 @@ namespace Microsoft.BotBuilderSamples
         public bool SecureCodeBool { get; internal set; }
 
         public static string IsencaoIPVA;
+        public static double[] anoLicenciamentoIn;
     }
 }

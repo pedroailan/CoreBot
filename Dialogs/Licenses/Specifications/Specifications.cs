@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Models;
+using CoreBot.Models.Generate;
+using CoreBot.Models.MethodsValidation.License;
 using CoreBot.Services.Models;
 using CoreBot.Services.ValidationServiceLicenciamento;
 using Microsoft.Bot.Builder;

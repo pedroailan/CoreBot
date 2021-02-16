@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Fields;
 using CoreBot.Models;
+using CoreBot.Models.Generate;
 using CoreBot.Models.Generate.Converter;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -79,12 +80,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            //ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
+            await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            {
+                Prompt = (Activity)MessageFactory.Attachment(
+                    PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut)
+                )
+            }, cancellationToken);
 
 
-            var reply = MessageFactory.Text("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e).");
-            reply.Attachments = new List<Attachment>() { PdfOption() };
-            await stepContext.Context.SendActivityAsync(reply);
+            //var reply = MessageFactory.Text("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e).");
+            //reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut) };
+            //await stepContext.Context.SendActivityAsync(reply);
 
             return await stepContext.EndDialogAsync(cancellationToken);
 
@@ -200,21 +206,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         //        ContentUrl = $"data:image/png;base64,{imageData}",
         //    };
         //}
-
-        private static Attachment PdfOption()
-        {
-            //ConverterStringToPDF.converter(CRLVDialogDetails.documentoCRLVePdf);
-
-            //var docPath = "C:\\Users\\fsfalcao\\DownloadsCONTRATO.pdf";
-            var docData = CRLVDialogDetails.documentoCRLVePdf;
-
-            return new Attachment
-            {
-                Name = @"CRLVe_" + CRLVDialogDetails.codSegurançaOut,
-                ContentType = "application/pdf",
-                ContentUrl = $"data:application/pdf;base64,{docData}",
-            };
-        }
 
     }
 }

@@ -194,28 +194,28 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
 
-            //await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
-            //    Convert.ToDouble(LicenseDialogDetails.renavamOut), 
-            //    Convert.ToDouble(LicenseDialogDetails.codSegurancaOut), 
-            //    LicenseDialogDetails.restricao,
-            //    LicenseDialogDetails.exercicio, 
-            //    LicenseDialogDetails.tipoAutorizacaoRNTRCOut, 
-            //    Convert.ToDouble(LicenseDialogDetails.nroAutorizacaoRNTRCOut), 
-            //    LicenseDialogDetails.dataValidadeRNTRC,
-            //    LicenseDialogDetails.IsencaoIPVA, 
-            //    LicenseDialogDetails.tipoDocumentoIn
-            //    );
             await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
-                501136541,
-                64449505448,
-                "N",
-                2021,
-                "",
-                0,
-                "0",
-                "N",
-                "D"
+                Convert.ToDouble(LicenseDialogDetails.renavamOut),
+                Convert.ToDouble(LicenseDialogDetails.codSegurancaOut),
+                LicenseDialogDetails.restricao,
+                LicenseDialogDetails.exercicio,
+                LicenseDialogDetails.tipoAutorizacaoRNTRCOut,
+                Convert.ToDouble(LicenseDialogDetails.nroAutorizacaoRNTRCOut),
+                LicenseDialogDetails.dataValidadeRNTRC,
+                LicenseDialogDetails.IsencaoIPVA,
+                LicenseDialogDetails.tipoDocumentoIn
                 );
+            //await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
+            //    501136541,
+            //    64449505448,
+            //    "N",
+            //    2021,
+            //    "",
+            //    0,
+            //    "0",
+            //    "N",
+            //    "D"
+            //    );
 
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]

@@ -18,13 +18,13 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
             var soap = await wsClient.validarServicoLicenciamentoAsync(auth, renavam, codSeguranca, tipoDocumentoIn, anoLicenciamentoIn);
             var result = soap.validarServicoLicenciamentoResult;
 
-            alocarFields(result);
+            History(result);
 
             return soap.validarServicoLicenciamentoResult;
         }
 
 
-        public void alocarFields(wsDetranChatBot.validarServicoLicenciamentoResult result)
+        public void History(wsDetranChatBot.validarServicoLicenciamentoResult result)
         {
             LicenseDialogDetails.codigoRetorno = result.codigoRetorno;
             LicenseDialogDetails.Erro.codigo = result.erro.codigo;

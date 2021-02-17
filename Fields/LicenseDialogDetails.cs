@@ -126,9 +126,9 @@ namespace Microsoft.BotBuilderSamples
         public static string flagParc2A;
         public static string flagParc3A;
 
-        public string Banco { get; internal set; }
-        public int Count { get; internal set; }
-        public bool SecureCodeBool { get; internal set; }
+        public static string Banco { get; internal set; }
+        public static int Count { get; internal set; }
+        public static bool SecureCodeBool { get; internal set; }
 
         public static string IsencaoIPVA;
         public static double[] anoLicenciamentoIn;

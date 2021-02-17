@@ -1,4 +1,5 @@
-﻿using Microsoft.BotBuilderSamples;
+﻿using CoreBot.Models.MethodsValidation.License;
+using Microsoft.BotBuilderSamples;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,12 @@ namespace CoreBot.Models.Generate
         public static string tipo = LicenseDialogDetails.tipo;
         public static string cor = LicenseDialogDetails.cor;
         public static string exercicio = LicenseDialogDetails.exercicio.ToString();
-        public static string processado = LicenseDialogDetails.dataProcessamento.ToString();
-        public static string emissao = LicenseDialogDetails.dataProcessamento.ToString();
+        public static string processado = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
+        public static string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
         public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public static string tituloVenc = LicenseDialogDetails.tituloVenc;
         public static string valorTotal = LicenseDialogDetails.valorApagar;
-        public static string vencimento = LicenseDialogDetails.vencimento.ToString();
+        public static string vencimento = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public static string validade = LicenseDialogDetails.vencimento.ToString();
         public static string chassi = LicenseDialogDetails.chassiSNG;
 
@@ -61,7 +62,10 @@ namespace CoreBot.Models.Generate
 
             foreach (string value in LicenseDialogDetails.vetDescDebitos)
             {
-                taxa.Add(value);
+                if(value != "")
+                {
+                    taxa.Add(value);
+                }
             }
 
             return taxa;
@@ -72,7 +76,13 @@ namespace CoreBot.Models.Generate
             List<string> preco = new List<string>();
             foreach (string value in LicenseDialogDetails.vetValorA)
             {
-                preco.Add("R$ " + value);
+                if (value != "")
+                {
+                    preco.Add("R$ " + value);
+                } else
+                {
+                    break;
+                }
             }
             return preco;
         }

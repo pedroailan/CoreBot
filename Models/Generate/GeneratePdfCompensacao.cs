@@ -37,13 +37,13 @@ namespace CoreBot.Models.Generate
         public static byte[] GenerateInvoice2()
         {
             System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-            Document document = new Document(PageSize.A4, 88f, 88f, 10f, 10f);
+            Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
-            //WriteDocument(document, writer);
-            document.Open();
-            document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
-            document.Close();
+            WriteDocument(document, writer);
+            //document.Open();
+            //document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
+            //document.Close();
 
             byte[] bytes = memoryStream.ToArray();
 
@@ -60,10 +60,10 @@ namespace CoreBot.Models.Generate
             Font FonteVia = FontFactory.GetFont("Verdana", 6F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            //string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
-            //string pathBanese = @"C:\Users\fsfalcao\Downloads\" + "banese.jpg";
-            string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
-            string pathBanese = @"C:\Users\Felipe\Downloads\" + "banese.png";
+            string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
+            string pathBanese = @"C:\Users\fsfalcao\Downloads\" + "banese.jpg";
+            //string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
+            //string pathBanese = @"C:\Users\Felipe\Downloads\" + "banese.png";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
             iTextSharp.text.Image imageBanese = iTextSharp.text.Image.GetInstance(pathBanese);
 

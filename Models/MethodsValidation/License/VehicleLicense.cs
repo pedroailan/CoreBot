@@ -15,7 +15,7 @@ namespace CoreBot.Models
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                var Licencense = await obter.validarServicoLicenciamento(499837630, Convert.ToDouble(SecureCode), "D", 2020);
+                var Licencense = await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), "D", 2020);
                 if (LicenseDialogDetails.Erro.codigo == 0)
                 {
                     return true;

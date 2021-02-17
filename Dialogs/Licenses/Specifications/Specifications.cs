@@ -143,7 +143,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
             string anoAtual = DateTime.Now.Year.ToString();
@@ -160,17 +160,24 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 }
                 else
                 {
-                    await stepContext.Context.SendActivityAsync("Valor a ser pago:");
-                    await stepContext.Context.SendActivityAsync("Ano: " + anoAtual + "\r\n" +
-                                                                "Valor: " + LicenseDialogDetails.totalCotaUnica);
-                }  
-                
-               
+                    //await stepContext.Context.SendActivityAsync("Valor a ser pago:");
+                    await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
+                                                                "Valor a ser pago: R$" + LicenseDialogDetails.totalCotaUnica);
+                }
+
+                List<string> anos = new List<string>();
+                for(int i = 0; i < LicenseDialogDetails.contadorAnoLicenciamento; i++)
+                {
+                    if(LicenseDialogDetails.anoLicenciamento[i] != 0)
+                    {
+                        anos.Add(LicenseDialogDetails.anoLicenciamento[i].ToString());
+                    }
+                }
 
                 var promptOptions = new PromptOptions
                 {
                     Prompt = MessageFactory.Text($"Quais deseja pagar? (A escolha do ano atual já tráz acumulado o ano anterior)"),
-                    Choices = ChoiceFactory.ToChoices(choices: new List<string> { anoAnterior, anoAtual }),
+                    Choices = ChoiceFactory.ToChoices(choices: anos),
                 };
                 return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
             }
@@ -229,6 +236,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             var info = "Aqui está sua via para pagamento no " + LicenseDialogDetails.Banco +"!\r\n" +
                         "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
@@ -282,12 +290,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //},
             //    cancellationToken);
 
-            if(LicenseDialogDetails.Banco == "OUTROS")
+            if (LicenseDialogDetails.tipoDocumentoOut == "F")
             {
                 var reply = MessageFactory.Text(info);
                 reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2()) };
                 await stepContext.Context.SendActivityAsync(reply);
-            } else
+            }
+            else
             {
                 var reply = MessageFactory.Text(info);
                 reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2()) };

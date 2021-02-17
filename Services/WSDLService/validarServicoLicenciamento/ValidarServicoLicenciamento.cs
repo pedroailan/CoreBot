@@ -40,6 +40,7 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
             LicenseDialogDetails.temIsençãoIPVA = result.temIsencaoIPVA;
             LicenseDialogDetails.restricao = result.restricao;
             LicenseDialogDetails.anoLicenciamento = result.anoLicenciamento;
+            LicenseDialogDetails.totalCotaUnica = result.totalCotaUnica;
             LicenseDialogDetails.contadorAnoLicenciamento = result.contadorAnoLicenciamento;
             LicenseDialogDetails.RecallPendente.codigo = result.recallPendente.codigo;
             LicenseDialogDetails.RecallPendente.mensagem = result.recallPendente.mensagem;

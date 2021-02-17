@@ -37,8 +37,7 @@ namespace CoreBot.Models
         public static byte[] GenerateInvoice2()
         {
             System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-            Document document = new Document(PageSize.A4, 88f, 88f, 10f, 10f);
-            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+            Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
             WriteDocument(document, writer);
             //document.Open();
@@ -59,8 +58,8 @@ namespace CoreBot.Models
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            //string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
-            string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
+            string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
+            //string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
 
             doc.Add(Header());
@@ -159,7 +158,7 @@ namespace CoreBot.Models
             table1.AddCell(cell6);
 
             // LINHA 3
-            PdfPCell cell7 = new PdfPCell(new Phrase("MARCA MODELO:\n" + FieldsGenerate.marca, FontePadrao));
+            PdfPCell cell7 = new PdfPCell(new Phrase("MARCA/MODELO:\n" + FieldsGenerate.marca, FontePadrao));
             cell7.HorizontalAlignment = 0;
             cell7.Border = 1;
             table1.AddCell(cell7);
@@ -190,7 +189,7 @@ namespace CoreBot.Models
             cell12.Border = 1;
             table1.AddCell(cell12);
 
-            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.tituloVenc + " " + FieldsGenerate.dataVenc, FontePadrao));
+            PdfPCell cell13 = new PdfPCell(new Phrase(FieldsGenerate.tituloVenc + ": " + FieldsGenerate.dataVenc, FontePadrao));
             cell13.HorizontalAlignment = 0;
             cell13.Border = 1;
             cell13.Colspan = 2;

@@ -282,9 +282,18 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //},
             //    cancellationToken);
 
-            var reply = MessageFactory.Text(info);
-            reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2()) };
-            await stepContext.Context.SendActivityAsync(reply);
+            if(LicenseDialogDetails.Banco == "OUTROS")
+            {
+                var reply = MessageFactory.Text(info);
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2()) };
+                await stepContext.Context.SendActivityAsync(reply);
+            } else
+            {
+                var reply = MessageFactory.Text(info);
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2()) };
+                await stepContext.Context.SendActivityAsync(reply);
+            }
+
 
             return await stepContext.EndDialogAsync(cancellationToken);
         }

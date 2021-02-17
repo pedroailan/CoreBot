@@ -40,10 +40,10 @@ namespace CoreBot.Models
             Document document = new Document(PageSize.A4, 88f, 88f, 10f, 10f);
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
-            //WriteDocument(document, writer);
-            document.Open();
-            document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
-            document.Close();
+            WriteDocument(document, writer);
+            //document.Open();
+            //document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
+            //document.Close();
 
             byte[] bytes = memoryStream.ToArray();
 

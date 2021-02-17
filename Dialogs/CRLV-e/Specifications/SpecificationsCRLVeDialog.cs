@@ -80,6 +80,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+
+            await stepContext.Context.SendActivityAsync("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e)! Para baixar basta clicar no item abaixo.");
             await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
             {
                 Prompt = (Activity)MessageFactory.Attachment(

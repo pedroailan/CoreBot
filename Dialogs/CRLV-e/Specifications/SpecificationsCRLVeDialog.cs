@@ -80,15 +80,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-
-            await stepContext.Context.SendActivityAsync("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e)! Para baixar basta clicar no item abaixo.");
-            await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+            if(CRLVDialogDetails.codigoRetorno == 1) {
+                await stepContext.Context.SendActivityAsync("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e)! Para baixar basta clicar no item abaixo.");
+                await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+                {
+                    Prompt = (Activity)MessageFactory.Attachment(
+                        PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut)
+                    )
+                }, cancellationToken);
+            } else
             {
-                Prompt = (Activity)MessageFactory.Attachment(
-                    PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut)
-                )
-            }, cancellationToken);
-
+                await stepContext.Context.SendActivityAsync("Ocorreu um erro no processamento do PDF, tente novamente mais tarde.");
+            }
+            
 
             //var reply = MessageFactory.Text("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e).");
             //reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut) };

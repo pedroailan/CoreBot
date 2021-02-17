@@ -86,7 +86,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou processando seu código de segurança. Por favor, aguarde um pouco"),
+                MessageFactory.Text("Estou processando seu código de segurança. Por favor, aguarde um momento."),
                 new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 

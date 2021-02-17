@@ -80,6 +80,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
 
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
+            {
+                MessageFactory.Text("Estou verificando sua placa. Por favor, aguarde um momento."),
+                new Activity { Type = ActivityTypes.Typing },
+            }, cancellationToken);
+
             CRLVDialogDetails.placaIn = stepContext.Result.ToString();
 
             if (await VehicleCRLV.ValidationPlaca(CRLVDialogDetails.placaIn) == true) // Validação da placa
@@ -134,7 +140,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Opa, Esta placa é inválida");
+                await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
                 return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
             }
         }

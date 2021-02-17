@@ -23,8 +23,6 @@ namespace CoreBot.Models
         {
             Document doc = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
 
-            // Directory.GetCurrentDirectory()
-            // string path = @"C:\Users\fsfalcao\Downloads\" + "CONTRATO.pdf";
             string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             FileStream file = new FileStream(caminho + "/DUA - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
@@ -37,12 +35,10 @@ namespace CoreBot.Models
         public static byte[] GenerateInvoice2()
         {
             System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-            Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+            Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);            
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
             WriteDocument(document, writer);
-            //document.Open();
-            //document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
-            //document.Close();
 
             byte[] bytes = memoryStream.ToArray();
 
@@ -58,9 +54,8 @@ namespace CoreBot.Models
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
-            //string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
+            string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
 
             doc.Add(Header());
             doc.Add(parag);

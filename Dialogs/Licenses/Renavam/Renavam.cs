@@ -79,6 +79,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
+            {
+                MessageFactory.Text("Estou verificando seu Renavam. Por favor, aguarde um momento."),
+                new Activity { Type = ActivityTypes.Typing },
+            }, cancellationToken);
+
             LicenseDialogDetails.renavamIn = stepContext.Result.ToString();
 
             if (await VehicleLicense.ValidationRenavam(LicenseDialogDetails.renavamIn) == true)
@@ -130,7 +136,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseDialogDetails.Count += 1;
                 if (LicenseDialogDetails.Count < 3)
                 {
-                    await stepContext.Context.SendActivityAsync(LicenseDialogDetails.Erro.mensagem);
+                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
                     return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
                 }
                 else

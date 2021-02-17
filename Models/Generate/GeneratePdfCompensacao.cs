@@ -24,8 +24,6 @@ namespace CoreBot.Models.Generate
         {
             Document doc = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
 
-            // Directory.GetCurrentDirectory()
-            // string path = @"C:\Users\fsfalcao\Downloads\" + "CONTRATO.pdf";
             string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             FileStream file = new FileStream(caminho + "/Ficha de Compensação - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
@@ -41,9 +39,6 @@ namespace CoreBot.Models.Generate
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
             WriteDocument(document, writer);
-            //document.Open();
-            //document.Add(new Paragraph(new Phrase("TESTE TESTE TESTE")));
-            //document.Close();
 
             byte[] bytes = memoryStream.ToArray();
 
@@ -60,12 +55,11 @@ namespace CoreBot.Models.Generate
             Font FonteVia = FontFactory.GetFont("Verdana", 6F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            string pathImage = @"C:\Users\fsfalcao\Downloads\" + "detran.jpeg";
-            string pathBanese = @"C:\Users\fsfalcao\Downloads\" + "banese.jpg";
-            //string pathImage = @"C:\Users\Felipe\Downloads\" + "detran.jpg";
-            //string pathBanese = @"C:\Users\Felipe\Downloads\" + "banese.png";
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImage);
-            iTextSharp.text.Image imageBanese = iTextSharp.text.Image.GetInstance(pathBanese);
+            string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
+            string pathImageBanese = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "banese.jpg");
+            
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
+            iTextSharp.text.Image imageBanese = iTextSharp.text.Image.GetInstance(pathImageBanese);
 
             doc.Add(Header());
             doc.Add(parag);

@@ -88,9 +88,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut)
                     )
                 }, cancellationToken);
+                return await stepContext.EndDialogAsync(cancellationToken);
             } else
             {
                 await stepContext.Context.SendActivityAsync("Ocorreu um erro no processamento do PDF, tente novamente mais tarde.");
+                return await stepContext.EndDialogAsync(cancellationToken);
             }
             
 
@@ -98,7 +100,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut) };
             //await stepContext.Context.SendActivityAsync(reply);
 
-            return await stepContext.EndDialogAsync(cancellationToken);
+            
 
 
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text("Este é seu Documento de Circulação de Porte Obrigatório (CRLV-e)!"));

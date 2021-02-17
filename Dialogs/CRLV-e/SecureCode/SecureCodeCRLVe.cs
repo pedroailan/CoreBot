@@ -86,7 +86,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou processando seu código de segurança. Por favor, aguarde um momento."),
+                MessageFactory.Text("Estou verificando seu código de segurança. Por favor, aguarde um momento."),
                 new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
@@ -97,12 +97,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text(CRLVDialogDetails.Erro.mensagem), cancellationToken);
-
                 CRLVDialogDetails.Count += 1;
                 if (CRLVDialogDetails.Count < 3)
                 {
-                    await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
                     return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
                 }
                 else

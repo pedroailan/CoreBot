@@ -79,7 +79,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.codSegurancaIn = stepContext.Result.ToString();
-          
+
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
+            {
+                MessageFactory.Text("Estou verificando seu código de segurança. Por favor, aguarde um momento."),
+                new Activity { Type = ActivityTypes.Typing },
+            }, cancellationToken);
+
             if (await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaIn) == true)
             {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
@@ -88,7 +94,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (VehicleLicense.Situation(LicenseDialogDetails.placa) == true)
                 {
-                    await stepContext.Context.SendActivityAsync(LicenseDialogDetails.Erro.mensagem);
+                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
                     if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
                     {
                         LicenseDialogDetails.Count += 1;

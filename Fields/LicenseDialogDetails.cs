@@ -76,15 +76,15 @@ namespace Microsoft.BotBuilderSamples
         ///Saídas para o método efetuarServicoLicenciamento
         /// </summary>
         public static string cpfProcurador;
-        public static int numeroDocumento;
+        public static double numeroDocumento;
         public static string tipoDocumentoIn;
         public static string tipoDocumentoOut;
         public static string cor;
-        public static int[] vetTaxas = new int[17];
+        public static double[] vetTaxas = new double[17];
         //public static string[] vetDescDebitos = new string[20];
-        public static int dataProcessamento;
+        public static double dataProcessamento;
         public static double exercicio;
-        public static int ind;
+        public static double ind;
         //public static string marcaModelo;
         public static string nome;
         //public static string placa;
@@ -92,7 +92,7 @@ namespace Microsoft.BotBuilderSamples
         public static string tipo;
         public static string[] vetValorA = new string[17];
         public static string valorApagar;
-        public static int vencimento;
+        public static double vencimento;
         public static string agencia;
         public static string mensagem1;
         public static string mensagem2;
@@ -104,15 +104,15 @@ namespace Microsoft.BotBuilderSamples
         public static string linhaCodBarra;
         public static string codBarra;
         public static string asBace1;
-        public static int indDescricao;
+        public static double indDescricao;
         public static string[] vetDescInfracao = new string[80];
-        public static int indMensagem;
+        public static double indMensagem;
         public static string[] vetDuaMensagem = new string[80];
         public static string chassiSNG;
         public static string tituloVenc;
         public static string datsVenc;
-        public static int indParc;
-        public static int[] vetDuaParc = new int[9];
+        public static double indParc;
+        public static double[] vetDuaParc = new double[9];
         public static string[] vetValorA1Parc = new string[8];
         public static string[] vetLinhaDigParc = new string[51];
         public static string[] vetLinhaCodBarra = new string[44];
@@ -121,7 +121,7 @@ namespace Microsoft.BotBuilderSamples
         public static string[] vetValorA2Parc = new string[8];
         public static string[] vetValorA3Parc = new string[8];
         public static string[] vetTotalAParc = new string[10];
-        public static int[] vetVencimentoParc = new int[8];
+        public static double[] vetVencimentoParc = new double[8];
         public static string flagParc1A;
         public static string flagParc2A;
         public static string flagParc3A;

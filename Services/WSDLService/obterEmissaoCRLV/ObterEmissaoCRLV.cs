@@ -24,7 +24,7 @@ namespace CoreBot.Services.WSDLService.obterEmissaoCRLV
             var soap = await wsClient.obterEmissaoCrlvAsync(auth, placa, codSeguranca);
             var result = soap.obterEmissaoCrlvResult;
 
-            alocarFields(result);
+            History(result);
 
             return soap.obterEmissaoCrlvResult;
         }
@@ -37,7 +37,7 @@ namespace CoreBot.Services.WSDLService.obterEmissaoCRLV
             var soap = await wsClient.obterEmissaoCrlvAsync(auth, placa, 0);
             var result = soap.obterEmissaoCrlvResult;
 
-            alocarFields(result);
+            History(result);
 
             return soap.obterEmissaoCrlvResult;
         }
@@ -50,7 +50,7 @@ namespace CoreBot.Services.WSDLService.obterEmissaoCRLV
             var soap = await wsClient.obterEmissaoCrlvAsync(auth, "OEK8190", codSeguranca);
             var result = soap.obterEmissaoCrlvResult;
 
-            alocarFields(result);
+            History(result);
 
             return soap.obterEmissaoCrlvResult;
         }
@@ -60,7 +60,7 @@ namespace CoreBot.Services.WSDLService.obterEmissaoCRLV
         ///     Preencher as Fields da classe CrlvDialogsDetails com os atributos recebidos.
         /// AUTOR(RES): Felipe Falcão e Pedro Ailan
         /// </summary>
-        public void alocarFields(wsDetranChatBot.obterEmissaoCrlvResult result)
+        public void History(wsDetranChatBot.obterEmissaoCrlvResult result)
         {
             CRLVDialogDetails.codigoRetorno = result.codigoRetorno;
             CRLVDialogDetails.Erro.codigo = result.erro.codigo;

@@ -295,16 +295,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var reply = MessageFactory.Text(info);
                 reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2()) };
                 await stepContext.Context.SendActivityAsync(reply);
+                return await stepContext.EndDialogAsync(cancellationToken);
             }
             else
             {
                 var reply = MessageFactory.Text(info);
                 reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2()) };
                 await stepContext.Context.SendActivityAsync(reply);
+                return await stepContext.EndDialogAsync(cancellationToken);
             }
-
-
-            return await stepContext.EndDialogAsync(cancellationToken);
+ 
         }
 
     }

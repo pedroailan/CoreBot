@@ -785,9 +785,9 @@ namespace wsDetranChatBot
     public partial class efetuarServicoLicenciamentoResult
     {
         
-        private int codigoRetornoField;
-        
         private erro erroField;
+        
+        private int codigoRetornoField;
         
         private string cpfProcuradorField;
         
@@ -889,20 +889,6 @@ namespace wsDetranChatBot
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public int codigoRetorno
-        {
-            get
-            {
-                return this.codigoRetornoField;
-            }
-            set
-            {
-                this.codigoRetornoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public erro erro
         {
             get
@@ -912,6 +898,20 @@ namespace wsDetranChatBot
             set
             {
                 this.erroField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public int codigoRetorno
+        {
+            get
+            {
+                return this.codigoRetornoField;
+            }
+            set
+            {
+                this.codigoRetornoField = value;
             }
         }
         
@@ -1798,10 +1798,7 @@ namespace wsDetranChatBot
         /// <param name="serviceEndpoint">O ponto de extremidade a ser configurado</param>
         /// <param name="clientCredentials">As credenciais do cliente</param>
         static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
-
-        public wsChatbotSoapClient()   
-        {
-        }
+        
         public wsChatbotSoapClient(EndpointConfiguration endpointConfiguration) : 
                 base(wsChatbotSoapClient.GetBindingForEndpoint(endpointConfiguration), wsChatbotSoapClient.GetEndpointAddress(endpointConfiguration))
         {
@@ -1894,15 +1891,15 @@ namespace wsDetranChatBot
         
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
         {
-            //if ((endpointConfiguration == EndpointConfiguration.wsChatbotSoap))
-            //{
-            //    System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
-            //    result.MaxBufferSize = int.MaxValue;
-            //    result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
-            //    result.MaxReceivedMessageSize = int.MaxValue;
-            //    result.AllowCookies = true;
-            //    return result;
-            //}
+            if ((endpointConfiguration == EndpointConfiguration.wsChatbotSoap))
+            {
+                System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
+                result.MaxBufferSize = int.MaxValue;
+                result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
+                result.MaxReceivedMessageSize = int.MaxValue;
+                result.AllowCookies = true;
+                return result;
+            }
             if ((endpointConfiguration == EndpointConfiguration.wsChatbotSoap12))
             {
                 System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
@@ -1921,10 +1918,10 @@ namespace wsDetranChatBot
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
         {
-            //if ((endpointConfiguration == EndpointConfiguration.wsChatbotSoap))
-            //{
-            //    return new System.ServiceModel.EndpointAddress("http://172.28.64.58:9176/homologa/serviceChatBot");
-            //}
+            if ((endpointConfiguration == EndpointConfiguration.wsChatbotSoap))
+            {
+                return new System.ServiceModel.EndpointAddress("http://172.28.64.58:9176/homologa/serviceChatBot");
+            }
             if ((endpointConfiguration == EndpointConfiguration.wsChatbotSoap12))
             {
                 return new System.ServiceModel.EndpointAddress("http://172.28.64.58:9176/homologa/serviceChatBot");
@@ -1935,7 +1932,7 @@ namespace wsDetranChatBot
         public enum EndpointConfiguration
         {
             
-            //wsChatbotSoap,
+            wsChatbotSoap,
             
             wsChatbotSoap12,
         }

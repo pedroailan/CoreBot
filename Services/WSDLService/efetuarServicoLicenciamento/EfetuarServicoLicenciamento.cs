@@ -53,6 +53,7 @@ namespace CoreBot.Services.WSDLService.efetuarServicoLicenciamento
             LicenseDialogDetails.Erro.trace = result.erro.trace;
             LicenseDialogDetails.placa = result.placa;
 
+
         }
     }
 }

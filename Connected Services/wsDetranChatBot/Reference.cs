@@ -887,6 +887,20 @@ namespace wsDetranChatBot
         
         private string flagParc3AField;
         
+        private string cpfCnpjPagadorField;
+        
+        private string enderecoPagadorField;
+        
+        private string cepPagadorField;
+        
+        private string bairroPagadorField;
+        
+        private string municipioPagadorField;
+        
+        private string ufPagadorField;
+        
+        private string nossoNumeroField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public erro erro
@@ -1598,6 +1612,104 @@ namespace wsDetranChatBot
             set
             {
                 this.flagParc3AField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=51)]
+        public string cpfCnpjPagador
+        {
+            get
+            {
+                return this.cpfCnpjPagadorField;
+            }
+            set
+            {
+                this.cpfCnpjPagadorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=52)]
+        public string enderecoPagador
+        {
+            get
+            {
+                return this.enderecoPagadorField;
+            }
+            set
+            {
+                this.enderecoPagadorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=53)]
+        public string cepPagador
+        {
+            get
+            {
+                return this.cepPagadorField;
+            }
+            set
+            {
+                this.cepPagadorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=54)]
+        public string bairroPagador
+        {
+            get
+            {
+                return this.bairroPagadorField;
+            }
+            set
+            {
+                this.bairroPagadorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=55)]
+        public string municipioPagador
+        {
+            get
+            {
+                return this.municipioPagadorField;
+            }
+            set
+            {
+                this.municipioPagadorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=56)]
+        public string ufPagador
+        {
+            get
+            {
+                return this.ufPagadorField;
+            }
+            set
+            {
+                this.ufPagadorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=57)]
+        public string nossoNumero
+        {
+            get
+            {
+                return this.nossoNumeroField;
+            }
+            set
+            {
+                this.nossoNumeroField = value;
             }
         }
     }

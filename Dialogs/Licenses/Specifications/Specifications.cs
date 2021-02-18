@@ -257,7 +257,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(), "DUA" + LicenseDialogDetails.codSegurancaOut) };
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(), "DUA_" + LicenseDialogDetails.codSegurancaOut) };
                 await stepContext.Context.SendActivityAsync(reply);
                 return await stepContext.EndDialogAsync(cancellationToken);
             }

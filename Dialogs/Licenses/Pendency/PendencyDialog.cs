@@ -94,8 +94,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             
             //LicenseDialogDetails.contadorAnoLicenciamento = 1;
 
+            // Confirmação para somente um ano
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
+                LicenseDialogDetails.exercicio = LicenseDialogDetails.anoLicenciamento[0];
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
             else

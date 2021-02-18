@@ -163,7 +163,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             //await stepContext.Context.SendActivityAsync("Você escolheu " + LicenseDialogDetails.AnoExercicio);
 
-            await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
+            var result = await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
                 Convert.ToDouble(LicenseDialogDetails.renavamOut),
                 Convert.ToDouble(LicenseDialogDetails.codSegurancaOut),
                 LicenseDialogDetails.restricao,
@@ -174,18 +174,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseDialogDetails.IsencaoIPVA,
                 LicenseDialogDetails.tipoDocumentoIn
                 );
-            //await EfetuarServicoLicenciamento.efeutarServicoLicenciamento(
-            //    501136541,
-            //    64449505448,
-            //    "N",
-            //    2021,
-            //    "",
-            //    0,
-            //    "0",
-            //    "N",
-            //    "D"
-            //    );
-
+            
+            if (result.erro.codigo != 0)
+            {
+                await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                return await stepContext.EndDialogAsync(cancellationToken);
+            }
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {

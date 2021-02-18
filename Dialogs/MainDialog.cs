@@ -45,7 +45,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 ActStepAsync,
                 AskStepAsync,
                 FinalStepAsync,
-                AvaliationStepAsync,
+                //AvaliationStepAsync,
             }));
 
             // The initial child Dialog to run.
@@ -142,12 +142,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog), cancellationToken);
             } else
             {
-                var promptOptions = new PromptOptions
-                {
-                    Prompt = MessageFactory.Text($"De 1 a 5, qual nota você daria para meu atendimento?"),
-                    Choices = ChoiceFactory.ToChoices(new List<string> { "1 - Péssimo", "2 - Ruim", "3 - Regular", "4 - Bom", "5 - Excelente" }),
-                };
-                return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
+                return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
+                //var promptOptions = new PromptOptions
+                //{
+                //    Prompt = MessageFactory.Text($"De 1 a 5, qual nota você daria para meu atendimento?"),
+                //    Choices = ChoiceFactory.ToChoices(new List<string> { "1 - Péssimo", "2 - Ruim", "3 - Regular", "4 - Bom", "5 - Excelente" }),
+                //};
+                //return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
             }
 
             //if (stepContext.Result != null)

@@ -82,8 +82,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando sua placa. Por favor, aguarde um momento."),
-                new Activity { Type = ActivityTypes.Typing },
+                MessageFactory.Text("Estou verificando sua placa. Por favor, aguarde um momento..."),
+                //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
             CRLVDialogDetails.placaIn = stepContext.Result.ToString();
@@ -138,10 +138,31 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
             }
+            // Caso a placa não seja válida
             else
             {
                 await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
-                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
+                if (CRLVDialogDetails.Erro.codigo >= 1 && CRLVDialogDetails.Erro.codigo <= 900)
+                {
+                    CRLVDialogDetails.Count += 1;
+                    if (CRLVDialogDetails.Count < 3)
+                    {
+                        return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
+                    }
+                    else
+                    {
+                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar a Placa\r\n" +
+                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois\r\n" +
+                                                                    "ou entre em contato com o DETRAN, para obter mais informações");
+                        return await stepContext.EndDialogAsync(cancellationToken);
+                    }
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
             }
         }
 

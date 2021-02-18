@@ -81,8 +81,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando seu Renavam. Por favor, aguarde um momento."),
-                new Activity { Type = ActivityTypes.Typing },
+                MessageFactory.Text("Estou verificando seu Renavam. Por favor, aguarde um momento..."),
+                //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
             LicenseDialogDetails.renavamIn = stepContext.Result.ToString();
@@ -133,17 +133,26 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                LicenseDialogDetails.Count += 1;
-                if (LicenseDialogDetails.Count < 3)
+                await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
+                if (LicenseDialogDetails.Erro.codigo >= 1 && LicenseDialogDetails.Erro.codigo <= 900)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
-                    return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                    LicenseDialogDetails.Count += 1;
+                    if (LicenseDialogDetails.Count < 3)
+                    {
+                        return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                    }
+                    else
+                    {
+                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
+                                                                    "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
+                                                                    "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
+                        return await stepContext.EndDialogAsync(cancellationToken);
+                    }
                 }
                 else
                 {
-                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
-                                                                "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
-                                                                "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
             }

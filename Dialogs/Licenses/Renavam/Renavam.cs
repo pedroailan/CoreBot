@@ -81,8 +81,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando seu Renavam. Por favor, aguarde um momento."),
-                new Activity { Type = ActivityTypes.Typing },
+                MessageFactory.Text("Estou verificando seu Renavam. Por favor, aguarde um momento..."),
+                //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
             LicenseDialogDetails.renavamIn = stepContext.Result.ToString();

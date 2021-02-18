@@ -35,8 +35,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 IntroStepAsync,
-                
-
             }));
 
             // The initial child Dialog to run.
@@ -75,6 +73,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 Style = ListStyle.None,
             },
                 cancellationToken);
+
             return await stepContext.EndDialogAsync(cancellationToken);
         }
 

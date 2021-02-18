@@ -15,6 +15,7 @@ using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
+using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
@@ -42,7 +43,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 IntroStepAsync,
                 ActStepAsync,
+                AskStepAsync,
                 FinalStepAsync,
+                AvaliationStepAsync,
             }));
 
             // The initial child Dialog to run.
@@ -77,17 +80,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             switch (stepContext.Values["choice"].ToString().ToLower())
             {
                 case "nenhuma das alternativas":
-                    return await stepContext.ReplaceDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (banese)":
                     LicenseDialogDetails.tipoDocumentoIn = "D";
                     LicenseDialogDetails.Banco = "Banese";
-                    return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (outros bancos)":
                     LicenseDialogDetails.tipoDocumentoIn = "F";
                     LicenseDialogDetails.Banco = "Outros Bancos";
-                    return await stepContext.ReplaceDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
-                    return await stepContext.ReplaceDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {
@@ -113,8 +116,39 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         }
 
+        private async Task<DialogTurnResult> AskStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            await stepContext.Context.SendActivitiesAsync(new Activity[]
+           {
+                new Activity { Type = ActivityTypes.Typing },
+                new Activity { Type = "delay", Value = 1000},
+           }, cancellationToken);
+
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text($"Posso ajudá-lo em algo mais?"),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+            };
+
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+        }
+
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            stepContext.Values["continue"] = ((FoundChoice)stepContext.Result).Value;
+
+            if(stepContext.Values["continue"].ToString().ToLower() == "sim")
+            {
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), cancellationToken);
+            } else
+            {
+                var promptOptions = new PromptOptions
+                {
+                    Prompt = MessageFactory.Text($"De 1 a 5, qual nota você daria para meu atendimento?"),
+                    Choices = ChoiceFactory.ToChoices(new List<string> { "1 - Péssimo", "2 - Ruim", "3 - Regular", "4 - Bom", "5 - Excelente" }),
+                };
+                return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+            }
 
             //if (stepContext.Result != null)
             //{
@@ -123,8 +157,15 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //}
             //else
             //{
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Obrigada."), cancellationToken);
+            //await stepContext.Context.SendActivityAsync(MessageFactory.Text("Obrigada."), cancellationToken);
             //}
+        }
+
+        private async Task<DialogTurnResult> AvaliationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            stepContext.Values["avaliation"] = ((FoundChoice)stepContext.Result).Value;
+
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
     }

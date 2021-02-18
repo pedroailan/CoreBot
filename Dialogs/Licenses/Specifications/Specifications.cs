@@ -37,7 +37,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new RNTRCDialog());
             AddDialog(new RecallDialog());
             AddDialog(new ExemptionDialog());
-
+            AddDialog(new PendencyDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InfoStepAsync,
@@ -45,8 +45,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 TypeVehicleAsync,
                 RecallVehicleStepAsync,
                 ExemptionVehicleStepAsync,
-                PendencyStepAsync,
-                Pendency_2StepAsync,
+                InvoiceVehicleStepAsync,
                 VehicleStepAsync,
                 FinalStepAsync
 
@@ -143,72 +142,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         }
 
 
-
-        private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> InvoiceVehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-
-            string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
-            string anoAtual = DateTime.Now.Year.ToString();
-
             if (VehicleLicense.Pendency() == true)
             {
-                if(VehicleLicense.ValidationYear() == true)
-                {
-                    await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
-                    await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
-                                                                "Valor a ser pago: R$" + LicenseDialogDetails.totalCotaUnica);
-                }
-                else
-                {
-                    //await stepContext.Context.SendActivityAsync("Valor a ser pago:");
-                    await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
-                                                                "Valor a ser pago: R$" + LicenseDialogDetails.totalCotaUnica);
-                }
-
-                List<string> anos = new List<string>();
-                for(int i = 0; i < LicenseDialogDetails.contadorAnoLicenciamento; i++)
-                {
-                    if(LicenseDialogDetails.anoLicenciamento[i] != 0)
-                    {
-                        anos.Add(LicenseDialogDetails.anoLicenciamento[i].ToString());
-                    }
-                }
-
-                var promptOptions = new PromptOptions
-                {
-                    Prompt = MessageFactory.Text($"Quais deseja pagar? (A escolha do ano atual já tráz acumulado o ano anterior)"),
-                    Choices = ChoiceFactory.ToChoices(choices: anos),
-                };
-                return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(PendencyDialog), LicenseDialogDetails, cancellationToken);
             }
             else
             {
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
 
-        }
-
-        private async Task<DialogTurnResult> Pendency_2StepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            //double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
-            LicenseDialogDetails.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
-            LicenseDialogDetails.contadorAnoLicenciamento = 1;
-
-            if(LicenseDialogDetails.exercicio == 2021)
-            {
-                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaOut, 2021);
-                await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
-                                                            "Valor a ser pago: R$" + LicenseDialogDetails.totalCotaUnica);
-                return await stepContext.ContinueDialogAsync(cancellationToken);
-            }
-            else
-            {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
-            }
-            
         }
 
         private async Task<DialogTurnResult> VehicleStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)

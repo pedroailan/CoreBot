@@ -255,14 +255,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (LicenseDialogDetails.tipoDocumentoOut == "F")
             {
                 var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2()) };
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao_" + LicenseDialogDetails.codSegurancaOut) };
                 await stepContext.Context.SendActivityAsync(reply);
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
             else
             {
                 var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2()) };
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(), "DUA" + LicenseDialogDetails.codSegurancaOut) };
                 await stepContext.Context.SendActivityAsync(reply);
                 return await stepContext.EndDialogAsync(cancellationToken);
             }

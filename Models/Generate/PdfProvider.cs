@@ -15,13 +15,14 @@ namespace CoreBot.Models.Generate
         /// </summary>
         /// <param name="var">Array de bytes com dados necessários para criar o PDF</param>
         /// <returns>Attachment a ser chamado por "new List<Attachment>()"</returns>
-        public static Attachment Disponibilizer(byte[] var)
+        public static Attachment Disponibilizer(byte[] var, string name)
         {
             var docData = Convert.ToBase64String(var);
+            var docName = name;
 
             return new Attachment
             {
-                Name = @"CRLVe",
+                Name = docName + ".pdf",
                 ContentType = "application/pdf",
                 ContentUrl = $"data:application/pdf;base64,{docData}",
             };

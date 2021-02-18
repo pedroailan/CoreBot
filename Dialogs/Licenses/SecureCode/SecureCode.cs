@@ -94,9 +94,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (VehicleLicense.Situation(LicenseDialogDetails.placa) == true)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
                     if (LicenseDialogDetails.Erro.codigo >= 1 && LicenseDialogDetails.Erro.codigo <= 900)
                     {
+                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
                         if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
                         {
                             LicenseDialogDetails.Count += 1;

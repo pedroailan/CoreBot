@@ -29,7 +29,7 @@ namespace CoreBot.Models.Generate
         public static string tituloVenc = LicenseDialogDetails.tituloVenc;
         public static string valorTotal = LicenseDialogDetails.valorApagar;
         public static string vencimento = Format.Output.FormatData(LicenseDialogDetails.vencimento);
-        public static string validade = LicenseDialogDetails.vencimento.ToString();
+        public static string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public static string chassi = LicenseDialogDetails.chassiSNG;
 
         /// <summary>

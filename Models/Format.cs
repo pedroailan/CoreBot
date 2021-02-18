@@ -22,16 +22,60 @@ namespace CoreBot.Models.MethodsValidation.License
 
         public class Output
         {
-            public static string FormatData(double data)
+            /// <summary>
+            /// Método responsável por converter e formatar a data para o tipo dd/MM/aaaa
+            /// </summary>
+            /// <param name="dataDouble"></param>
+            /// <returns></returns>
+            public static string FormatData(double dataDouble)
             {
-                string dataFormatada = Regex.Replace(data.ToString(),
-                @"\b(?<day>\d{1,2})/(?<month>\d{1,2})/(?<year>\d{2,4})\b",
-               "${day}-${month}-${year}", RegexOptions.None,
-               TimeSpan.FromMilliseconds(150));
+                var cont = 1;
+                string dataTotal = "";
+                string data = dataDouble.ToString();
 
-                //var date = DateTime.Parse(dataFormatada);
-                //dataFormatada = date.Day + "/" + date.Month + "/" + date.Year;
-                return dataFormatada;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (cont == 2)
+                    {
+                        dataTotal += data[i - 1].ToString() + data[i].ToString() + "/";
+                    }
+                    if (cont == 4)
+                    {
+                        dataTotal += data[i - 1].ToString() + data[i].ToString() + "/";
+                    }
+                    if (cont > 4)
+                    {
+                        dataTotal += data[i].ToString();
+                    }
+                    cont++;
+                }
+
+                return dataTotal;
+            }
+
+            public static string FormatData(string data)
+            {
+                var cont = 1;
+                string dataTotal = "";
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (cont == 2)
+                    {
+                        dataTotal += data[i - 1].ToString() + data[i].ToString() + "/";
+                    }
+                    if (cont == 4)
+                    {
+                        dataTotal += data[i - 1].ToString() + data[i].ToString() + "/";
+                    }
+                    if (cont > 4)
+                    {
+                        dataTotal += data[i].ToString();
+                    }
+                    cont++;
+                }
+
+                return dataTotal;
             }
         }
     }

@@ -100,6 +100,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
+                if(LicenseDialogDetails.anoLicenciamento[0] == LicenseDialogDetails.exercicio && stepContext.Values["choice"].ToString().ToLower() == "não")
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
+                }
                 LicenseDialogDetails.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
                 if (stepContext.Values["choice"].ToString().ToLower() == LicenseDialogDetails.anoLicenciamento[0].ToString())
                 {

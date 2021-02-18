@@ -27,8 +27,8 @@ namespace CoreBot.Services.WSDLService
             try
             {
                 wsDetranChatBot.autenticacao auth = new wsDetranChatBot.autenticacao();
-                auth.loginUsuario = "0";
-                auth.senhaUsuario = "0";
+                auth.loginUsuario = "4030852F-26A1-4BA7-A4E0-30940E210CF3";
+                auth.senhaUsuario = "bfce160d0941496f935ea762806c9160";
                 return auth;
             }
             catch (Exception err)

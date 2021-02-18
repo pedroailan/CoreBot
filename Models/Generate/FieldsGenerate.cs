@@ -27,10 +27,15 @@ namespace CoreBot.Models.Generate
         public static string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
         public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public static string tituloVenc = LicenseDialogDetails.tituloVenc;
-        public static string valorTotal = LicenseDialogDetails.valorApagar;
-        public static string vencimento = Format.Output.FormatData(LicenseDialogDetails.vencimento);
+        public static string valorTotal = Format.Output.FormatValue(Convert.ToDouble(LicenseDialogDetails.valorApagar)); 
+        public static string vencimento = Format.Output.FormatData(Format.Output.InverteString(LicenseDialogDetails.vencimento.ToString()));
         public static string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public static string chassi = LicenseDialogDetails.chassiSNG;
+        public static string mensagem1 = LicenseDialogDetails.mensagem1;
+        public static string mensagem2 = LicenseDialogDetails.mensagem2;
+        public static string mensagem3 = LicenseDialogDetails.mensagem3;
+        public static string mensagem4 = LicenseDialogDetails.mensagem4;
+        public static string mensagem5 = LicenseDialogDetails.mensagem5;
 
         /// <summary>
         /// Fields utilizados somente no DUA
@@ -40,14 +45,15 @@ namespace CoreBot.Models.Generate
         /// <summary>
         /// Fields utilizados somente na Ficha de Compensação
         /// </summary>
-        public static string nossonum = "285600816";
-        public static string endereco = "RUA DOIS, TANCREDO NEVES";
-        public static string cep = "49000-000";
-        public static string cpf = "000.000.000-00";
+        public static string nossonum = LicenseDialogDetails.nossoNumero;
+        public static string endereco = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + ", "
+                                        + LicenseDialogDetails.ufPagador + ". " + LicenseDialogDetails.cepPagador;
+        public static string cep = LicenseDialogDetails.cepPagador;
+        public static string cpf = LicenseDialogDetails.cpfCnpjPagador;
         public static string sacador = "AVENIDA TANCREDO NEVES, S/N, ARACAJU/SE";
         public static string agencia = LicenseDialogDetails.agencia;
 
-        public static string totalA = LicenseDialogDetails.totalA;
+        public static string totalA = LicenseDialogDetails.totalA; 
         public static string linhaCodBarras = LicenseDialogDetails.linhaCodBarra;
         public static string codBarras = LicenseDialogDetails.codBarra;
         public static string asBace1 = LicenseDialogDetails.asBace1;

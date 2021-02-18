@@ -10,6 +10,7 @@ using CoreBot;
 using CoreBot.Fields;
 using CoreBot.Models;
 using CoreBot.Models.Generate;
+using CoreBot.Models.MethodsValidation.License;
 using CoreBot.Services.WSDLService;
 using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;

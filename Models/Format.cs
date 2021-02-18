@@ -78,6 +78,13 @@ namespace CoreBot.Models.MethodsValidation.License
                 return dataTotal;
             }
 
+            public static string InverteString(string s)
+            {
+                char[] arr = s.ToCharArray();
+                Array.Reverse(arr);
+                return new string(arr);
+            }
+
             public static string FormatValue(double value)
             {
                 string cota = value.ToString();
@@ -89,7 +96,6 @@ namespace CoreBot.Models.MethodsValidation.License
                 }
                 return cota;
             }
-
         }
     }
 }

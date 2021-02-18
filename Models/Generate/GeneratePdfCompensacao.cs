@@ -278,26 +278,40 @@ namespace CoreBot.Models.Generate
             cellDisc0.Colspan = 2;
             tableObs.AddCell(cellDisc0);
 
-            List<string> obs = new List<string>();
-            obs = FieldsGenerate.obs();
-
-            if (obs.Count > 0)
+            if (FieldsGenerate.mensagem1 != "")
             {
-                for (int i = 0; i < obs.Count; i++)
-                {
-                    PdfPCell cellDisc1 = new PdfPCell(new Phrase(obs[i], FontePadrao));
-                    cellDisc1.HorizontalAlignment = 0;
-                    cellDisc1.Border = 0;
-                    tableObs.AddCell(cellDisc1);
-
-                }
+                PdfPCell cellDisc11 = new PdfPCell(new Phrase(FieldsGenerate.mensagem1, FontePadrao));
+                cellDisc11.Border = 0;
+                tableObs.AddCell(cellDisc11);
             }
-            else
+            if (FieldsGenerate.mensagem2 != "")
             {
-                PdfPCell cellDisc1 = new PdfPCell(new Phrase("\r\n", FontePadrao));
-                cellDisc1.Border = 0;
-                tableObs.AddCell(cellDisc1);
+                PdfPCell cellDisc2 = new PdfPCell(new Phrase(FieldsGenerate.mensagem2, FontePadrao));
+                cellDisc2.Border = 0;
+                tableObs.AddCell(cellDisc2);
             }
+            if (FieldsGenerate.mensagem3 != "")
+            {
+                PdfPCell cellDisc3 = new PdfPCell(new Phrase(FieldsGenerate.mensagem3, FontePadrao));
+                cellDisc3.Border = 0;
+                tableObs.AddCell(cellDisc3);
+            }
+            if (FieldsGenerate.mensagem4 != "")
+            {
+                PdfPCell cellDisc4 = new PdfPCell(new Phrase(FieldsGenerate.mensagem4, FontePadrao));
+                cellDisc4.Border = 0;
+                tableObs.AddCell(cellDisc4);
+            }
+            if (FieldsGenerate.mensagem5 != "")
+            {
+                PdfPCell cellDisc5 = new PdfPCell(new Phrase(FieldsGenerate.mensagem5, FontePadrao));
+                cellDisc5.Border = 0;
+                tableObs.AddCell(cellDisc5);
+            }
+
+            PdfPCell cellDisc1 = new PdfPCell(new Phrase("\r\n", FontePadrao));
+            cellDisc1.Border = 0;
+            tableObs.AddCell(cellDisc1);
 
             return tableObs;
         }
@@ -445,9 +459,8 @@ namespace CoreBot.Models.Generate
 
             // LINHA 5
             PdfPCell cell16 = new PdfPCell(new Phrase("Instruções" +
-                                                        "\nSR.CAIXA NÃO RECEBER APÓS O VENCIMENTO" +
-                                                        "\nESTE DUA TAMBÉM PODE SER PAGO POR CARTÕES DE CRÉDITO EM SERVIÇO DISPONIBILIZADO" +
-                                                        "\nNO SITE DO DETRAN(WWW.DETRAN.SE.GOV.BR)", FontePadrao));
+                                                        "\nSR.CAIXA NÃO RECEBER APÓS O VENCIMENTO\r\n" +
+                                                        FieldsGenerate.mensagem1 + " " + FieldsGenerate.mensagem2, FontePadrao));
             cell16.HorizontalAlignment = 0;
             cell16.Colspan = 4;
             cell16.Rowspan = 5;
@@ -508,12 +521,22 @@ namespace CoreBot.Models.Generate
             viaCell5.Border = 0;
             tableVia.AddCell(viaCell5);
 
+            PdfPCell cellDisc8 = new PdfPCell(new Phrase("\r\n", FontePadrao));
+            cellDisc8.Border = 0;
+            cellDisc8.Colspan = 6;
+            tableVia.AddCell(cellDisc8);
+
             // LINHA 9 VIA - NÚMERO CODIGO BARRA
             PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.codBarras, FontePadrao));
             viaCell6.HorizontalAlignment = 1;
             viaCell6.Colspan = 6;
             viaCell6.Border = 0;
             tableVia.AddCell(viaCell6);
+
+            PdfPCell cellDisc7  = new PdfPCell(new Phrase("\r\n", FontePadrao));
+            cellDisc7.Border = 0;
+            cellDisc7.Colspan = 6;
+            tableVia.AddCell(cellDisc7);
 
             return tableVia;
         }

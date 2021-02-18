@@ -125,6 +125,13 @@ namespace Microsoft.BotBuilderSamples
         public static string flagParc1A;
         public static string flagParc2A;
         public static string flagParc3A;
+        public static string cpfCnpjPagador;
+        public static string enderecoPagador;
+        public static string cepPagador;
+        public static string bairroPagador;
+        public static string municipioPagador;
+        public static string ufPagador;
+        public static string nossoNumero;
 
         public static string Banco { get; internal set; }
         public static int Count { get; internal set; }

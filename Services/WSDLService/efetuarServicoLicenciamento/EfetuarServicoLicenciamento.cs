@@ -100,6 +100,13 @@ namespace CoreBot.Services.WSDLService.efetuarServicoLicenciamento
             LicenseDialogDetails.flagParc1A = result.flagParc1A;
             LicenseDialogDetails.flagParc2A = result.flagParc2A;
             LicenseDialogDetails.flagParc3A = result.flagParc3A;
+            LicenseDialogDetails.cpfCnpjPagador = result.cpfCnpjPagador;
+            LicenseDialogDetails.enderecoPagador = result.enderecoPagador;
+            LicenseDialogDetails.cepPagador = result.cepPagador;
+            LicenseDialogDetails.bairroPagador = result.bairroPagador;
+            LicenseDialogDetails.municipioPagador = result.municipioPagador;
+            LicenseDialogDetails.ufPagador = result.ufPagador;
+            LicenseDialogDetails.nossoNumero = result.nossoNumero;
         }
     }
 }

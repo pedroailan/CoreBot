@@ -77,6 +77,19 @@ namespace CoreBot.Models.MethodsValidation.License
 
                 return dataTotal;
             }
+
+            public static string FormatValue(double value)
+            {
+                string cota = value.ToString();
+                int i = 0;
+                while (i <= cota.Length)
+                {
+                    if (cota[i] != 0) return cota;
+                    i++;
+                }
+                return cota;
+            }
+
         }
     }
 }

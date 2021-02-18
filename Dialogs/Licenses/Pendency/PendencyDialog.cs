@@ -37,12 +37,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
+        class ano
+        {
+            public static string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
+            public static string anoAtual = DateTime.Now.Year.ToString();
+        }
         private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-
-            string anoAnterior = ((DateTime.Now.Year) - 1).ToString();
-            string anoAtual = DateTime.Now.Year.ToString();
 
 
             if (VehicleLicense.ValidationYear() == true)
@@ -99,7 +101,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 LicenseDialogDetails.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
-                if (stepContext.Values["choice"].ToString().ToLower() == "2020")
+                if (stepContext.Values["choice"].ToString().ToLower() == LicenseDialogDetails.anoLicenciamento[0].ToString())
                 {
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
@@ -117,7 +119,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
             
 
-            if (LicenseDialogDetails.exercicio == 2021)
+            if (LicenseDialogDetails.exercicio == LicenseDialogDetails.anoLicenciamento[1])
             {
                 await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaOut, LicenseDialogDetails.exercicio);
                 await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
@@ -148,7 +150,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                LicenseDialogDetails.exercicio = LicenseDialogDetails.exercicio - 1;
+                LicenseDialogDetails.exercicio -= 1;
                 await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaOut, LicenseDialogDetails.exercicio);
                 return await stepContext.ReplaceDialogAsync(nameof(PendencyDialog), LicenseDialogDetails, cancellationToken);
             }

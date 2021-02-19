@@ -79,7 +79,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Quais deseja pagar? (A escolha do ano atual já tráz acumulado o ano anterior)"),
+                Prompt = MessageFactory.Text($"Qual ano deseja licenciar seu veículo? (A escolha do ano atual já tráz acumulado o ano anterior)"),
                 Choices = ChoiceFactory.ToChoices(choices: anos),
             };
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -91,24 +91,36 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
-            
+
             //LicenseDialogDetails.contadorAnoLicenciamento = 1;
 
             // Confirmação para somente um ano
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
+                await stepContext.Context.SendActivitiesAsync(new Activity[]
+                {
+                    MessageFactory.Text("Estou verificando seus dados para gerar o documento. Por favor, aguarde um momento..."),
+                    //new Activity { Type = ActivityTypes.Typing },
+                }, cancellationToken);
+
                 LicenseDialogDetails.exercicio = LicenseDialogDetails.anoLicenciamento[0];
+
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
             else
             {
-                if(LicenseDialogDetails.anoLicenciamento[0] == LicenseDialogDetails.exercicio && stepContext.Values["choice"].ToString().ToLower() == "não")
+                if (LicenseDialogDetails.anoLicenciamento[0] == LicenseDialogDetails.exercicio && stepContext.Values["choice"].ToString().ToLower() == "não")
                 {
                     return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
                 }
                 LicenseDialogDetails.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
                 if (stepContext.Values["choice"].ToString().ToLower() == LicenseDialogDetails.anoLicenciamento[0].ToString())
                 {
+                    await stepContext.Context.SendActivitiesAsync(new Activity[]
+                    {
+                        MessageFactory.Text("Estou verificando seus dados para gerar o documento. Por favor, aguarde um momento..."),
+                       //new Activity { Type = ActivityTypes.Typing },
+                    }, cancellationToken);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
                 else
@@ -123,7 +135,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
-            
+
 
             if (LicenseDialogDetails.exercicio == LicenseDialogDetails.anoLicenciamento[1])
             {
@@ -151,6 +163,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //stepContext.Values["choice"].ToString().ToLower();
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
+                await stepContext.Context.SendActivitiesAsync(new Activity[]
+                {
+                    MessageFactory.Text("Estou verificando seus dados para gerar o documento. Por favor, aguarde um momento..."),
+                    //new Activity { Type = ActivityTypes.Typing },
+                }, cancellationToken);
+
                 LicenseDialogDetails.exercicio = LicenseDialogDetails.exercicio;
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }

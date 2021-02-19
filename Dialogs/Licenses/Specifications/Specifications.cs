@@ -90,7 +90,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 return await stepContext.ContinueDialogAsync(cancellationToken);
-
             }
             else
             {
@@ -177,15 +176,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             
             if (result.erro.codigo != 0)
             {
-                await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema e não foi possível gerar o PDF. Por favor, volte mais tarde para efetuar seu serviço" +
                                                                 ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
 
-            await stepContext.Context.SendActivitiesAsync(new Activity[]
-            {
-                new Activity { Type = ActivityTypes.Typing },
-            }, cancellationToken);
             return await stepContext.ContinueDialogAsync(cancellationToken);
 
         }

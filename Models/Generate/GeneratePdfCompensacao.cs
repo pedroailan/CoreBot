@@ -487,7 +487,7 @@ namespace CoreBot.Models.Generate
             cell20.Colspan = 2;
             tableVia.AddCell(cell20);
 
-            PdfPCell cell21 = new PdfPCell(new Phrase("(=) Valor cobrado: R$" + FieldsGenerate.valorTotal, FontePadrao));
+            PdfPCell cell21 = new PdfPCell(new Phrase("(=) Valor cobrado: R$ " + FieldsGenerate.valorTotal, FontePadrao));
             cell21.HorizontalAlignment = 0;
             cell21.Colspan = 2;
             tableVia.AddCell(cell21);

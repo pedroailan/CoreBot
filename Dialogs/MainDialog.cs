@@ -61,8 +61,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             ///*var algo = await novo.obterEmissaoCRLV("", 0);*/
 
             //LicenseDialogDetails.MarcaModelo = algo.nomeProprietario;
-
-            var s = Format.Output.reverseString("AILAN");
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo? "),

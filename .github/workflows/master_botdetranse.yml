@@ -31,5 +31,5 @@ jobs:
       with:
         app-name: 'botdetranse'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_151d25fce1ca48609249ec98d56da326 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_fccd29ac015543d3bb88d7dd54fc7124 }}
         package: ${{env.DOTNET_ROOT}}/myapp 

@@ -28,7 +28,7 @@ namespace CoreBot.Models.Generate
         public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public static string tituloVenc = LicenseDialogDetails.tituloVenc;
         public static string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar); 
-        public static string vencimento = Format.Output.FormatData(Format.Output.InverteString(LicenseDialogDetails.vencimento.ToString()));
+        public static string vencimento = Format.Output.FormatData(Format.Output.reverseString(LicenseDialogDetails.vencimento.ToString()));
         public static string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public static string chassi = LicenseDialogDetails.chassiSNG;
         public static string mensagem1 = LicenseDialogDetails.mensagem1;
@@ -46,7 +46,6 @@ namespace CoreBot.Models.Generate
         /// Fields utilizados somente na Ficha de Compensação
         /// </summary>
         public static string nossonum = LicenseDialogDetails.nossoNumero;
-        public static string endereco = "";
         public static string cep = LicenseDialogDetails.cepPagador;
         public static string cpf = LicenseDialogDetails.cpfCnpjPagador;
         public static string sacador = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + " - " 

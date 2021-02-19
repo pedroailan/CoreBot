@@ -510,7 +510,8 @@ namespace CoreBot.Models.Generate
             tableVia.AddCell(cell25);
 
             // LINHA 8 - CÓDIGO DE BARRAS
-            PdfPCell viaCell5 = new PdfPCell(BarCode(writer));
+            PdfPCell viaCell5 = new PdfPCell();
+            AddImageInCell(viaCell5, BarCode(writer), 350f, 350f, 1);
             viaCell5.HorizontalAlignment = 1;
             viaCell5.PaddingTop = 10;
             viaCell5.Colspan = 6;

@@ -191,10 +191,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
 
             var info = "Aqui está sua via para pagamento no " + LicenseDialogDetails.Banco +"!\r\n" +
-                        "Estou disponibilizando em formato .pdf ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
-                        "Após a compensação do pagamento você pode voltar aqui para emitir seu documento de circulação (CRLV-e).";
+                        "Estou disponibilizando seu documento ou diretamente o código de barras para facilitar seu pagamento!\r\n" +
+                        "Após a compensação do pagamento você pode voltar aqui para emitir seu Documento de Circulação (CRLV-e).";
 
-            var code = LicenseDialogDetails.codBarra;
+            var codeF = LicenseDialogDetails.codBarra;
+            var codeD = LicenseDialogDetails.linhaDig;
 
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
             //await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
@@ -247,6 +248,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var reply = MessageFactory.Text(info);
                 reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao_" + LicenseDialogDetails.codSegurancaOut) };
                 await stepContext.Context.SendActivityAsync(reply);
+                await stepContext.Context.SendActivityAsync(codeF);
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
             else
@@ -254,6 +256,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var reply = MessageFactory.Text(info);
                 reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(), "DUA_" + LicenseDialogDetails.codSegurancaOut) };
                 await stepContext.Context.SendActivityAsync(reply);
+                await stepContext.Context.SendActivityAsync(codeD);
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
  

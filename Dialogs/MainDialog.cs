@@ -62,10 +62,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             //LicenseDialogDetails.MarcaModelo = algo.nomeProprietario;
 
-            var c = Format.Output.reverseDate("20210314");
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo? " + c),
+                Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo? "),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Anual (BANESE)", "Licenciamento Anual (Outros Bancos)", "Emitir Documento de Circulação (CRLV-e)", "Nenhuma das alternativas" }),
             };
 

@@ -409,24 +409,15 @@ namespace CoreBot.Models
             viaCell4.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell4);
 
-            PdfPCell cellDisc8 = new PdfPCell(new Phrase("\r\n", FontePadrao));
-            cellDisc8.Border = 0;
-            cellDisc8.Colspan = 6;
-            tableVia.AddCell(cellDisc8);
-
             // LINHA 2 - CÓDIGO DE BARRAS
             PdfPCell viaCell5 = new PdfPCell();
             AddImageInCell(viaCell5, BarCode(writer), 350f, 350f, 1);
             viaCell5.HorizontalAlignment = 1;
             viaCell5.PaddingTop = 10;
+            viaCell5.PaddingBottom = 10;
             viaCell5.Colspan = 4;
             viaCell5.Border = 0;
             tableVia.AddCell(viaCell5);
-
-            PdfPCell cellDisc7 = new PdfPCell(new Phrase("\r\n", FontePadrao));
-            cellDisc7.Border = 0;
-            cellDisc7.Colspan = 6;
-            tableVia.AddCell(cellDisc7);
 
             // LINHA 3 VIA - NÚMERO CODIGO BARRA
             PdfPCell viaCell6 = new PdfPCell(new Phrase(FieldsGenerate.linhaDig, FontePadrao));

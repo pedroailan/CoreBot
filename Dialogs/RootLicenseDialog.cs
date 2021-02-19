@@ -63,7 +63,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
-                                                        "O documento gerado aqui é do documento de arrecadação (DUA).");
+                                                        "O documento gerado aqui é o Documento de Arrecadação (DUA).");
             //if(LicenseDialogDetails.Banco == "BANESE")
             //{
             //    await stepContext.Context.SendActivityAsync("Você optou por banese");

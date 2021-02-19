@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -81,6 +82,35 @@ namespace CoreBot.Models.MethodsValidation.License
                 return dataTotal;
             }
 
+            public static string FormatData(string data, int cont)
+            {
+                string dataTotal = "";
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    //if (cont == 2)
+                    //{
+                    //    dataTotal += data[i - 1].ToString() + data[i].ToString() + "/";
+                    //}
+                    if (cont == 2)
+                    {
+                        dataTotal += data[i - 1].ToString() + data[i].ToString() + data[i + 1].ToString() + data[i + 2].ToString() + "/";
+                    }
+                    if (cont == 5)
+                    {
+                        dataTotal += data[i].ToString() + data[i + 1].ToString() + "/";
+                    }
+                    if (cont > 6)
+                    {
+                        dataTotal += data[i].ToString() + data[i + 1].ToString();
+                        break;
+                    }
+                    cont++;
+                }
+
+                return dataTotal;
+            }
+
             public static string FormatValue(string value)
             {
                 string valorTotal = value.TrimStart('0');
@@ -95,6 +125,18 @@ namespace CoreBot.Models.MethodsValidation.License
 
                 return invertida;
             }
+
+            public static string reverseDate(string Word)
+            {
+
+                var invertida = FormatData(Word, 1);
+                var NewDate = DateTime.Parse(invertida, new CultureInfo("pt-PT"));
+
+                invertida = NewDate.Day.ToString() + "0" + NewDate.Month.ToString() +NewDate.Year.ToString();
+                return FormatData(invertida);
+            }
+
+
         }
     }
 }

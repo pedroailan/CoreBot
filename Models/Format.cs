@@ -131,7 +131,6 @@ namespace CoreBot.Models.MethodsValidation.License
 
                 var invertida = FormatData(Word, 1);
                 var NewDate = DateTime.Parse(invertida, new CultureInfo("pt-PT"));
-
                 invertida = NewDate.Day.ToString() + "0" + NewDate.Month.ToString() +NewDate.Year.ToString();
                 return FormatData(invertida);
             }

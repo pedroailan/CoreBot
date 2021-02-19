@@ -120,7 +120,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     else
                     {
                         await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
                         return await stepContext.EndDialogAsync(cancellationToken);
                     }
                 }

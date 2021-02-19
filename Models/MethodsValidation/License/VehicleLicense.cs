@@ -21,7 +21,7 @@ namespace CoreBot.Models
         /// <returns></returns>
         public async static Task<bool> ValidationSecureCodeLicenciamento(string SecureCode)
         {
-            if (SecureCode.Length > 0 && Format.Input.ValidationFormat(SecureCode) == true)
+            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
@@ -40,7 +40,7 @@ namespace CoreBot.Models
 
         public async static Task<bool> ValidationSecureCodeLicenciamento(string SecureCode, double year)
         {
-            if (SecureCode.Length > 0 && Format.Input.ValidationFormat(SecureCode) == true)
+            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
@@ -81,7 +81,7 @@ namespace CoreBot.Models
         /// <returns></returns>
         public async static Task<bool> ValidationRenavam(string Renavam)
         {
-            if (Renavam.Length > 0 && Format.Input.ValidationFormat(Renavam) == true)
+            if (Renavam.Length > 0 && Format.Input.ValidationFormat.IsNumber(Renavam) == true)
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();

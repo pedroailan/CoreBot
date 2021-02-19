@@ -60,9 +60,12 @@ namespace CoreBot.Models.MethodsValidation.License
 
         public static bool ValidationNumber(string nroAutorizacaoRNTRCIn)
         {
-            if(nroAutorizacaoRNTRCIn == LicenseDialogDetails.nroAutorizacaoRNTRCOut)
+            if (Format.Input.ValidationFormat.IsNumber(nroAutorizacaoRNTRCIn) == true)
             {
-                return true;
+                if (nroAutorizacaoRNTRCIn == LicenseDialogDetails.nroAutorizacaoRNTRCOut)
+                {
+                    return true;
+                }
             }
             return false;
         }

@@ -12,7 +12,7 @@ namespace CoreBot.Models.Methods
     {
         public async static Task<bool> ValidationSecureCode(string SecureCode)
         {
-            if (SecureCode.Length > 0 && Format.Input.ValidationFormat(SecureCode) == true)
+            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
             {
                 ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
                 var crlv = await obter.obterEmissaoCRLV(Convert.ToDouble(SecureCode));

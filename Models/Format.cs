@@ -10,13 +10,16 @@ namespace CoreBot.Models.MethodsValidation.License
     {
         public class Input
         {
-            public static bool ValidationFormat(string secureCode)
+            public class ValidationFormat
             {
-                if (Char.IsDigit(secureCode, 0))
+                public static bool IsNumber(string secureCode)
                 {
-                    return true;
+                    if (Char.IsDigit(secureCode, 0))
+                    {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
             }
         }
 
@@ -78,29 +81,25 @@ namespace CoreBot.Models.MethodsValidation.License
                 return dataTotal;
             }
 
-            public static string InverteString(string s)
+            public static string FormatValue(double value)
             {
-                char[] arr = s.ToCharArray();
-                Array.Reverse(arr);
-                return new string(arr);
+                string cota = value.ToString();
+                int i = 0;
+                while (i <= cota.Length)
+                {
+                    if (cota[i] != 0) return cota;
+                    i++;
+                }
+                return cota;
             }
 
-            //public static string FormatValue(double value)
-            //{
-            //    string cota = value.ToString();
-            //    int i = 0;
-            //    while (i <= cota.Length)
-            //    {
-            //        if (cota[i] != 0) return cota;
-            //        i++;
-            //    }
-            //    return cota;
-            //}
-
-            public static string FormatValue(string value)
+            public static string reverseString(string Word)
             {
-                string valorTotal = value.TrimStart('0');
-                return valorTotal;
+                char[] arrChar = Word.ToCharArray();
+                Array.Reverse(arrChar);
+                string invertida = new String(arrChar);
+
+                return invertida;
             }
         }
     }

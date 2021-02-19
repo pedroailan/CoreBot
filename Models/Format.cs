@@ -10,13 +10,16 @@ namespace CoreBot.Models.MethodsValidation.License
     {
         public class Input
         {
-            public static bool ValidationFormat(string secureCode)
+            public class ValidationFormat
             {
-                if (Char.IsDigit(secureCode, 0))
+                public static bool IsNumber(string secureCode)
                 {
-                    return true;
+                    if (Char.IsDigit(secureCode, 0))
+                    {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
             }
         }
 
@@ -78,13 +81,6 @@ namespace CoreBot.Models.MethodsValidation.License
                 return dataTotal;
             }
 
-            public static string InverteString(string s)
-            {
-                char[] arr = s.ToCharArray();
-                Array.Reverse(arr);
-                return new string(arr);
-            }
-
             public static string FormatValue(double value)
             {
                 string cota = value.ToString();
@@ -95,6 +91,15 @@ namespace CoreBot.Models.MethodsValidation.License
                     i++;
                 }
                 return cota;
+            }
+
+            public static string reverseString(string Word)
+            {
+                char[] arrChar = Word.ToCharArray();
+                Array.Reverse(arrChar);
+                string invertida = new String(arrChar);
+
+                return invertida;
             }
         }
     }

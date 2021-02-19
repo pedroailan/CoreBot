@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AdaptiveCards;
 using CoreBot.Models;
 using CoreBot.Models.MethodsValidation.License;
 using Microsoft.Bot.Builder;
@@ -12,6 +14,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -98,19 +101,29 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             
         }
 
-        private async Task<DialogTurnResult> ValidationAuthorizationDataStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        public async Task<DialogTurnResult> ValidationAuthorizationDataStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseDialogDetails.dataValidadeRNTRC = stepContext.Result.ToString();
-
-            if (VehicleLicenseRNTRC.ValidationDate(LicenseDialogDetails.dataValidadeRNTRC) == true)
-            {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
+            LicenseDialogDetails.Count += 1;
+            if (LicenseDialogDetails.Count < 3)
+            { 
+                if (VehicleLicenseRNTRC.ValidationDate(LicenseDialogDetails.dataValidadeRNTRC) == true)
+                {
+                    return await stepContext.ContinueDialogAsync(cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("A data informada deve ser maior que a atual, vamos repetir o processo");
+                    return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog.ValidationAuthorizationDataStepAsync), LicenseDialogDetails, cancellationToken);
+                }
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("A data informada deve ser maior que a atual, vamos repetir o processo");
-                return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+                await stepContext.Context.SendActivityAsync("Sua data é invalida!\r\n" +
+                                                            "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                            "ou entre em contato com o DETRAN, para obter mais informações");
+                return await stepContext.EndDialogAsync(cancellationToken);
             }
         }
 
@@ -118,16 +131,54 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> AuthorizationValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            ///Valida tipo da autorização
-            if (VehicleLicenseRNTRC.ValidationNumber(LicenseDialogDetails.nroAutorizacaoRNTRCIn) == true && VehicleLicenseRNTRC.ValidationTypeAuthorization(LicenseDialogDetails.tipoAutorizacaoRNTRCIn))
+            LicenseDialogDetails.Count += 1;
+            if (LicenseDialogDetails.Count < 3)
             {
-                return await stepContext.ContinueDialogAsync(cancellationToken);
+                ///Valida tipo da autorização
+                if (VehicleLicenseRNTRC.ValidationNumber(LicenseDialogDetails.nroAutorizacaoRNTRCIn) == true && VehicleLicenseRNTRC.ValidationTypeAuthorization(LicenseDialogDetails.tipoAutorizacaoRNTRCIn))
+                {
+                    return await stepContext.ContinueDialogAsync(cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Os dados informados não estão de acordo com o nosso sistema.\r\n" +
+                                                               "Vou ter que repetir algumas perguntas, ok?");
+                    return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+                }
             }
             else
             {
                 await stepContext.Context.SendActivityAsync("Os dados informados não estão de acordo com o nosso sistema.\r\n" +
-                                                           "Vou ter que repetir algumas perguntas, ok?");
-                return await stepContext.ReplaceDialogAsync(nameof(RNTRCDialog), LicenseDialogDetails, cancellationToken);
+                                                            "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                            "ou entre em contato com o DETRAN, para obter mais informações");
+                var choices = new[] { "Ir para o site" };
+                var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
+                {
+                    // Use LINQ to turn the choices into submit actions
+
+                    Actions = choices.Select(choice => new AdaptiveOpenUrlAction
+                    {
+                        Title = choice,
+                        Url = new Uri("https://www.detran.se.gov.br/portal/?menu=1")
+
+                    }).ToList<AdaptiveAction>(),
+                };
+
+                // Prompt
+                return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+                {
+                    Prompt = (Activity)MessageFactory.Attachment(new Attachment
+                    {
+                        ContentType = AdaptiveCard.ContentType,
+                        // Convert the AdaptiveCard to a JObject
+                        Content = JObject.FromObject(card),
+                    }),
+                    Choices = ChoiceFactory.ToChoices(choices),
+                    // Don't render the choices outside the card
+                    Style = ListStyle.None,
+                },
+                    cancellationToken);
+                
             }
         }
 

@@ -85,16 +85,22 @@ namespace CoreBot.Models.MethodsValidation.License
                 return new string(arr);
             }
 
-            public static string FormatValue(double value)
+            //public static string FormatValue(double value)
+            //{
+            //    string cota = value.ToString();
+            //    int i = 0;
+            //    while (i <= cota.Length)
+            //    {
+            //        if (cota[i] != 0) return cota;
+            //        i++;
+            //    }
+            //    return cota;
+            //}
+
+            public static string FormatValue(string value)
             {
-                string cota = value.ToString();
-                int i = 0;
-                while (i <= cota.Length)
-                {
-                    if (cota[i] != 0) return cota;
-                    i++;
-                }
-                return cota;
+                string valorTotal = value.TrimStart('0');
+                return valorTotal;
             }
         }
     }

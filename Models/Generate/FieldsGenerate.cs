@@ -46,11 +46,12 @@ namespace CoreBot.Models.Generate
         /// Fields utilizados somente na Ficha de Compensação
         /// </summary>
         public static string nossonum = LicenseDialogDetails.nossoNumero;
-        public static string endereco = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + ", "
-                                        + LicenseDialogDetails.ufPagador + ". " + LicenseDialogDetails.cepPagador;
+        public static string endereco = "";
         public static string cep = LicenseDialogDetails.cepPagador;
         public static string cpf = LicenseDialogDetails.cpfCnpjPagador;
-        public static string sacador = "AVENIDA TANCREDO NEVES, S/N, ARACAJU/SE";
+        public static string sacador = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + " - " 
+                                        + LicenseDialogDetails.municipioPagador + "/" + LicenseDialogDetails.ufPagador 
+                                        + ". CEP: " + LicenseDialogDetails.cepPagador;
         public static string agencia = LicenseDialogDetails.agencia;
 
         public static string totalA = LicenseDialogDetails.totalA; 
@@ -84,7 +85,7 @@ namespace CoreBot.Models.Generate
             {
                 if (value != "")
                 {
-                    preco.Add("R$ " + value);
+                    preco.Add("R$ " + Format.Output.FormatValue(value));
                 } else
                 {
                     break;

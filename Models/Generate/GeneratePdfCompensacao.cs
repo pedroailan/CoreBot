@@ -396,8 +396,9 @@ namespace CoreBot.Models.Generate
             tableVia.AddCell(viaCell2);
 
             // LINHA 2 
-            PdfPCell cell2 = new PdfPCell(new Phrase("Beneficiário: DEPARTAMENTO ESTADUAL DE TRÂNSITO DE SERGIPE - DETRAN/SE\n" +
-                                                    "Av.Tancredo Neves, s / n, Ponto Novo, Aracaju / SE, Cep. 49.097 - 510 - Cnpj. 01.560.393 / 0001 - 50", FontePadrao));
+            PdfPCell cell2 = new PdfPCell(new Phrase("Beneficiário: DEPARTAMENTO ESTADUAL DE TRÂNSITO DE SERGIPE - DETRAN/SE\n"
+                                                    + FieldsGenerate.sacador
+                                                    + " - Cnpj. 01.560.393 / 0001 - 50", FontePadrao));
             cell2.HorizontalAlignment = 0;
             cell2.Colspan = 4;
             tableVia.AddCell(cell2);
@@ -453,7 +454,7 @@ namespace CoreBot.Models.Generate
             cell14.HorizontalAlignment = 0;
             tableVia.AddCell(cell14);
 
-            PdfPCell cell15 = new PdfPCell(new Phrase("(=) Valor do Documento: \n" + FieldsGenerate.valorTotal, FontePadrao));
+            PdfPCell cell15 = new PdfPCell(new Phrase("(=) Valor do Documento: \nR$ " + FieldsGenerate.valorTotal, FontePadrao));
             cell15.HorizontalAlignment = 0;
             tableVia.AddCell(cell15);
 
@@ -486,7 +487,7 @@ namespace CoreBot.Models.Generate
             cell20.Colspan = 2;
             tableVia.AddCell(cell20);
 
-            PdfPCell cell21 = new PdfPCell(new Phrase("(=) Valor cobrado: " + FieldsGenerate.valorTotal, FontePadrao));
+            PdfPCell cell21 = new PdfPCell(new Phrase("(=) Valor cobrado: R$" + FieldsGenerate.valorTotal, FontePadrao));
             cell21.HorizontalAlignment = 0;
             cell21.Colspan = 2;
             tableVia.AddCell(cell21);
@@ -494,17 +495,12 @@ namespace CoreBot.Models.Generate
             //LINHA 6
             PdfPCell cell22 = new PdfPCell(new Phrase("Pagador: \n" + FieldsGenerate.nome, FontePadrao));
             cell22.HorizontalAlignment = 0;
-            cell22.Colspan = 2;
-            tableVia.AddCell(cell22);
-
-            PdfPCell cell23 = new PdfPCell(new Phrase("Endereço \n" + FieldsGenerate.endereco, FontePadrao));
-            cell23.HorizontalAlignment = 0;
-            cell23.Colspan = 2;
-            tableVia.AddCell(cell23);
+            cell22.Colspan = 3;
+            tableVia.AddCell(cell22);    
 
             PdfPCell cell24 = new PdfPCell(new Phrase("CPF/CNPJ: \n" + FieldsGenerate.cpf, FontePadrao));
             cell24.HorizontalAlignment = 0;
-            cell24.Colspan = 2;
+            cell24.Colspan = 3;
             tableVia.AddCell(cell24);
 
             //LINHA 7

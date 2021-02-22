@@ -1,9 +1,6 @@
 ﻿using CoreBot.Models.MethodsValidation.License;
 using Microsoft.BotBuilderSamples;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CoreBot.Models.Generate
 {
@@ -11,6 +8,8 @@ namespace CoreBot.Models.Generate
     /// OBJETIVO: Fields de preenchimento das variáveis necessárias para construção dos PDFs.
     /// AUTOR(ES): Felipe Falcão
     /// </summary>
+    /// 
+    ///blabla
     public class FieldsGenerate
     {
         /// <summary>
@@ -27,7 +26,7 @@ namespace CoreBot.Models.Generate
         public static string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
         public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public static string tituloVenc = LicenseDialogDetails.tituloVenc;
-        public static string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar); 
+        public static string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar);
         public static string vencimento = Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
         public static string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public static string chassi = LicenseDialogDetails.chassiSNG;
@@ -49,12 +48,12 @@ namespace CoreBot.Models.Generate
         public static string endereco = "";
         public static string cep = LicenseDialogDetails.cepPagador;
         public static string cpf = LicenseDialogDetails.cpfCnpjPagador;
-        public static string sacador = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + " - " 
-                                        + LicenseDialogDetails.municipioPagador + "/" + LicenseDialogDetails.ufPagador 
+        public static string sacador = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + " - "
+                                        + LicenseDialogDetails.municipioPagador + "/" + LicenseDialogDetails.ufPagador
                                         + ". CEP: " + LicenseDialogDetails.cepPagador;
         public static string agencia = LicenseDialogDetails.agencia;
 
-        public static string totalA = LicenseDialogDetails.totalA; 
+        public static string totalA = LicenseDialogDetails.totalA;
         public static string linhaCodBarras = LicenseDialogDetails.linhaCodBarra;
         public static string codBarras = LicenseDialogDetails.codBarra;
         public static string asBace1 = LicenseDialogDetails.asBace1;
@@ -69,7 +68,7 @@ namespace CoreBot.Models.Generate
 
             foreach (string value in LicenseDialogDetails.vetDescDebitos)
             {
-                if(value != "")
+                if (value != "")
                 {
                     taxa.Add(value);
                 }
@@ -86,7 +85,8 @@ namespace CoreBot.Models.Generate
                 if (value != "")
                 {
                     preco.Add("R$ " + Format.Output.FormatValue(value));
-                } else
+                }
+                else
                 {
                     break;
                 }

@@ -39,6 +39,9 @@ namespace CoreBot.Models
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
             WriteDocument(document, writer);
+            //document.Open();
+            //document.Add(new Paragraph(new Phrase("TESTE")));
+            //document.Close();
 
             byte[] bytes = memoryStream.ToArray();
 
@@ -54,10 +57,13 @@ namespace CoreBot.Models
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
+            //string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
+            string pathImageDetran = "https://www.detran.se.gov.br/portal/img/governo/logo_detran.png";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
 
             doc.Add(Header());
+            //doc.Add(new Paragraph(new Phrase(Environment.CurrentDirectory)));
+            //doc.Add(new Paragraph(new Phrase(Directory.GetCurrentDirectory())));
             doc.Add(parag);
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);

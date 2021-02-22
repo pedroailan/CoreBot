@@ -99,7 +99,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (CRLVDialogDetails.Erro.codigo >= 1 && CRLVDialogDetails.Erro.codigo <= 900)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem + " " + CRLVDialogDetails.Erro.codigo);
 
                     CRLVDialogDetails.Count += 1;
                     if (CRLVDialogDetails.Count < 3)

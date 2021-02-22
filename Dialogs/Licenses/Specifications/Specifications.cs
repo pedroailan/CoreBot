@@ -173,6 +173,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseDialogDetails.IsencaoIPVA,
                 LicenseDialogDetails.tipoDocumentoIn
                 );
+
+            await stepContext.Context.SendActivityAsync(result.codigoRetorno.ToString());
+            
             
             if (result.erro.codigo != 0)
             {
@@ -197,8 +200,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var codeF = LicenseDialogDetails.codBarra;
             var codeD = LicenseDialogDetails.linhaDig;
 
-            //await stepContext.Context.SendActivityAsync(MessageFactory.Text(info), cancellationToken);
-            //await stepContext.Context.SendActivityAsync(MessageFactory.Text(code), cancellationToken);
+            //await stepContext.Context.SendActivityAsync(LicenseDialogDetails.cpfCnpjPagador);
+
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(codeF), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(codeD), cancellationToken);
 
 
             //// Define choices
@@ -243,23 +248,23 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //},
             //    cancellationToken);
 
-            if (LicenseDialogDetails.tipoDocumentoOut == "F")
-            {
-                var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao_" + LicenseDialogDetails.codSegurancaOut) };
-                await stepContext.Context.SendActivityAsync(reply);
-                await stepContext.Context.SendActivityAsync(codeF);
-                return await stepContext.EndDialogAsync(cancellationToken);
-            }
-            else
-            {
-                var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(), "DUA_" + LicenseDialogDetails.codSegurancaOut) };
-                await stepContext.Context.SendActivityAsync(reply);
-                await stepContext.Context.SendActivityAsync(codeD);
-                return await stepContext.EndDialogAsync(cancellationToken);
-            }
- 
+            //if (LicenseDialogDetails.tipoDocumentoOut == "F")
+            //{
+            //    var reply = MessageFactory.Text(info);
+            //    reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao_" + LicenseDialogDetails.codSegurancaOut) };
+            //    await stepContext.Context.SendActivityAsync(reply);
+            //    await stepContext.Context.SendActivityAsync(codeF);
+            //    return await stepContext.EndDialogAsync(cancellationToken);
+            //}
+            //else
+            //{
+            //    var reply = MessageFactory.Text(info);
+            //    reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(), "DUA_" + LicenseDialogDetails.codSegurancaOut) };
+            //    await stepContext.Context.SendActivityAsync(reply);
+            //    await stepContext.Context.SendActivityAsync(codeD);
+            //    return await stepContext.EndDialogAsync(cancellationToken);
+            //}
+            return await stepContext.EndDialogAsync(cancellationToken);
         }
 
     }

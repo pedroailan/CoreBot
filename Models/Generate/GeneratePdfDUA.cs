@@ -405,7 +405,7 @@ namespace CoreBot.Models
             viaCell3.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell3);
 
-            PdfPCell viaCell4 = new PdfPCell(new Phrase("VALOR: " + FieldsGenerate.valorTotal, FontePadrao));
+            PdfPCell viaCell4 = new PdfPCell(new Phrase("VALOR: R$ " + FieldsGenerate.valorTotal, FontePadrao));
             viaCell4.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell4);
 

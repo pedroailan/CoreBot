@@ -97,9 +97,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                if (CRLVDialogDetails.Erro.codigo >= 1 && CRLVDialogDetails.Erro.codigo <= 900)
+                if (CRLVDialogDetails.Erro.codigo == 1)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem + " " + CRLVDialogDetails.Erro.codigo);
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
 
                     CRLVDialogDetails.Count += 1;
                     if (CRLVDialogDetails.Count < 3)
@@ -109,12 +109,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     else
                     {
                         await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança\r\n" +
-                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois\r\n" +
+                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
                                                                     "ou entre em contato com o DETRAN, para obter mais informações");
                         return await stepContext.EndDialogAsync(cancellationToken);
                     }
                 }
-                else
+                else if (CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900)
+                {
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.codigo + " - " + CRLVDialogDetails.Erro.mensagem);
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                } else
                 {
                     await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
                                                                 ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");

@@ -141,7 +141,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             // Caso a placa não seja válida
             else
             {
-                if (CRLVDialogDetails.Erro.codigo >= 1 && CRLVDialogDetails.Erro.codigo <= 900)
+                if (CRLVDialogDetails.Erro.codigo == 1)
                 {
                     await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
 
@@ -157,6 +157,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                                     "ou entre em contato com o DETRAN, para obter mais informações");
                         return await stepContext.EndDialogAsync(cancellationToken);
                     }
+                }
+                else if (CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900)
+                {
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
                 else
                 {

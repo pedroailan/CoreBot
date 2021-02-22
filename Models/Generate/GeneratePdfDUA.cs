@@ -57,17 +57,17 @@ namespace CoreBot.Models
             Font FontePadrao = FontFactory.GetFont("Verdana", 8F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            //string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
-            //iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
+            string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
 
             doc.Add(Header());
-            doc.Add(new Paragraph(new Phrase(Environment.CurrentDirectory)));
-            doc.Add(new Paragraph(new Phrase(Directory.GetCurrentDirectory())));
+            //doc.Add(new Paragraph(new Phrase(Environment.CurrentDirectory)));
+            //doc.Add(new Paragraph(new Phrase(Directory.GetCurrentDirectory())));
             doc.Add(parag);
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);
             doc.Add(tableDUA(Titulo));
-            //doc.Add(tableDados(FontePadrao, page, image));
+            doc.Add(tableDados(FontePadrao, page, image));
             doc.Add(tableDiscriminacao(FontePadrao, Subtitulo));
             doc.Add(parag);
             doc.Add(tableMultas(FontePadrao, Subtitulo));
@@ -77,7 +77,7 @@ namespace CoreBot.Models
             doc.Add(tablePendencias(FontePadrao, Subtitulo));
             doc.Add(parag);
             doc.Add(tableInfoPagamento(FontePadrao, Subtitulo));
-            //doc.Add(tableVia(writer, FontePadrao, page, image));
+            doc.Add(tableVia(writer, FontePadrao, page, image));
             doc.Close();
         }
 

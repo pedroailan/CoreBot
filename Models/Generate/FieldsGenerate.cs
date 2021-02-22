@@ -25,13 +25,13 @@ namespace CoreBot.Models.Generate
         public static string tipo = LicenseDialogDetails.tipo;
         public static string cor = LicenseDialogDetails.cor;
         public static string exercicio = LicenseDialogDetails.exercicio.ToString();
-        public static string processado = ""; //Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
-        public static string emissao = ""; //Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
+        public static string processado = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
+        public static string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
         public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public static string tituloVenc = LicenseDialogDetails.tituloVenc;
-        public static string valorTotal = ""; // Format.Output.FormatValue(LicenseDialogDetails.valorApagar); 
-        public static string vencimento = ""; // Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
-        public static string validade = ""; //Format.Output.FormatData(LicenseDialogDetails.vencimento);
+        public static string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar); 
+        public static string vencimento = Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
+        public static string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public static string chassi = LicenseDialogDetails.chassiSNG;
         public static string mensagem1 = LicenseDialogDetails.mensagem1;
         public static string mensagem2 = LicenseDialogDetails.mensagem2;
@@ -87,7 +87,7 @@ namespace CoreBot.Models.Generate
             {
                 if (value != "")
                 {
-                    preco.Add("R$ "  /*Format.Output.FormatValue(value)*/);
+                    preco.Add("R$ " + Format.Output.FormatValue(value));
                 } else
                 {
                     break;

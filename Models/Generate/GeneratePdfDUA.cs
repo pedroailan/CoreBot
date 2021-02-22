@@ -61,6 +61,8 @@ namespace CoreBot.Models
             //iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
 
             doc.Add(Header());
+            doc.Add(new Paragraph(new Phrase(Environment.CurrentDirectory)));
+            doc.Add(new Paragraph(new Phrase(Directory.GetCurrentDirectory())));
             doc.Add(parag);
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);

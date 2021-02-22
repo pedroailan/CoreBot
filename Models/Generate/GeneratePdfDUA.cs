@@ -58,7 +58,7 @@ namespace CoreBot.Models
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
             //string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
-            string pathImageDetran = "https://www.detran.se.gov.br/portal/img/governo/logo_detran.png";
+            string pathImageDetran = "https://www.detran.se.gov.br/portal/images/detran.jpeg";
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
 
             doc.Add(Header());

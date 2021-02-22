@@ -55,9 +55,12 @@ namespace CoreBot.Models.Generate
             Font FonteVia = FontFactory.GetFont("Verdana", 6F, Font.NORMAL, BaseColor.BLACK);
             Paragraph parag = new Paragraph(new Phrase("\n"));
 
-            string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
-            string pathImageBanese = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "banese.jpg");
-            
+            //string pathImageDetran = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "detran.jpeg");
+            //string pathImageBanese = Path.Combine(Environment.CurrentDirectory, @"Assets/Docs", "banese.jpg");
+
+            string pathImageDetran = "https://www.detran.se.gov.br/portal/images/detran.jpeg";
+            string pathImageBanese = "https://www.detran.se.gov.br/portal/images/banese.jpg";
+
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
             iTextSharp.text.Image imageBanese = iTextSharp.text.Image.GetInstance(pathImageBanese);
 

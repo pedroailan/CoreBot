@@ -11,6 +11,8 @@ namespace CoreBot.Models.Generate
     /// OBJETIVO: Fields de preenchimento das variáveis necessárias para construção dos PDFs.
     /// AUTOR(ES): Felipe Falcão
     /// </summary>
+    /// 
+    ///blabla
     public class FieldsGenerate
     {
         /// <summary>

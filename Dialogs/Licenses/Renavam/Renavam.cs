@@ -70,7 +70,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             ), cancellationToken);
 
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM do seu veículo"), cancellationToken);
             var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = renavam }, cancellationToken);
         }
@@ -81,7 +81,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando seu Renavam. Por favor, aguarde um momento..."),
+                MessageFactory.Text("Estou verificando o Renavam informado. Por favor, aguarde um momento..."),
                 //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
@@ -92,7 +92,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 if (VehicleLicense.ExistSecureCode() == true)
                 {
                     LicenseDialogDetails.SecureCodeBool = true;
-                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo");
+                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo.");
 
                     AdaptiveCard card = new AdaptiveCard("1.0")
                     {

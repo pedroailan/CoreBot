@@ -82,7 +82,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando sua placa. Por favor, aguarde um momento..."),
+                MessageFactory.Text("Estou verificando a placa informada. Por favor, aguarde um momento..."),
                 //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
@@ -153,7 +153,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     else
                     {
                         await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar a Placa\r\n" +
-                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois\r\n" +
+                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
                                                                     "ou entre em contato com o DETRAN, para obter mais informações");
                         return await stepContext.EndDialogAsync(cancellationToken);
                     }

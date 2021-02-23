@@ -49,7 +49,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
-            await stepContext.Context.SendActivityAsync("Aqui você pode emitir o Documento de Circulação de porte obrigatório (CRVL-e).\r\n");
+            await stepContext.Context.SendActivityAsync("Aqui você pode emitir o Documento de Circulação de Porte Obrigatório (CRLV-e).\r\n");
             
             var promptOptions = new PromptOptions
             {

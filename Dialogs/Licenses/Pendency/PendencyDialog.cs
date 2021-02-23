@@ -133,9 +133,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> Pendency_2StepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
-            //double[] data = new double[] { Convert.ToDouble(stepContext.Values["choice"]) };
-
 
             if (LicenseDialogDetails.exercicio == LicenseDialogDetails.anoLicenciamento[1])
             {

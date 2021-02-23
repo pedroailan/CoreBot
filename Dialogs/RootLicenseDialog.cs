@@ -45,11 +45,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 OptionValidationStepAsync,
                 SecureCodeQuestionStepAsync,
                 SecureCodeStepAsync,
-                //ValidationSecureCodeStepAsync,
-                //SendSecureCodeStepAsync
-                //RenavamStepAsync,
-                //ValidatorStepAsync
-                //FinalStepAsync
 
             }));
 
@@ -64,14 +59,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
-            //if(LicenseDialogDetails.Banco == "BANESE")
-            //{
-            //    await stepContext.Context.SendActivityAsync("Você optou por banese");
-            //}
-            //else
-            //{
-            //    await stepContext.Context.SendActivityAsync("você optou por outros bancos");
-            //}
+            
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Deseja prosseguir?"),
@@ -98,7 +86,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
             }
         }
-
 
         private async Task<DialogTurnResult> SecureCodeQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
@@ -140,7 +127,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
         }
 
-
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
@@ -158,9 +144,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
             }
         }
-
-
     }
-    
 }
        

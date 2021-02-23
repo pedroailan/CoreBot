@@ -14,6 +14,7 @@ using CoreBot.Models;
 using AdaptiveCards;
 using Microsoft.Extensions.Options;
 using CoreBot;
+using CoreBot.Models.MethodsValidation.License;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -94,11 +95,42 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 if (VehicleLicense.Situation(LicenseDialogDetails.placa) == true)
                 {
-                    if (LicenseDialogDetails.Erro.codigo == 1)
+                    switch (LicenseDialogDetails.Erro.codigo == 1 ? "Incorreto" :
+                           LicenseDialogDetails.Erro.codigo >= 2 && LicenseDialogDetails.Erro.codigo <= 900 ? "Sistema" :
+                           LicenseDialogDetails.Erro.codigo == 0 && Format.Input.ValidationFormat.IsNumber(LicenseDialogDetails.codSegurancaIn) ? "Conexao" :
+                           LicenseDialogDetails.Erro.codigo == 0 && !Format.Input.ValidationFormat.IsNumber(LicenseDialogDetails.codSegurancaIn) ? "Invalido" : null)
                     {
-                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
-                        if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
-                        {
+                        case "Incorreto":
+                            await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
+                            if (LicenseDialogDetails.SecureCodeBool == true || LicenseDialogDetails.Count < 3)
+                            {
+                                LicenseDialogDetails.Count += 1;
+                                if (LicenseDialogDetails.Count < 3)
+                                {
+                                    LicenseDialogDetails.Erro.codigo = 0;
+                                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                                }
+                                else
+                                {
+                                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
+                                                                                "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                                "ou entre em contato com o DETRAN, para obter mais informações");
+                                    return await stepContext.EndDialogAsync(cancellationToken);
+                                }
+                            }
+                            else
+                            {
+                                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                            }
+                        case "Sistema":
+                            await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
+                            return await stepContext.EndDialogAsync(cancellationToken);
+                        case "Conexao":
+                            await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                        ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                            return await stepContext.EndDialogAsync(cancellationToken);
+                        case "Invalido":
+                            await stepContext.Context.SendActivityAsync("Este código de segurança é inválido!");
                             LicenseDialogDetails.Count += 1;
                             if (LicenseDialogDetails.Count < 3)
                             {
@@ -111,21 +143,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                                             "ou entre em contato com o DETRAN, para obter mais informações");
                                 return await stepContext.EndDialogAsync(cancellationToken);
                             }
-                        } else
-                        {
-                            return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
-                        }
-                    }
-                    else if (LicenseDialogDetails.Erro.codigo >= 2 && LicenseDialogDetails.Erro.codigo <= 900)
-                    {
-                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
-                        return await stepContext.EndDialogAsync(cancellationToken);
-                    }
-                    else
-                    {
-                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                        return await stepContext.EndDialogAsync(cancellationToken);
+                        default:
+                            await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                        ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                            return await stepContext.EndDialogAsync(cancellationToken);
                     }
                 }
                 else
@@ -133,9 +154,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     await stepContext.Context.SendActivityAsync("{Informa o motivo ao cliente}");
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
-  
             }
         }
-
     }
 }

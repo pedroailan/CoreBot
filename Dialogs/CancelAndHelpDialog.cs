@@ -53,10 +53,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         return new DialogTurnResult(DialogTurnStatus.Waiting);
 
                     case "sair":
-                    case "cancel":
+                    case "cancelar":
                     case "quit":
-                        await innerDc.Context.SendActivityAsync($"Cancelando", cancellationToken: cancellationToken);
-                        return await innerDc.CancelAllDialogsAsync();
+                        return await innerDc.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                    //await innerDc.Context.SendActivityAsync($"Cancelando", cancellationToken: cancellationToken);
+                    //return await innerDc.CancelAllDialogsAsync();
 
                     case "menu":
                     case "voltar":

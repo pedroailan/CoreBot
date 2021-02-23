@@ -17,7 +17,7 @@ namespace CoreBot.Models.Generate
         /// </summary>
         public static string placa = LicenseDialogDetails.placa;
         public static string documento = LicenseDialogDetails.numeroDocumento.ToString();
-        public static string nome = LicenseDialogDetails.nomeProprietario;
+        public string nome = LicenseDialogDetails.nomeProprietario;
         public static string marca = LicenseDialogDetails.marcaModelo;
         public static string tipo = LicenseDialogDetails.tipo;
         public static string cor = LicenseDialogDetails.cor;

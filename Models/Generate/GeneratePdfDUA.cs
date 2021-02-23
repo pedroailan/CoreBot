@@ -10,6 +10,7 @@ using iTextSharp.text; // Extensão 1 - Text
 using iTextSharp.text.pdf; // Extensão 2 - PDF
 using iTextSharp.text.html.simpleparser;
 using CoreBot.Models.Generate;
+using Microsoft.BotBuilderSamples;
 
 namespace CoreBot.Models
 {
@@ -19,18 +20,20 @@ namespace CoreBot.Models
     /// </summary>
     public class GeneratePdfDUA
     {
-        public static void GenerateInvoice()
-        {
-            Document doc = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
+        public static string LicenseDetailsDialog { get; private set; }
 
-            string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        //public static void GenerateInvoice()
+        //{
+        //    Document doc = new Document(PageSize.A4, 2F, 2F, 25F, 10F);
 
-            FileStream file = new FileStream(caminho + "/DUA - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
+        //    string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            PdfWriter writer = PdfWriter.GetInstance(doc, file);
+        //    FileStream file = new FileStream(caminho + "/DUA" + ".pdf", FileMode.Create);
 
-            WriteDocument(doc, writer);
-        }
+        //    PdfWriter writer = PdfWriter.GetInstance(doc, file);
+
+        //    WriteDocument(doc, writer);
+        //}
 
         public static byte[] GenerateInvoice2()
         {
@@ -38,7 +41,9 @@ namespace CoreBot.Models
             Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);            
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
-            WriteDocument(document, writer);
+            FieldsGenerate data = new FieldsGenerate();
+
+            WriteDocument(document, writer, data);
             //document.Open();
             //document.Add(new Paragraph(new Phrase("TESTE")));
             //document.Close();
@@ -48,7 +53,7 @@ namespace CoreBot.Models
             return bytes;
         }
 
-        public static void WriteDocument(Document doc, PdfWriter writer)
+        public static void WriteDocument(Document doc, PdfWriter writer, FieldsGenerate data)
         {
             doc.Open();
             Rectangle page = doc.PageSize;
@@ -68,7 +73,7 @@ namespace CoreBot.Models
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);
             doc.Add(tableDUA(Titulo));
-            doc.Add(tableDados(FontePadrao, page, image));
+            doc.Add(tableDados(FontePadrao, page, image, data));
             doc.Add(tableDiscriminacao(FontePadrao, Subtitulo));
             doc.Add(parag);
             doc.Add(tableMultas(FontePadrao, Subtitulo));
@@ -111,8 +116,9 @@ namespace CoreBot.Models
             return tableDUA;
         }
 
-        public static PdfPTable tableDados(Font FontePadrao, Rectangle page, iTextSharp.text.Image image)
+        public static PdfPTable tableDados(Font FontePadrao, Rectangle page, iTextSharp.text.Image image, FieldsGenerate data)
         {
+
             PdfPTable table1 = new PdfPTable(5);
             table1.TotalWidth = page.Width;
 
@@ -129,7 +135,7 @@ namespace CoreBot.Models
             table1.SetWidths(widths);
 
             // LINHA 1
-            PdfPCell cell2 = new PdfPCell(new Phrase("PLACA: " + FieldsGenerate.placa, FontePadrao));
+            PdfPCell cell2 = new PdfPCell(new Phrase("PLACA: " + LicenseDialogDetails.placa, FontePadrao));
             cell2.HorizontalAlignment = 0;
             cell2.Border = 1;
             table1.AddCell(cell2);
@@ -146,7 +152,7 @@ namespace CoreBot.Models
             table1.AddCell(cell4);
 
             // LINHA 2
-            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + FieldsGenerate.nome, FontePadrao));
+            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + data.nome, FontePadrao));
             cell5.Colspan = 2;
             cell5.HorizontalAlignment = 0;
             cell5.Border = 1;

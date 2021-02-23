@@ -26,7 +26,7 @@ namespace CoreBot.Models.Generate
 
             string caminho = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            FileStream file = new FileStream(caminho + "/Ficha de Compensação - " + FieldsGenerate.nome + ".pdf", FileMode.Create);
+            FileStream file = new FileStream(caminho + "/Ficha de Compensação" + ".pdf", FileMode.Create);
             PdfWriter writer = PdfWriter.GetInstance(doc, file);
 
             WriteDocument(doc, writer);
@@ -151,7 +151,8 @@ namespace CoreBot.Models.Generate
             table1.AddCell(cell10);
 
             // LINHA 2
-            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + FieldsGenerate.nome, FontePadrao));
+            FieldsGenerate nome = new FieldsGenerate();
+            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + nome, FontePadrao));
             cell5.Colspan = 2;
             cell5.HorizontalAlignment = 0;
             cell5.Border = 1;
@@ -496,7 +497,8 @@ namespace CoreBot.Models.Generate
             tableVia.AddCell(cell21);
 
             //LINHA 6
-            PdfPCell cell22 = new PdfPCell(new Phrase("Pagador: \n" + FieldsGenerate.nome, FontePadrao));
+            FieldsGenerate nome = new FieldsGenerate();
+            PdfPCell cell22 = new PdfPCell(new Phrase("Pagador: \n" + nome.nome, FontePadrao));
             cell22.HorizontalAlignment = 0;
             cell22.Colspan = 3;
             tableVia.AddCell(cell22);    

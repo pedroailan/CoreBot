@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Fields;
 using CoreBot.Models;
 using CoreBot.Models.Generate;
 using CoreBot.Models.MethodsValidation.License;
@@ -70,7 +71,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Seus dados estão corretos?"),
+                Prompt = MessageFactory.Text($"Seus dados estão corretos?" + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text("Seus dados estão corretos?" +  TextGlobal.ChoiceDig),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
             };
 

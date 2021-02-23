@@ -1,25 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreBot;
 using CoreBot.Fields;
-using CoreBot.Models;
-using CoreBot.Models.Generate;
-using CoreBot.Models.MethodsValidation.License;
-using CoreBot.Services.WSDLService;
-using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -128,9 +119,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Posso ajudá-lo em algo mais? \r\n 1-SIM  ou  2-NÃO"),
-                RetryPrompt = MessageFactory.Text($"Desculpe, não conseguir entender, \r\n Posso ajudá-lo em algo mais? \r\n Digite 1 para SIM ou 2 para NÃO"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO"}),
+                Prompt = MessageFactory.Text(TextGlobal.Ajuda + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + TextGlobal.Ajuda + TextGlobal.ChoiceDig),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não"}),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -145,7 +136,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog), cancellationToken);
             } else
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text(TextGlobal.Agradecimento), cancellationToken);
                 return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
                 //var promptOptions = new PromptOptions
                 //{
@@ -170,7 +161,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(TextGlobal.Agradecimento), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
     }

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using CoreBot.Models.MethodsValidation.License;
+using CoreBot.Fields;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -121,8 +122,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
                     var promptOptions = new PromptOptions
                     {
-                        Prompt = MessageFactory.Text("Você localizou?"),
-                        Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                        Prompt = MessageFactory.Text("Você localizou?" + TextGlobal.Choice),
+                        RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você localizou?" + TextGlobal.ChoiceDig),
+                        Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
                     };
 
                     return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

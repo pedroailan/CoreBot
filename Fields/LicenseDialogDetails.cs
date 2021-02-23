@@ -34,7 +34,7 @@ namespace Microsoft.BotBuilderSamples
             public static int codigo;
             public static string mensagem;
             
-            public class listaRecall
+            public class ListaRecall
             {
                 public static string[] descricao;
                 public static double defeito;
@@ -136,6 +136,8 @@ namespace Microsoft.BotBuilderSamples
         public static string Banco { get; internal set; }
         public static int Count { get; internal set; }
         public static bool SecureCodeBool { get; internal set; }
+        public static string ErrorService { get; internal set; }
+        public static string ErrorAuthentication { get; internal set; }
 
         public static string IsencaoIPVA;
         public static double[] anoLicenciamentoIn;

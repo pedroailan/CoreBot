@@ -8,7 +8,7 @@ using System.IO; // Entrada e saída de arquivos
 using iTextSharp; // Biblioteca ITextSharp
 using iTextSharp.text; // Extensão 1 - Text
 using iTextSharp.text.pdf; // Extensão 2 - PDF
-using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.html.simpleparser; 
 using CoreBot.Models.Generate;
 using Microsoft.BotBuilderSamples;
 

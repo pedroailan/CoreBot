@@ -48,14 +48,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
+            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Carro);
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
             
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
-                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + TextGlobal.Prosseguir),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + Emojis.SorrisoSuor + TextGlobal.Prosseguir),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 

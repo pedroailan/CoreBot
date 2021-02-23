@@ -15,6 +15,7 @@ using AdaptiveCards;
 using Microsoft.Extensions.Options;
 using CoreBot;
 using CoreBot.Models.MethodsValidation.License;
+using CoreBot.Fields;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -83,7 +84,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando o código de segurança informado. Por favor, aguarde um momento..."),
+                MessageFactory.Text("Estou verificando o código de segurança informado. Por favor, aguarde um momento..." + Emojis.Sorriso),
                 //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 

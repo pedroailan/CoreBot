@@ -113,11 +113,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         };
 
                         await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
-                            {
-                                Content = card,
-                                ContentType = "application/vnd.microsoft.card.adaptive",
-                                Name = "cardName"
-                            }
+                        {
+                            Content = card,
+                            ContentType = "application/vnd.microsoft.card.adaptive",
+                            Name = "cardName"
+                        }
                         ), cancellationToken);
 
                         var promptOptions = new PromptOptions
@@ -141,34 +141,62 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             // Caso a placa não seja válida
             else
             {
-                if (CRLVDialogDetails.Erro.codigo == 1)
+                switch (CRLVDialogDetails.Erro.codigo == 1 ? "Incorreto" :
+                        CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900 ? "Sistema" : null)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+                    case "Incorreto":
+                        await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
 
-                    CRLVDialogDetails.Count += 1;
-                    if (CRLVDialogDetails.Count < 3)
-                    {
-                        return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
-                    }
-                    else
-                    {
-                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar a Placa\r\n" +
-                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
-                                                                    "ou entre em contato com o DETRAN, para obter mais informações");
+                        CRLVDialogDetails.Count += 1;
+                        if (CRLVDialogDetails.Count < 3)
+                        {
+                            CRLVDialogDetails.Erro.codigo = 0;
+                            return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
+                        }
+                        else
+                        {
+                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança\r\n" +
+                                                                        "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                        "ou entre em contato com o DETRAN, para obter mais informações");
+                            return await stepContext.EndDialogAsync(cancellationToken);
+                        }
+                    case "Sistema":
+                        await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
                         return await stepContext.EndDialogAsync(cancellationToken);
-                    }
+                    default:
+                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                        return await stepContext.EndDialogAsync(cancellationToken);
                 }
-                else if (CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900)
-                {
-                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
-                    return await stepContext.EndDialogAsync(cancellationToken);
-                }
-                else
-                {
-                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                    return await stepContext.EndDialogAsync(cancellationToken);
-                }
+
+                //if (CRLVDialogDetails.Erro.codigo == 1)
+                //{
+                //    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+
+                //    CRLVDialogDetails.Count += 1;
+                //    if (CRLVDialogDetails.Count < 3)
+                //    {
+                //        return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
+                //    }
+                //    else
+                //    {
+                //        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar a Placa\r\n" +
+                //                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                //                                                    "ou entre em contato com o DETRAN, para obter mais informações");
+                //        return await stepContext.EndDialogAsync(cancellationToken);
+                //    }
+                //}
+                //else if (CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900)
+                //{
+                //    await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+                //    return await stepContext.EndDialogAsync(cancellationToken);
+                //}
+                //else
+                //{
+                //    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                //                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                //    return await stepContext.EndDialogAsync(cancellationToken);
+                //}
             }
         }
 

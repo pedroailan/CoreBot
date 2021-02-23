@@ -15,6 +15,7 @@ using AdaptiveCards;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using CoreBot.Models.MethodsValidation.License;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -131,35 +132,55 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
                 }
             }
+            // Caso o Renavam seja inválido
             else
             {
-                if (LicenseDialogDetails.Erro.codigo == 1)
+                switch (LicenseDialogDetails.Erro.codigo == 1 ? "Incorreto" :
+                           LicenseDialogDetails.Erro.codigo >= 2 && LicenseDialogDetails.Erro.codigo <= 900 ? "Sistema" :
+                           LicenseDialogDetails.Erro.codigo == 0 && Format.Input.ValidationFormat.IsNumber(LicenseDialogDetails.renavamIn) ? "Conexao" :
+                           LicenseDialogDetails.Erro.codigo == 0 && !Format.Input.ValidationFormat.IsNumber(LicenseDialogDetails.renavamIn) ? "Invalido" : null)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
+                    case "Incorreto":
+                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
 
-                    LicenseDialogDetails.Count += 1;
-                    if (LicenseDialogDetails.Count < 3)
-                    {
-                        return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
-                    }
-                    else
-                    {
-                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
-                                                                    "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
-                                                                    "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
+                        LicenseDialogDetails.Count += 1;
+                        if (LicenseDialogDetails.Count < 3)
+                        {
+                            LicenseDialogDetails.Erro.codigo = 0;
+                            return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                        }
+                        else
+                        {
+                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
+                                                                        "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
+                                                                        "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
+                            return await stepContext.EndDialogAsync(cancellationToken);
+                        }
+                    case "Sistema":
+                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
                         return await stepContext.EndDialogAsync(cancellationToken);
-                    }
-                }
-                else if (LicenseDialogDetails.Erro.codigo >= 2 && LicenseDialogDetails.Erro.codigo <= 900)
-                {
-                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
-                    return await stepContext.EndDialogAsync(cancellationToken);
-                }
-                else
-                {
-                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                    return await stepContext.EndDialogAsync(cancellationToken);
+                    case "Conexao":
+                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                        return await stepContext.EndDialogAsync(cancellationToken);
+                    case "Invalido":
+                        await stepContext.Context.SendActivityAsync("Este RENAVAM é inválido!");
+                        LicenseDialogDetails.Count += 1;
+                        if (LicenseDialogDetails.Count < 3)
+                        {
+                            return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                        }
+                        else
+                        {
+                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o Renavam!\r\n" +
+                                                                        "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                        "ou entre em contato com o DETRAN, para obter mais informações");
+                            return await stepContext.EndDialogAsync(cancellationToken);
+                        }
+                    default:
+                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                        return await stepContext.EndDialogAsync(cancellationToken);
                 }
             }
         }

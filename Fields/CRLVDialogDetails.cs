@@ -27,7 +27,7 @@ namespace CoreBot.Fields
             public static string trace;
         }
 
-        public int Count { get; set; }
+        public static int Count { get; set; }
         public static bool secureCodeBool { get; set; }
     }
 }

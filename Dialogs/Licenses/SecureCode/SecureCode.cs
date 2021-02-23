@@ -91,6 +91,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
             }
+            // Caso o código de Segurança seja inválido
             else
             {
                 if (VehicleLicense.Situation(LicenseDialogDetails.placa) == true)

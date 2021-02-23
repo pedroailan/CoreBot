@@ -15,54 +15,54 @@ namespace CoreBot.Models.Generate
         /// <summary>
         /// Fields utilizados na Ficha de Compensação e DUA
         /// </summary>
-        public static string placa = LicenseDialogDetails.placa;
-        public static string documento = LicenseDialogDetails.numeroDocumento.ToString();
-        public static string nome = LicenseDialogDetails.nomeProprietario;
-        public static string marca = LicenseDialogDetails.marcaModelo;
-        public static string tipo = LicenseDialogDetails.tipo;
-        public static string cor = LicenseDialogDetails.cor;
-        public static string exercicio = LicenseDialogDetails.exercicio.ToString();
-        public static string processado = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
-        public static string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
-        public static string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
-        public static string tituloVenc = LicenseDialogDetails.tituloVenc;
-        public static string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar);
-        public static string vencimento = Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
-        public static string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
-        public static string chassi = LicenseDialogDetails.chassiSNG;
-        public static string mensagem1 = LicenseDialogDetails.mensagem1;
-        public static string mensagem2 = LicenseDialogDetails.mensagem2;
-        public static string mensagem3 = LicenseDialogDetails.mensagem3;
-        public static string mensagem4 = LicenseDialogDetails.mensagem4;
-        public static string mensagem5 = LicenseDialogDetails.mensagem5;
+        public string placa = LicenseDialogDetails.placa;
+        public string documento = LicenseDialogDetails.numeroDocumento.ToString();
+        public string nome = LicenseDialogDetails.nomeProprietario;
+        public string marca = LicenseDialogDetails.marcaModelo;
+        public string tipo = LicenseDialogDetails.tipo;
+        public string cor = LicenseDialogDetails.cor;
+        public string exercicio = LicenseDialogDetails.exercicio.ToString();
+        public string processado = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
+        public string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
+        public string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
+        public string tituloVenc = LicenseDialogDetails.tituloVenc;
+        public string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar);
+        public string vencimento = Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
+        public string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
+        public string chassi = LicenseDialogDetails.chassiSNG;
+        public string mensagem1 = LicenseDialogDetails.mensagem1;
+        public string mensagem2 = LicenseDialogDetails.mensagem2;
+        public string mensagem3 = LicenseDialogDetails.mensagem3;
+        public string mensagem4 = LicenseDialogDetails.mensagem4;
+        public string mensagem5 = LicenseDialogDetails.mensagem5;
 
         /// <summary>
         /// Fields utilizados somente no DUA
         /// </summary>
-        public static string linhaDig = LicenseDialogDetails.linhaDig;
+        public string linhaDig = LicenseDialogDetails.linhaDig;
 
         /// <summary>
         /// Fields utilizados somente na Ficha de Compensação
         /// </summary>
-        public static string nossonum = LicenseDialogDetails.nossoNumero;
-        public static string endereco = "";
-        public static string cep = LicenseDialogDetails.cepPagador;
-        public static string cpf = LicenseDialogDetails.cpfCnpjPagador;
-        public static string sacador = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + " - "
+        public string nossonum = LicenseDialogDetails.nossoNumero;
+        public string endereco = "";
+        public string cep = LicenseDialogDetails.cepPagador;
+        public string cpf = LicenseDialogDetails.cpfCnpjPagador;
+        public string sacador = LicenseDialogDetails.enderecoPagador + ", " + LicenseDialogDetails.bairroPagador + " - "
                                         + LicenseDialogDetails.municipioPagador + "/" + LicenseDialogDetails.ufPagador
                                         + ". CEP: " + LicenseDialogDetails.cepPagador;
-        public static string agencia = LicenseDialogDetails.agencia;
+        public string agencia = LicenseDialogDetails.agencia;
 
-        public static string totalA = LicenseDialogDetails.totalA;
-        public static string linhaCodBarras = LicenseDialogDetails.linhaCodBarra;
-        public static string codBarras = LicenseDialogDetails.codBarra;
-        public static string asBace1 = LicenseDialogDetails.asBace1;
+        public string totalA = LicenseDialogDetails.totalA;
+        public string linhaCodBarras = LicenseDialogDetails.linhaCodBarra;
+        public string codBarras = LicenseDialogDetails.codBarra;
+        public string asBace1 = LicenseDialogDetails.asBace1;
 
         /// <summary>
         /// Ocorrência de listas
         /// </summary>
         /// <returns></returns>
-        public static List<string> listaTaxas()
+        public List<string> listaTaxas()
         {
             List<string> taxa = new List<string>();
 
@@ -77,7 +77,7 @@ namespace CoreBot.Models.Generate
             return taxa;
         }
 
-        public static List<string> listaPreco()
+        public List<string> listaPreco()
         {
             List<string> preco = new List<string>();
             foreach (string value in LicenseDialogDetails.vetValorA)
@@ -94,7 +94,7 @@ namespace CoreBot.Models.Generate
             return preco;
         }
 
-        public static List<string> multas()
+        public List<string> multas()
         {
             List<string> multas = new List<string>();
             foreach (string value in LicenseDialogDetails.vetDescInfracao)
@@ -104,14 +104,14 @@ namespace CoreBot.Models.Generate
             return multas;
         }
 
-        public static List<string> obs()
+        public List<string> obs()
         {
             List<string> obs = new List<string>();
             obs.Add("- " + LicenseDialogDetails.mensagem1 + " " + LicenseDialogDetails.mensagem2);
             return obs;
         }
 
-        public static List<string> pendencias()
+        public List<string> pendencias()
         {
             List<string> pendencias = new List<string>();
             return pendencias;

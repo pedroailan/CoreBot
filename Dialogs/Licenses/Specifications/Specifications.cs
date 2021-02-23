@@ -3,22 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AdaptiveCards;
+using CoreBot.Fields;
 using CoreBot.Models;
 using CoreBot.Models.Generate;
 using CoreBot.Models.MethodsValidation.License;
-using CoreBot.Services.Models;
-using CoreBot.Services.ValidationServiceLicenciamento;
 using CoreBot.Services.WSDLService.efetuarServicoLicenciamento;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -76,7 +71,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Seus dados estão corretos?"),
+                Prompt = MessageFactory.Text($"Seus dados estão corretos?" + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text("Seus dados estão corretos?" +  TextGlobal.ChoiceDig),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
             };
 
@@ -93,7 +89,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("Beleza, vamos repetir o processo para outro veículo");
+                await stepContext.Context.SendActivityAsync("Se os dados não estão corretos, teremos que repetir o processo.\r\n" +
+                                                            "Caso o problema persista, entre em contato com nossa equipe de atendimento");
                 return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
             }
         }

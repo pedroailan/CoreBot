@@ -3,22 +3,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Configuration;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
-using CoreBot.Models;
+using CoreBot.Fields;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using Newtonsoft.Json.Linq;
-using static System.Net.WebRequestMethods;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -45,11 +37,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 OptionValidationStepAsync,
                 SecureCodeQuestionStepAsync,
                 SecureCodeStepAsync,
-                //ValidationSecureCodeStepAsync,
-                //SendSecureCodeStepAsync
-                //RenavamStepAsync,
-                //ValidatorStepAsync
-                //FinalStepAsync
 
             }));
 
@@ -64,18 +51,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
-            //if(LicenseDialogDetails.Banco == "BANESE")
-            //{
-            //    await stepContext.Context.SendActivityAsync("Você optou por banese");
-            //}
-            //else
-            //{
-            //    await stepContext.Context.SendActivityAsync("você optou por outros bancos");
-            //}
+            
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Deseja prosseguir?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + TextGlobal.Prosseguir),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -98,7 +79,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
             }
         }
-
 
         private async Task<DialogTurnResult> SecureCodeQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
@@ -133,13 +113,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Você pode informar o CÓDIGO DE SEGURANÇA?"),
+                Prompt = MessageFactory.Text($"Você pode informar o CÓDIGO DE SEGURANÇA?" + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você pode informar o CÓDIGO DE SEGURANÇA?" + TextGlobal.ChoiceDig),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
         }
-
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
@@ -158,9 +138,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
             }
         }
-
-
     }
-    
 }
        

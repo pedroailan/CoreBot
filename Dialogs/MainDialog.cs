@@ -1,25 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreBot;
 using CoreBot.Fields;
-using CoreBot.Models;
-using CoreBot.Models.Generate;
-using CoreBot.Models.MethodsValidation.License;
-using CoreBot.Services.WSDLService;
-using CoreBot.Services.WSDLService.obterEmissaoCRLV;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -35,7 +26,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             Logger = logger;
 
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-BR"));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-PT"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new RootCRLVeDialog());
             AddDialog(new RootLicenseDialog());
@@ -65,6 +56,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo? "),
+                RetryPrompt = MessageFactory.Text("Por favor, insira uma das opções abaixo:"),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Anual (BANESE)", "Licenciamento Anual (Outros Bancos)", "Emitir Documento de Circulação (CRLV-e)", "Nenhuma das alternativas" }),
             };
 
@@ -127,8 +119,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Posso ajudá-lo em algo mais?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Prompt = MessageFactory.Text(TextGlobal.Ajuda + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + TextGlobal.Ajuda + TextGlobal.ChoiceDig),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não"}),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -143,7 +136,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog), cancellationToken);
             } else
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text(TextGlobal.Agradecimento), cancellationToken);
                 return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
                 //var promptOptions = new PromptOptions
                 //{
@@ -168,7 +161,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(TextGlobal.Agradecimento), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
     }

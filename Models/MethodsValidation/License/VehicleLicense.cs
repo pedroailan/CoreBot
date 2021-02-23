@@ -25,7 +25,7 @@ namespace CoreBot.Models
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                var Licencense = await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, 0);
+                await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, 0);
                 if (LicenseDialogDetails.Erro.codigo == 0)
                 {
                     return true;
@@ -44,7 +44,7 @@ namespace CoreBot.Models
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                var Licencense = await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, year);
+                await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, year);
                 if (LicenseDialogDetails.Erro.codigo == 0)
                 {
                     return true;
@@ -85,7 +85,7 @@ namespace CoreBot.Models
             {
                 //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                var License = await obter.validarServicoLicenciamento(Convert.ToDouble(Renavam), 0, LicenseDialogDetails.tipoDocumentoIn, 0);
+                await obter.validarServicoLicenciamento(Convert.ToDouble(Renavam), 0, LicenseDialogDetails.tipoDocumentoIn, 0);
                 if (LicenseDialogDetails.Erro.codigo == 0)
                 {
                     return true;

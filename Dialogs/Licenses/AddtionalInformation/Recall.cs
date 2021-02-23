@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
+using CoreBot.Fields;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -36,7 +37,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         }
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Há uma chamada da montadora de seu veículo para RECALL! Para mais informações acesse o site do detran e verifique a situação do seu veículo"), cancellationToken);
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Há uma chamada da montadora de seu veículo para RECALL! Para mais informações acesse o site do detran e verifique a situação do seu veículo."), cancellationToken);
             var choices = new[] { "Ir para o site" };
             var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0))
             {
@@ -71,8 +72,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Esta ciente dessa informação?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Prompt = MessageFactory.Text($"Esta ciente dessa informação?" + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Esta ciente dessa informação?" + TextGlobal.ChoiceDig),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

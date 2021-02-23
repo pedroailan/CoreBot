@@ -53,8 +53,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Deseja prosseguir?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + TextGlobal.Prosseguir),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -110,8 +111,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Você pode informar o CÓDIGO DE SEGURANÇA?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Prompt = MessageFactory.Text($"Você pode informar o CÓDIGO DE SEGURANÇA?" + TextGlobal.Choice),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você pode informar o CÓDIGO DE SEGURANÇA?" + TextGlobal.ChoiceDig),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

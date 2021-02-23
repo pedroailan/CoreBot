@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Fields;
 using CoreBot.Models;
 using CoreBot.Models.MethodsValidation.License;
 using Microsoft.Bot.Builder;
@@ -61,8 +62,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                             "Valor a ser pago: R$ " + LicenseDialogDetails.totalCotaUnica);
                 var Options = new PromptOptions
                 {
-                    Prompt = MessageFactory.Text($"Deseja prosseguir?"),
-                    Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                    Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
+                    RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Deseja Prosseguir?" + TextGlobal.ChoiceDig),
+                    Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
                 };
 
                 return await stepContext.PromptAsync(nameof(ChoicePrompt), Options, cancellationToken);
@@ -141,8 +143,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                             "Valor a ser pago: R$ " + LicenseDialogDetails.totalCotaUnica);
                 var Options = new PromptOptions
                 {
-                    Prompt = MessageFactory.Text($"Deseja prosseguir?"),
-                    Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                    Prompt = MessageFactory.Text($"Deseja prosseguir?" + TextGlobal.Choice),
+                    RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Deseja prosseguir?" + TextGlobal.ChoiceDig),
+                    Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
                 };
                 return await stepContext.PromptAsync(nameof(ChoicePrompt), Options, cancellationToken);
             }

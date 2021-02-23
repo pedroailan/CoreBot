@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using CoreBot.Models;
+using CoreBot.Models.Generate;
 using CoreBot.Models.MethodsValidation.License;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -18,6 +19,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
+    
     public class RNTRCDialog : CancelAndHelpDialog
     {
         private LicenseDialogDetails LicenseDialogDetails;
@@ -49,6 +51,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 Prompt = MessageFactory.Text($"Qual tipo de autorização você possui?"),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "ETC - Empresa de transporte de carga", "CTC - Cooperativa de transporte de carga", "TAC - Transportador autônomo de carga", "Não sei onde encontrar esta informação" }),
+                RetryPrompt = MessageFactory.Text("Por favor, insira uma opções abaixo:")
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

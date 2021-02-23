@@ -17,7 +17,7 @@ namespace CoreBot.Services.WSDLService
             }
             catch (Exception err)
             {
-                //LicenseDialogDetails.Error = err.Message;
+                LicenseDialogDetails.ErrorService = err.Message;
                 return null;
             }
         }
@@ -26,14 +26,16 @@ namespace CoreBot.Services.WSDLService
         {
             try
             {
-                wsDetranChatBot.autenticacao auth = new wsDetranChatBot.autenticacao();
-                auth.loginUsuario = "4030852F-26A1-4BA7-A4E0-30940E210CF3";
-                auth.senhaUsuario = "bfce160d0941496f935ea762806c9160";
+                wsDetranChatBot.autenticacao auth = new wsDetranChatBot.autenticacao
+                {
+                    loginUsuario = "4030852F-26A1-4BA7-A4E0-30940E210CF3",
+                    senhaUsuario = "bfce160d0941496f935ea762806c9160"
+                };
                 return auth;
             }
             catch (Exception err)
             {
-                //LicenseDialogDetails.Error = err.Message;
+                LicenseDialogDetails.ErrorAuthentication = err.Message;
                 return null;
             }
         }

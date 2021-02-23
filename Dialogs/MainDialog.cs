@@ -35,7 +35,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             Logger = logger;
 
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-BR"));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-PT"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new RootCRLVeDialog());
             AddDialog(new RootLicenseDialog());
@@ -65,6 +65,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text($"Olá, posso ajudá-lo com alguma das opções abaixo? "),
+                RetryPrompt = MessageFactory.Text("Por favor, insira uma das opções abaixo:"),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Licenciamento Anual (BANESE)", "Licenciamento Anual (Outros Bancos)", "Emitir Documento de Circulação (CRLV-e)", "Nenhuma das alternativas" }),
             };
 
@@ -127,8 +128,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Posso ajudá-lo em algo mais?"),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Prompt = MessageFactory.Text($"Posso ajudá-lo em algo mais? \r\n 1-SIM  ou  2-NÃO"),
+                RetryPrompt = MessageFactory.Text($"Desculpe, não conseguir entender, \r\n Posso ajudá-lo em algo mais? \r\n Digite 1 para SIM ou 2 para NÃO"),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO"}),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

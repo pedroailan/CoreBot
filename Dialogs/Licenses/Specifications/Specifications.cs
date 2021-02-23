@@ -3,22 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AdaptiveCards;
 using CoreBot.Models;
 using CoreBot.Models.Generate;
 using CoreBot.Models.MethodsValidation.License;
-using CoreBot.Services.Models;
-using CoreBot.Services.ValidationServiceLicenciamento;
 using CoreBot.Services.WSDLService.efetuarServicoLicenciamento;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {

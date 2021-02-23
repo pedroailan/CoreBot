@@ -44,7 +44,7 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
             LicenseDialogDetails.contadorAnoLicenciamento = result.contadorAnoLicenciamento;
             LicenseDialogDetails.RecallPendente.codigo = result.recallPendente.codigo;
             LicenseDialogDetails.RecallPendente.mensagem = result.recallPendente.mensagem;
-            LicenseDialogDetails.RecallPendente.listaRecall.descricao = new string[] { result.recallPendente.listaRecall.ToString() };
+            LicenseDialogDetails.RecallPendente.ListaRecall.descricao = new string[] { result.recallPendente.listaRecall.ToString() };
 
         }
     }

@@ -136,9 +136,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            stepContext.Values["continue"] = ((FoundChoice)stepContext.Result).Value;
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
-            if(stepContext.Values["continue"].ToString().ToLower() == "sim")
+            if(stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog), cancellationToken);
             } else
@@ -166,7 +166,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> AvaliationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            stepContext.Values["avaliation"] = ((FoundChoice)stepContext.Result).Value;
+            stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Agradeço pelo contato!"), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);

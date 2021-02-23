@@ -133,7 +133,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             else
             {
-                if (LicenseDialogDetails.Erro.codigo >= 1 && LicenseDialogDetails.Erro.codigo <= 900)
+                if (LicenseDialogDetails.Erro.codigo == 1)
                 {
                     await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
 
@@ -149,6 +149,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                                     "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
                         return await stepContext.EndDialogAsync(cancellationToken);
                     }
+                }
+                else if (LicenseDialogDetails.Erro.codigo >= 2 && LicenseDialogDetails.Erro.codigo <= 900)
+                {
+                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
                 else
                 {

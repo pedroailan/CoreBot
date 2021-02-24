@@ -84,7 +84,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
-                MessageFactory.Text("Estou verificando o código de segurança informado. Por favor, aguarde um momento..." + Emojis.Sorriso),
+                MessageFactory.Text("Estou verificando o código de segurança informado. Por favor, aguarde um momento..." + Emojis.Rostos.Sorriso),
                 //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 

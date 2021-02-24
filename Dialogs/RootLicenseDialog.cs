@@ -24,7 +24,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
 
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-br"));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-BR"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new RNTRCDialog());
             AddDialog(new RenavamDialog());
@@ -48,14 +48,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Carro);
+            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Veiculos.Carro);
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
             
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
-                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + Emojis.SorrisoSuor + TextGlobal.Prosseguir),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + Emojis.Rostos.SorrisoSuor + TextGlobal.Prosseguir),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 

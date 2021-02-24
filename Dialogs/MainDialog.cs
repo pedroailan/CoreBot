@@ -67,6 +67,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             var LicenseDialogDetails = new LicenseDialogDetails();
             var CRLVDialogDetails = new CRLVDialogDetails();
+            var LicenseFields = new LicenseFields();
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
 
@@ -75,9 +76,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 case "nenhuma das alternativas":
                     return await stepContext.BeginDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
                 case "licenciamento anual (banese)":
-                    LicenseDialogDetails.tipoDocumentoIn = "D";
-                    LicenseDialogDetails.Banco = "Banese";
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    LicenseFields.tipoDocumentoIn = "D";
+                    LicenseFields.Banco = "Banese";
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseFields, cancellationToken);
                 case "licenciamento anual (outros bancos)":
                     LicenseDialogDetails.tipoDocumentoIn = "F";
                     LicenseDialogDetails.Banco = "Outros Bancos";

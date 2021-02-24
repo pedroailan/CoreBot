@@ -1,4 +1,5 @@
-﻿using CoreBot.Models.MethodsValidation.License;
+﻿using CoreBot.Fields;
+using CoreBot.Models.MethodsValidation.License;
 using CoreBot.Services.WSDLService.validarServicoLicenciamento;
 using Microsoft.BotBuilderSamples;
 using System;
@@ -19,23 +20,29 @@ namespace CoreBot.Models
         /// </summary>
         /// <param name="SecureCode"></param>
         /// <returns></returns>
-        public async static Task<bool> ValidationSecureCodeLicenciamento(string SecureCode)
+        /// 
+        public bool ValidationString(string SecureCode)
         {
-            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
-            {
-                //16736005660
-                ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, 0);
-                if (LicenseDialogDetails.Erro.codigo == 0)
-                {
-                    return true;
-                }
-            }
+            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true) return true;
             return false;
-            //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
-            //{
-            //    return true;
-            //}
+        }
+
+        public async Task<wsDetranChatBot.validarServicoLicenciamentoResult> ValidationSecureCodeLicenciamento(string SecureCode, string tipoDocumentoIn)
+        {
+            try
+            {
+                ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
+                var result = await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), tipoDocumentoIn, 0);
+                return result;
+            }
+            catch (Exception err)
+            {
+                //erro de conexao
+                // atribuir erro
+                return null;
+            }
+
+            return null;
         }
 
         public async static Task<bool> ValidationSecureCodeLicenciamento(string SecureCode, double year)
@@ -101,9 +108,9 @@ namespace CoreBot.Models
         /// AUTOR(ES): Pedro Ailan
         /// </summary>
         /// <returns></returns>
-        public static bool Pendency()
+        public static bool Pendency(double[] anoLicenciamento)
         {
-            if (LicenseDialogDetails.anoLicenciamento != null)
+            if (anoLicenciamento != null)
             {
                 return true;
             }
@@ -122,13 +129,13 @@ namespace CoreBot.Models
         /// <returns></returns>
         public static bool ValidationYear()
         {
-            if(LicenseDialogDetails.contadorAnoLicenciamento > 1)
+            if (LicenseDialogDetails.contadorAnoLicenciamento > 1)
             {
-                return true;        
+                return true;
             }
             return false;
         }
     }
 
-       
+
 }

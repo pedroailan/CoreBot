@@ -17,8 +17,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RootLicenseDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
-
+        //private LicenseDialogDetails LicenseDialogDetails;
+        LicenseFields LicenseFields;
         public RootLicenseDialog()
             : base(nameof(RootLicenseDialog))
         {
@@ -47,7 +47,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Veiculos.Carro);
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
@@ -64,7 +65,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
@@ -123,19 +125,20 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 
-                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
                 
             }
             else
             {
-                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseFields, cancellationToken);
             }
         }
     }

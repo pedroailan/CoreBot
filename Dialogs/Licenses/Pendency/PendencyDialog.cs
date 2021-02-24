@@ -18,7 +18,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class PendencyDialog : CancelAndHelpDialog
     {
-        private LicenseDialogDetails LicenseDialogDetails;
+        //private LicenseFields LicenseFields;
+        LicenseFields LicenseFields;
         public PendencyDialog()
             : base(nameof(PendencyDialog))
         {
@@ -45,22 +46,23 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         }
         private async Task<DialogTurnResult> PendencyStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseFields = (LicenseFields)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
 
 
             if (VehicleLicense.ValidationYear() == true)
             {
                 await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
-                await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
-                                                            "Valor a ser pago: R$ " + LicenseDialogDetails.totalCotaUnica);
-                //return await stepContext.BeginDialogAsync(nameof(PendencyDialog), LicenseDialogDetails, cancellationToken);
+                await stepContext.Context.SendActivityAsync("Ano: " + LicenseFields.anoLicenciamento[0] + "\r\n" +
+                                                            "Valor a ser pago: R$ " + LicenseFields.totalCotaUnica);
+                //return await stepContext.BeginDialogAsync(nameof(PendencyDialog), LicenseFields, cancellationToken);
             }
             else
             {
                 //await stepContext.Context.SendActivityAsync("Valor a ser pago:");
-                await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
-                                                            "Valor a ser pago: R$ " + LicenseDialogDetails.totalCotaUnica);
-                LicenseDialogDetails.exercicio = LicenseDialogDetails.anoLicenciamento[0];
+                await stepContext.Context.SendActivityAsync("Ano: " + LicenseFields.anoLicenciamento[0] + "\r\n" +
+                                                            "Valor a ser pago: R$ " + LicenseFields.totalCotaUnica);
+                LicenseFields.exercicio = LicenseFields.anoLicenciamento[0];
 
                 var Options = new PromptOptions
                 {
@@ -73,11 +75,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
 
             List<string> anos = new List<string>();
-            for (int i = 0; i < LicenseDialogDetails.contadorAnoLicenciamento; i++)
+            for (int i = 0; i < LicenseFields.contadorAnoLicenciamento; i++)
             {
-                if (LicenseDialogDetails.anoLicenciamento[i] != 0)
+                if (LicenseFields.anoLicenciamento[i] != 0)
                 {
-                    anos.Add(LicenseDialogDetails.anoLicenciamento[i].ToString());
+                    anos.Add(LicenseFields.anoLicenciamento[i].ToString());
                 }
             }
 
@@ -92,11 +94,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ConfirmValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
 
-            //LicenseDialogDetails.contadorAnoLicenciamento = 1;
+            //LicenseFields.contadorAnoLicenciamento = 1;
 
             // Confirmação para somente um ano
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
@@ -107,18 +109,18 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     //new Activity { Type = ActivityTypes.Typing },
                 }, cancellationToken);
 
-                LicenseDialogDetails.exercicio = LicenseDialogDetails.anoLicenciamento[0];
+                LicenseFields.exercicio = LicenseFields.anoLicenciamento[0];
 
                 return await stepContext.EndDialogAsync(cancellationToken);
             }
             else
             {
-                if (LicenseDialogDetails.anoLicenciamento[0] == LicenseDialogDetails.exercicio && stepContext.Values["choice"].ToString().ToLower() == "não")
+                if (LicenseFields.anoLicenciamento[0] == LicenseFields.exercicio && stepContext.Values["choice"].ToString().ToLower() == "não")
                 {
                     return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
                 }
-                LicenseDialogDetails.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
-                if (stepContext.Values["choice"].ToString().ToLower() == LicenseDialogDetails.anoLicenciamento[0].ToString())
+                LicenseFields.exercicio = Convert.ToInt32(stepContext.Values["choice"]);
+                if (stepContext.Values["choice"].ToString().ToLower() == LicenseFields.anoLicenciamento[0].ToString())
                 {
                     await stepContext.Context.SendActivitiesAsync(new Activity[]
                     {
@@ -136,13 +138,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> Pendency_2StepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
 
-            if (LicenseDialogDetails.exercicio == LicenseDialogDetails.anoLicenciamento[1])
+            if (LicenseFields.exercicio == LicenseFields.anoLicenciamento[1])
             {
-                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaOut, LicenseDialogDetails.exercicio);
-                await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
-                                                            "Valor a ser pago: R$ " + LicenseDialogDetails.totalCotaUnica);
+                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.exercicio);
+                await stepContext.Context.SendActivityAsync("Ano: " + LicenseFields.anoLicenciamento[0] + "\r\n" +
+                                                            "Valor a ser pago: R$ " + LicenseFields.totalCotaUnica);
                 var Options = new PromptOptions
                 {
                     Prompt = MessageFactory.Text($"Deseja prosseguir?" + TextGlobal.Choice),
@@ -160,7 +162,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> Pendency_3StepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
@@ -171,14 +173,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     //new Activity { Type = ActivityTypes.Typing },
                 }, cancellationToken);
 
-                LicenseDialogDetails.exercicio = LicenseDialogDetails.exercicio;
+                LicenseFields.exercicio = LicenseFields.exercicio;
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
             else
             {
-                LicenseDialogDetails.exercicio -= 1;
-                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseDialogDetails.codSegurancaOut, LicenseDialogDetails.exercicio);
-                return await stepContext.ReplaceDialogAsync(nameof(PendencyDialog), LicenseDialogDetails, cancellationToken);
+                LicenseFields.exercicio -= 1;
+                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.exercicio);
+                return await stepContext.ReplaceDialogAsync(nameof(PendencyDialog), LicenseFields, cancellationToken);
             }
 
 

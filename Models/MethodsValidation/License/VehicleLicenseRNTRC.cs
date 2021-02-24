@@ -8,15 +8,14 @@ namespace CoreBot.Models.MethodsValidation.License
 {
     public class VehicleLicenseRNTRC
     {
-        public static bool ValidationVehicleType()
+        public static bool ValidationVehicleType(string temRNTRC)
         {
-            if(LicenseDialogDetails.temRNTRC == "S")
+            if(temRNTRC == "S")
             {
                return true;
             }
             else
             {
-                LicenseDialogDetails.dataValidadeRNTRC = "0";
                 return false;
             }
             //return false;

@@ -11,6 +11,7 @@ using iTextSharp.text.pdf; // Extensão 2 - PDF
 using iTextSharp.text.html.simpleparser;
 using CoreBot.Models.Generate;
 using Microsoft.BotBuilderSamples;
+using CoreBot.Fields;
 
 namespace CoreBot.Models
 {
@@ -34,7 +35,7 @@ namespace CoreBot.Models
         //    WriteDocument(doc, writer);
         //}
 
-        public static byte[] GenerateInvoice2()
+        public static byte[] GenerateInvoice2(LicenseFields LicenseFields)
         {
             System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
             Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);            
@@ -42,7 +43,7 @@ namespace CoreBot.Models
 
             FieldsGenerate data = new FieldsGenerate();
 
-            WriteDocument(document, writer, data);
+            WriteDocument(document, writer, data, LicenseFields);
             //document.Open();
             //document.Add(new Paragraph(new Phrase("TESTE")));
             //document.Close();
@@ -52,7 +53,7 @@ namespace CoreBot.Models
             return bytes;
         }
 
-        public static void WriteDocument(Document doc, PdfWriter writer, FieldsGenerate data)
+        public static void WriteDocument(Document doc, PdfWriter writer, FieldsGenerate data, LicenseFields LicenseFields)
         {
             doc.Open();
             Rectangle page = doc.PageSize;
@@ -72,7 +73,7 @@ namespace CoreBot.Models
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);
             doc.Add(tableDUA(Titulo));
-            doc.Add(tableDados(FontePadrao, page, image, data));
+            doc.Add(tableDados(FontePadrao, page, image, data, LicenseFields));
             doc.Add(tableDiscriminacao(FontePadrao, Subtitulo, data));
             doc.Add(parag);
             doc.Add(tableMultas(FontePadrao, Subtitulo, data));
@@ -115,7 +116,7 @@ namespace CoreBot.Models
             return tableDUA;
         }
 
-        public static PdfPTable tableDados(Font FontePadrao, Rectangle page, iTextSharp.text.Image image, FieldsGenerate data)
+        public static PdfPTable tableDados(Font FontePadrao, Rectangle page, iTextSharp.text.Image image, FieldsGenerate data, LicenseFields LicenseFields)
         {
 
             PdfPTable table1 = new PdfPTable(5);
@@ -151,7 +152,7 @@ namespace CoreBot.Models
             table1.AddCell(cell4);
 
             // LINHA 2
-            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + data.nome, FontePadrao));
+            PdfPCell cell5 = new PdfPCell(new Phrase("NOME: " + LicenseFields.nomeProprietario, FontePadrao));
             cell5.Colspan = 2;
             cell5.HorizontalAlignment = 0;
             cell5.Border = 1;

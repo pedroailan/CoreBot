@@ -73,7 +73,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 Prompt = MessageFactory.Text($"Seus dados estão corretos?" + TextGlobal.Choice),
                 RetryPrompt = MessageFactory.Text("Seus dados estão corretos?" +  TextGlobal.ChoiceDig),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

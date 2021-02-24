@@ -60,6 +60,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 //await stepContext.Context.SendActivityAsync("Valor a ser pago:");
                 await stepContext.Context.SendActivityAsync("Ano: " + LicenseDialogDetails.anoLicenciamento[0] + "\r\n" +
                                                             "Valor a ser pago: R$ " + LicenseDialogDetails.totalCotaUnica);
+                LicenseDialogDetails.exercicio = LicenseDialogDetails.anoLicenciamento[0];
+
                 var Options = new PromptOptions
                 {
                     Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
@@ -81,7 +83,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             var promptOptions = new PromptOptions
             {
-                Prompt = MessageFactory.Text($"Qual ano deseja licenciar seu veículo? (A escolha do ano atual já tráz acumulado o ano anterior)"),
+                Prompt = MessageFactory.Text($"Qual ano deseja licenciar seu veículo? (A escolha do ano atual já traz acumulado o ano anterior)"),
                 Choices = ChoiceFactory.ToChoices(choices: anos),
             };
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);

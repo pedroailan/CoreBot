@@ -8,9 +8,9 @@ namespace CoreBot.Models.MethodsValidation.License
 {
     public class VehicleLicenseRecall
     {
-        public static bool ValidationVehicleRecall()
+        public static bool ValidationVehicleRecall(int recallCodigo)
         {
-            if(LicenseDialogDetails.RecallPendente.codigo != 0)
+            if(recallCodigo != 0)
             {
                 return true;
             }

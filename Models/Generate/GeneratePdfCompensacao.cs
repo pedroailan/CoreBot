@@ -499,8 +499,7 @@ namespace CoreBot.Models.Generate
             tableVia.AddCell(cell21);
 
             //LINHA 6
-            FieldsGenerate nome = new FieldsGenerate();
-            PdfPCell cell22 = new PdfPCell(new Phrase("Pagador: \n" + nome.nome, FontePadrao));
+            PdfPCell cell22 = new PdfPCell(new Phrase("Pagador: \n" + data.nome(), FontePadrao));
             cell22.HorizontalAlignment = 0;
             cell22.Colspan = 3;
             tableVia.AddCell(cell22);    

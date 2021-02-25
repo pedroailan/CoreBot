@@ -47,7 +47,7 @@ namespace Microsoft.BotBuilderSamples
         //public static string renavamOut;
         //public static string placa;
         //public static string marcaModelo;
-        public static string nomeProprietario;
+        public string nomeProprietario;
         public static string temRNTRC;
         public static string tipoAutorizacaoRNTRCIn;
         public static string tipoAutorizacaoRNTRCOut;

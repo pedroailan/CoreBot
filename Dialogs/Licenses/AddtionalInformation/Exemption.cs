@@ -18,7 +18,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class ExemptionDialog : CancelAndHelpDialog
     {
-        private LicenseDialogDetails LicenseDialogDetails;
+        //private LicenseFields LicenseFields;
+        LicenseFields LicenseFields;
         public ExemptionDialog()
             : base(nameof(ExemptionDialog))
         {
@@ -51,17 +52,17 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ExemptionConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
-                LicenseDialogDetails.IsencaoIPVA = "S";
-                return await stepContext.NextAsync(LicenseDialogDetails, cancellationToken);
+                LicenseFields.IsencaoIPVA = "S";
+                return await stepContext.NextAsync(LicenseFields, cancellationToken);
 
             }
             else
             {
-                LicenseDialogDetails.IsencaoIPVA = "N";
+                LicenseFields.IsencaoIPVA = "N";
                 return await stepContext.ContinueDialogAsync(cancellationToken);
             }
         }

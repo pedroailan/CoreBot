@@ -18,7 +18,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class RecallDialog : CancelAndHelpDialog
     {
-        private LicenseDialogDetails LicenseDialogDetails;
+        //private LicenseFields LicenseFields;
+        LicenseFields LicenseFields;
         public RecallDialog()
             : base(nameof(RecallDialog))
         {
@@ -82,7 +83,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -92,7 +93,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 await stepContext.Context.SendActivityAsync("Infelizmente não podemos continuar sem esta confirmação!");
-                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseFields, cancellationToken);
             }
         }
 

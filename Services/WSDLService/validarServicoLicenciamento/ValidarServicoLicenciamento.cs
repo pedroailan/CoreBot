@@ -9,6 +9,7 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
 {
     public class ValidarServicoLicenciamento
     {
+        LicenseDialogDetails dados;
         public async Task<wsDetranChatBot.validarServicoLicenciamentoResult> validarServicoLicenciamento(double renavam, double codSeguranca, string tipoDocumentoIn, double anoLicenciamentoIn)
         {
             
@@ -18,14 +19,15 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
             var soap = await wsClient.validarServicoLicenciamentoAsync(auth, renavam, codSeguranca, tipoDocumentoIn, anoLicenciamentoIn);
             var result = soap.validarServicoLicenciamentoResult;
 
-            History(result);
+           //History(result);
 
-            return soap.validarServicoLicenciamentoResult;
+            return result;
         }
 
 
         public void History(wsDetranChatBot.validarServicoLicenciamentoResult result)
         {
+            LicenseDialogDetails dados1 = new LicenseDialogDetails();
             LicenseDialogDetails.codigoRetorno = result.codigoRetorno;
             LicenseDialogDetails.Erro.codigo = result.erro.codigo;
             LicenseDialogDetails.Erro.mensagem = result.erro.mensagem;
@@ -33,7 +35,7 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
             LicenseDialogDetails.codSegurancaOut = result.codSegurancaOut.ToString();
             LicenseDialogDetails.renavamOut = result.renavamOut.ToString();
             LicenseDialogDetails.placa = result.placa;
-            LicenseDialogDetails.nomeProprietario = result.nomeProprietario;
+            dados1.nomeProprietario = result.nomeProprietario;
             LicenseDialogDetails.temRNTRC = result.temRNTRC;
             LicenseDialogDetails.tipoAutorizacaoRNTRCOut = result.tipoAutorizacaoRNTRC;
             LicenseDialogDetails.nroAutorizacaoRNTRCOut = result.nroAutorizacaoRNTRC;
@@ -45,7 +47,6 @@ namespace CoreBot.Services.WSDLService.validarServicoLicenciamento
             LicenseDialogDetails.RecallPendente.codigo = result.recallPendente.codigo;
             LicenseDialogDetails.RecallPendente.mensagem = result.recallPendente.mensagem;
             LicenseDialogDetails.RecallPendente.ListaRecall.descricao = new string[] { result.recallPendente.listaRecall.ToString() };
-
         }
     }
 }

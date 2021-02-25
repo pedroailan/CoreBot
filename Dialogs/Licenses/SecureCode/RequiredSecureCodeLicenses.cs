@@ -17,8 +17,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RequiredSecureCodeLicenseDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
-
+        //private LicenseFields LicenseFields;
+        LicenseFields LicenseFields;
         public RequiredSecureCodeLicenseDialog()
             : base(nameof(RequiredSecureCodeLicenseDialog))
         {
@@ -63,7 +63,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             ), cancellationToken);
 
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe o CÓDIGO DE SEGURANÇA"), cancellationToken);
             var secureCode = MessageFactory.Text(null, InputHints.ExpectingInput);
@@ -72,21 +72,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            LicenseDialogDetails.codSegurancaIn = stepContext.Result.ToString();
+            LicenseFields = (LicenseFields)stepContext.Options;
+            LicenseFields.codSegurancaIn = stepContext.Result.ToString();
 
-            if (LicenseDialogDetails.codSegurancaIn == LicenseDialogDetails.codSegurancaOut) // Se for verdade, as Fields do License já estarão preenchidas em tempo de execução
+            if (LicenseFields.codSegurancaIn == LicenseFields.codSegurancaOut) // Se for verdade, as Fields do License já estarão preenchidas em tempo de execução
             {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseFields, cancellationToken);
             }
             else
             {
                 await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
 
-                LicenseDialogDetails.Count += 1;
-                if (LicenseDialogDetails.Count < 3)
+                LicenseFields.Count += 1;
+                if (LicenseFields.Count < 3)
                 {
-                    return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeLicenseDialog), LicenseFields, cancellationToken);
                 }
                 else
                 {

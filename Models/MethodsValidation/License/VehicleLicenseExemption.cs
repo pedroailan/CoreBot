@@ -8,9 +8,9 @@ namespace CoreBot.Models.MethodsValidation.License
 {
     public class VehicleLicenseExemption
     {
-        public static bool Exemption()
+        public static bool Exemption(string temIsencaoIPVA)
         {
-            if(LicenseDialogDetails.temIsençãoIPVA == "S")
+            if(temIsencaoIPVA == "S")
             {
                 return true;
             }

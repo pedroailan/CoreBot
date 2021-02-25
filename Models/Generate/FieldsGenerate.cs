@@ -1,4 +1,5 @@
-﻿using CoreBot.Models.MethodsValidation.License;
+﻿using CoreBot.Fields;
+using CoreBot.Models.MethodsValidation.License;
 using Microsoft.BotBuilderSamples;
 using System.Collections.Generic;
 
@@ -12,12 +13,21 @@ namespace CoreBot.Models.Generate
     ///blabla
     public class FieldsGenerate
     {
+        public string Fields(LicenseFields dados)
+        {
+            return dados.nomeProprietario;
+        }
         /// <summary>
         /// Fields utilizados na Ficha de Compensação e DUA
         /// </summary>
+        LicenseDialogDetails dados = new LicenseDialogDetails();
         public string placa = LicenseDialogDetails.placa;
         public string documento = LicenseDialogDetails.numeroDocumento.ToString();
-        public string nome = LicenseDialogDetails.nomeProprietario;
+        //public string nome = LicenseDialogDetails.nomeProprietario;
+        public string nome()
+        {
+            return dados.nomeProprietario;
+        }
         public string marca = LicenseDialogDetails.marcaModelo;
         public string tipo = LicenseDialogDetails.tipo;
         public string cor = LicenseDialogDetails.cor;
@@ -26,7 +36,7 @@ namespace CoreBot.Models.Generate
         public string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
         public string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public string tituloVenc = LicenseDialogDetails.tituloVenc;
-        public string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar);
+        public string valorTotal = "0"; /*Format.Output.FormatValue(LicenseDialogDetails.valorApagar)*/
         public string vencimento = Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
         public string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public string chassi = LicenseDialogDetails.chassiSNG;
@@ -84,7 +94,7 @@ namespace CoreBot.Models.Generate
             {
                 if (value != "")
                 {
-                    preco.Add("R$ " + Format.Output.FormatValue(value));
+                    preco.Add("R$ " /*Format.Output.FormatValue(value)*/);
                 }
                 else
                 {

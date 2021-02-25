@@ -17,14 +17,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RootLicenseDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
-
+        //private LicenseDialogDetails LicenseDialogDetails;
+        LicenseFields LicenseFields;
         public RootLicenseDialog()
             : base(nameof(RootLicenseDialog))
         {
 
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-br"));
+            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt), null, "pt-BR"));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new RNTRCDialog());
             AddDialog(new RenavamDialog());
@@ -47,15 +47,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
-            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Carro);
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
+            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Veiculos.Carro);
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
             
             var promptOptions = new PromptOptions
             {
                 Prompt = MessageFactory.Text(TextGlobal.Prosseguir),
-                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + Emojis.SorrisoSuor + TextGlobal.Prosseguir),
+                RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + Emojis.Rostos.SorrisoSuor + TextGlobal.Prosseguir),
                 Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
@@ -64,7 +65,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
@@ -115,7 +117,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 Prompt = MessageFactory.Text($"Você pode informar o CÓDIGO DE SEGURANÇA?" + TextGlobal.Choice),
                 RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você pode informar o CÓDIGO DE SEGURANÇA?" + TextGlobal.ChoiceDig),
-                Choices = ChoiceFactory.ToChoices(new List<string> { "SIM", "NÃO" }),
+                Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
             };
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -123,19 +125,20 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             //stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             //stepContext.Values["choice"].ToString().ToLower();
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 
-                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
                 
             }
             else
             {
-                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseDialogDetails , cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(RenavamDialog), LicenseFields, cancellationToken);
             }
         }
     }

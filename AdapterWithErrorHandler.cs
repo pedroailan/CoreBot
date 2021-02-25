@@ -20,7 +20,7 @@ namespace Microsoft.BotBuilderSamples
                 logger.LogError($"Exception caught : {exception.Message}");
 
                 // Send a catch-all apology to the user.
-                await turnContext.SendActivityAsync("Desculpa, parece que algo deu errado!");
+                await turnContext.SendActivityAsync("Desculpa, parece que algo deu errado!" + exception.Message);
 
                 if (conversationState != null)
                 {

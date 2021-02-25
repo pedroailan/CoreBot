@@ -51,7 +51,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             LicenseFields = (LicenseFields)stepContext.Options;
 
 
-            if (VehicleLicense.ValidationYear() == true)
+            if (VehicleLicense.ValidationYear(LicenseFields.contadorAnoLicenciamento) == true)
             {
                 await stepContext.Context.SendActivityAsync("Detectei também que você pode optar por licenciar o ano anterior");
                 await stepContext.Context.SendActivityAsync("Ano: " + LicenseFields.anoLicenciamento[0] + "\r\n" +

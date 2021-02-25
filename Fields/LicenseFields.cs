@@ -12,13 +12,13 @@ namespace CoreBot.Fields
         public string marcaModelo;
         public string placa;
         public string renavamOut;
-        public bool secureCodeBool;
+        //public bool secureCodeBool;
 
 
         public int erroCodigo;
         public string erroMensagem;
         public string erroTrace;
-      
+
 
         public string codSegurancaIn;
         public string renavamIn;
@@ -38,6 +38,8 @@ namespace CoreBot.Fields
         //public string placa;
         //public string marcaModelo;
         public string nomeProprietario;
+
+       
         public string temRNTRC;
         public string tipoAutorizacaoRNTRCIn;
         public string tipoAutorizacaoRNTRCOut;
@@ -123,13 +125,18 @@ namespace CoreBot.Fields
         public string ufPagador;
         public string nossoNumero;
 
-        public string Banco { get; internal set; }
-        public int Count { get; internal set; }
-        public bool SecureCodeBool { get; internal set; }
-        public string ErrorService { get; internal set; }
-        public string ErrorAuthentication { get; internal set; }
+        public string Banco { get; set; }
+        public int Count { get;  set; }
+        public bool SecureCodeBool { get; set; }
+        public string ErrorService { get; set; }
+        public string ErrorAuthentication { get; set; }
 
         public string IsencaoIPVA;
         public double[] anoLicenciamentoIn;
+
+        public LicenseFields(string nomeProprietario)
+        {
+            this.nomeProprietario = nomeProprietario;
+        }
     }
 }

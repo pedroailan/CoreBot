@@ -96,7 +96,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 await stepContext.Context.SendActivityAsync("Se os dados não estão corretos, teremos que repetir o processo.\r\n" +
                                                             "Caso o problema persista, entre em contato com nossa equipe de atendimento");
-                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), cancellationToken);
             }
         }
 
@@ -326,7 +326,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (LicenseFields.tipoDocumentoOut == "F")
             {
                 var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao_" + LicenseFields.codSegurancaOut) };
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao") };
                 await stepContext.Context.SendActivityAsync(reply);
                 await stepContext.Context.SendActivityAsync(codeF);
                 return await stepContext.EndDialogAsync(cancellationToken);
@@ -334,10 +334,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(LicenseFields), "DUA_" + LicenseFields.codSegurancaOut) };
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfDUA.GenerateInvoice2(LicenseFields), "DUA") };
                 await stepContext.Context.SendActivityAsync(reply);
                 await stepContext.Context.SendActivityAsync(codeD);
-                return await stepContext.EndDialogAsync(cancellationToken);
+                return await stepContext.ContinueDialogAsync(cancellationToken);
             }
             //return await stepContext.EndDialogAsync(cancellationToken);
         }

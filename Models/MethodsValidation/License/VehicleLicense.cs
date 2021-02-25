@@ -156,9 +156,9 @@ namespace CoreBot.Models
         /// AUTOR(ES): Pedro Ailan
         /// </summary>
         /// <returns></returns>
-        public static bool ValidationYear()
+        public static bool ValidationYear(double contadorAnoLicenciamento)
         {
-            if (LicenseDialogDetails.contadorAnoLicenciamento > 1)
+            if (contadorAnoLicenciamento > 1)
             {
                 return true;
             }

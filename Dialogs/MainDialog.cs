@@ -65,11 +65,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            
             var LicenseDialogDetails = new LicenseDialogDetails();
             var CRLVDialogDetails = new CRLVDialogDetails();
-            var LicenseFields = new LicenseFields();
+            var LicenseFields = new LicenseFields(null);
+            
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
+            stepContext.FindDialog(nameof(RootLicenseDialog));
 
             switch (stepContext.Values["choice"].ToString().ToLower())
             {

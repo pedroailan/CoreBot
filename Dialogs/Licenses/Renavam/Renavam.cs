@@ -127,7 +127,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         if (LicenseFields.Count < 3)
                         {
                             LicenseFields.erroCodigo = 0;
-                            return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
+                            return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseFields, cancellationToken);
                         }
                         else
                         {
@@ -148,12 +148,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     await stepContext.Context.SendActivityAsync("Erro: " + LicenseFields.erroMensagem);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
-                //else if (erro.codigo == 0)
-                //{
-                //    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                //                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                //    return await stepContext.EndDialogAsync(cancellationToken);
-                //}
+                // Caso retorne nenhum erro, mas tenha falha na conexao
+                else if (LicenseFields.erroCodigo == 0 && LicenseFields.codigoRetorno == 0)
+                {
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
                 // Caso não haja erros
                 else
                 {
@@ -205,7 +206,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseFields.Count += 1;
                 if (LicenseFields.Count < 3)
                 {
-                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseFields, cancellationToken);
                 }
                 else
                 {

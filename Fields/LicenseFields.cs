@@ -134,9 +134,9 @@ namespace CoreBot.Fields
         public string IsencaoIPVA;
         public double[] anoLicenciamentoIn;
 
-        public LicenseFields(string nomeProprietario)
-        {
-            this.nomeProprietario = nomeProprietario;
-        }
+        //public LicenseFields(string nomeProprietario)
+        //{
+        //    this.nomeProprietario = nomeProprietario;
+        //}
     }
 }

@@ -11,8 +11,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class CancelAndHelpDialog : ComponentDialog
     {
-        //LicenseFields LicenseFields;
         LicenseFields LicenseFields;
+
         public CancelAndHelpDialog(string id)
             : base(id)
         {

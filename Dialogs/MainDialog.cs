@@ -68,8 +68,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             
             var LicenseDialogDetails = new LicenseDialogDetails();
             var CRLVDialogDetails = new CRLVDialogDetails();
-            var LicenseFields = new LicenseFields(null);
-            
+            var LicenseFields = new LicenseFields();
+            var CRLVeFields = new CRLVeFields();
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             stepContext.FindDialog(nameof(RootLicenseDialog));
@@ -77,7 +77,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             switch (stepContext.Values["choice"].ToString().ToLower())
             {
                 case "nenhuma das alternativas":
-                    return await stepContext.BeginDialogAsync(nameof(RootOthersServicesDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootOthersServicesDialog), LicenseFields, cancellationToken);
                 case "licenciamento anual (banese)":
                     LicenseFields.tipoDocumentoIn = "D";
                     LicenseFields.Banco = "Banese";
@@ -87,7 +87,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     LicenseFields.Banco = "Outros Bancos";
                     return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseFields, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
-                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), CRLVeFields, cancellationToken);
                 default:
                     var promptOptions = new PromptOptions
                     {

@@ -156,7 +156,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
                 // Caso não haja erros
-                else
+                else if(LicenseFields.erroCodigo == 0 && LicenseFields.codigoRetorno == 1)
                 {
                     if(LicenseFields.codSegurancaOut != "0")
                     {
@@ -196,6 +196,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
                     }
                     return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseFields, cancellationToken);
+                }
+                // Erro crítico (Sistema fora)
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
 
             }

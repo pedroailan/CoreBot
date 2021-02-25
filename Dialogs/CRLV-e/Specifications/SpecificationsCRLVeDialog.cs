@@ -23,7 +23,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class SpecificationsCRLVeDialog : CancelAndHelpDialog
     {
 
-        private CRLVDialogDetails CRLVDialogDetails;
+        private CRLVeFields CRLVeFields;
 
 
         public SpecificationsCRLVeDialog()
@@ -47,11 +47,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> InfoStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: " + CRLVDialogDetails.renavam +
-                                                                            "\r\nPlaca: " + CRLVDialogDetails.placaOut +
-                                                                            "\r\nProprietário: " + CRLVDialogDetails.nomeProprietario),
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Renavam: " + CRLVeFields.renavam +
+                                                                            "\r\nPlaca: " + CRLVeFields.placaOut +
+                                                                            "\r\nProprietário: " + CRLVeFields.nomeProprietario),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {
@@ -65,7 +65,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ConfirmDataAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -75,19 +75,19 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 await stepContext.Context.SendActivityAsync("Se os dados não estão corretos, teremos que repetir o processo.\r\n" +
                                                             "Caso o problema persista, entre em contato com nossa equipe de atendimento");
-                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), CRLVDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(MainDialog), CRLVeFields, cancellationToken);
             }
         }
 
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            if(CRLVDialogDetails.codigoRetorno == 1) {
+            if(CRLVeFields.codigoRetorno == 1 && CRLVeFields.erroCodigo == 0) {
                 await stepContext.Context.SendActivityAsync("Aqui está o seu Documento de Circulação de Porte Obrigatório (CRLV-e)! Para baixar basta clicar no item abaixo.");
                 await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
                 {
                     Prompt = (Activity)MessageFactory.Attachment(
-                        PdfProvider.Disponibilizer(CRLVDialogDetails.documentoCRLVePdf, "CRLVe_" + CRLVDialogDetails.codSegurançaOut)
+                        PdfProvider.Disponibilizer(CRLVeFields.documentoCRLVePdf, "CRLVe_" + CRLVeFields.nomeProprietario)
                     )
                 }, cancellationToken);
                 return await stepContext.EndDialogAsync(cancellationToken);

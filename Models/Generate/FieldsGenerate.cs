@@ -36,7 +36,7 @@ namespace CoreBot.Models.Generate
         public string emissao = Format.Output.FormatData(LicenseDialogDetails.dataProcessamento);
         public string dataVenc = LicenseDialogDetails.datsVenc; // Texto explicativo
         public string tituloVenc = LicenseDialogDetails.tituloVenc;
-        public string valorTotal = Format.Output.FormatValue(LicenseDialogDetails.valorApagar);
+        public string valorTotal = "0"; /*Format.Output.FormatValue(LicenseDialogDetails.valorApagar)*/
         public string vencimento = Format.Output.reverseDate(LicenseDialogDetails.vencimento.ToString());
         public string validade = Format.Output.FormatData(LicenseDialogDetails.vencimento);
         public string chassi = LicenseDialogDetails.chassiSNG;
@@ -94,7 +94,7 @@ namespace CoreBot.Models.Generate
             {
                 if (value != "")
                 {
-                    preco.Add("R$ " + Format.Output.FormatValue(value));
+                    preco.Add("R$ " /*Format.Output.FormatValue(value)*/);
                 }
                 else
                 {

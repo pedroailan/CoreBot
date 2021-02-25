@@ -253,6 +253,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseFields.municipioPagador = result.municipioPagador;
                 LicenseFields.ufPagador = result.ufPagador;
                 LicenseFields.nossoNumero = result.nossoNumero;
+                LicenseFields.codBarra = result.codBarra;
+                LicenseFields.linhaDig = result.linhaDig;
+                LicenseFields.linhaCodBarra = result.linhaCodBarra;
             }
 
             return await stepContext.ContinueDialogAsync(cancellationToken);

@@ -42,9 +42,9 @@ namespace CoreBot.Models
             Document document = new Document(PageSize.A4, 2F, 2F, 25F, 10F);            
             PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
-            FieldsGenerate data = new FieldsGenerate();
+            //FieldsGenerate data = new FieldsGenerate();
 
-            WriteDocument(document, writer, data, LicenseFields);
+            WriteDocument(document, writer, LicenseFields);
             //document.Open();
             //document.Add(new Paragraph(new Phrase("TESTE")));
             //document.Close();
@@ -54,7 +54,7 @@ namespace CoreBot.Models
             return bytes;
         }
 
-        public static void WriteDocument(Document doc, PdfWriter writer, FieldsGenerate data, LicenseFields LicenseFields)
+        public static void WriteDocument(Document doc, PdfWriter writer, LicenseFields LicenseFields)
         {
             doc.Open();
             Rectangle page = doc.PageSize;
@@ -74,17 +74,17 @@ namespace CoreBot.Models
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);
             doc.Add(tableDUA(Titulo));
-            doc.Add(tableDados(FontePadrao, page, image, data, LicenseFields));
-            doc.Add(tableDiscriminacao(FontePadrao, Subtitulo, data, LicenseFields));
+            doc.Add(tableDados(FontePadrao, page, image, LicenseFields));
+            doc.Add(tableDiscriminacao(FontePadrao, Subtitulo, LicenseFields));
             doc.Add(parag);
-            doc.Add(tableMultas(FontePadrao, Subtitulo, data, LicenseFields));
+            doc.Add(tableMultas(FontePadrao, Subtitulo, LicenseFields));
             doc.Add(parag);
-            doc.Add(tableObservacoes(FontePadrao, Subtitulo, data, LicenseFields));
+            doc.Add(tableObservacoes(FontePadrao, Subtitulo, LicenseFields));
             doc.Add(parag);
-            doc.Add(tablePendencias(FontePadrao, Subtitulo, data, LicenseFields));
+            doc.Add(tablePendencias(FontePadrao, Subtitulo, LicenseFields));
             doc.Add(parag);
-            doc.Add(tableInfoPagamento(FontePadrao, Subtitulo, data));
-            doc.Add(tableVia(writer, FontePadrao, page, image, data, LicenseFields));
+            doc.Add(tableInfoPagamento(FontePadrao, Subtitulo));
+            doc.Add(tableVia(writer, FontePadrao, page, image, LicenseFields));
             doc.Close();
         }
 
@@ -117,7 +117,7 @@ namespace CoreBot.Models
             return tableDUA;
         }
 
-        public static PdfPTable tableDados(Font FontePadrao, Rectangle page, iTextSharp.text.Image image, FieldsGenerate data, LicenseFields LicenseFields)
+        public static PdfPTable tableDados(Font FontePadrao, Rectangle page, iTextSharp.text.Image image, LicenseFields LicenseFields)
         {
 
             PdfPTable table1 = new PdfPTable(5);
@@ -206,7 +206,7 @@ namespace CoreBot.Models
             return table1;
         }
 
-        public static PdfPTable tableDiscriminacao(Font FontePadrao, Font Subtitulo, FieldsGenerate data, LicenseFields LicenseFields)
+        public static PdfPTable tableDiscriminacao(Font FontePadrao, Font Subtitulo, LicenseFields LicenseFields)
         {
             PdfPTable tableDiscriminacao = new PdfPTable(2);
             float[] Discwidths = new float[] { 400f, 200f };
@@ -243,7 +243,7 @@ namespace CoreBot.Models
             {
                 if (value != "")
                 {
-                    preco.Add(value);
+                    preco.Add("R$ " + Format.Output.FormatValue(value));
                 }
             }
 
@@ -263,7 +263,7 @@ namespace CoreBot.Models
             return tableDiscriminacao;
         }
 
-        public static PdfPTable tableMultas(Font FontePadrao, Font Subtitulo, FieldsGenerate data, LicenseFields LicenseFields)
+        public static PdfPTable tableMultas(Font FontePadrao, Font Subtitulo, LicenseFields LicenseFields)
         {
             PdfPTable tableMulta = new PdfPTable(1);
             PdfPCell cellDisc0 = new PdfPCell(new Phrase("MULTAS", Subtitulo));
@@ -273,7 +273,7 @@ namespace CoreBot.Models
             tableMulta.AddCell(cellDisc0);
 
             List<string> multas = new List<string>();
-            foreach (string value in LicenseDialogDetails.vetDescInfracao)
+            foreach (string value in LicenseFields.vetDescInfracao)
             {
                 multas.Add(value);
             }
@@ -298,7 +298,7 @@ namespace CoreBot.Models
             return tableMulta;
         }
 
-        public static PdfPTable tableObservacoes(Font FontePadrao, Font Subtitulo, FieldsGenerate data, LicenseFields LicenseFields)
+        public static PdfPTable tableObservacoes(Font FontePadrao, Font Subtitulo, LicenseFields LicenseFields)
         {
             PdfPTable tableObs = new PdfPTable(1);
             PdfPCell cellDisc0 = new PdfPCell(new Phrase("OBSERVAÇÕES", Subtitulo));
@@ -308,7 +308,7 @@ namespace CoreBot.Models
             tableObs.AddCell(cellDisc0);
 
             List<string> obs = new List<string>();
-            obs.Add("- " + LicenseDialogDetails.mensagem1 + " " + LicenseDialogDetails.mensagem2);
+            obs.Add("- " + LicenseFields.mensagem1 + " " + LicenseFields.mensagem2);
 
             if (obs.Count > 0)
             {
@@ -331,7 +331,7 @@ namespace CoreBot.Models
             return tableObs;
         }
 
-        public static PdfPTable tablePendencias(Font FontePadrao, Font Subtitulo, FieldsGenerate data, LicenseFields LicenseFields)
+        public static PdfPTable tablePendencias(Font FontePadrao, Font Subtitulo, LicenseFields LicenseFields)
         {
             PdfPTable tablePendencias = new PdfPTable(1);
             PdfPCell cellDisc0 = new PdfPCell(new Phrase("PENDÊNCIA(S) QUE IMPEDE(M) A EMISSÃO DO CRLV", Subtitulo));
@@ -363,7 +363,7 @@ namespace CoreBot.Models
             return tablePendencias;
         }
 
-        public static PdfPTable tableInfoPagamento(Font FontePadrao, Font Subtitulo, FieldsGenerate data)
+        public static PdfPTable tableInfoPagamento(Font FontePadrao, Font Subtitulo)
         {
             PdfPTable tablePagamento = new PdfPTable(1);
             PdfPCell cellDisc0 = new PdfPCell(new Phrase("PAGÁVEL APENAS NO BANESE", Subtitulo));
@@ -399,7 +399,7 @@ namespace CoreBot.Models
             return tablePagamento;
         }
 
-        public static PdfPTable tableVia(PdfWriter writer, Font FontePadrao, Rectangle page, iTextSharp.text.Image image, FieldsGenerate data, LicenseFields LicenseFields)
+        public static PdfPTable tableVia(PdfWriter writer, Font FontePadrao, Rectangle page, iTextSharp.text.Image image, LicenseFields LicenseFields)
         {
 
             PdfPTable tableVia = new PdfPTable(5);
@@ -424,7 +424,7 @@ namespace CoreBot.Models
             viaCell1.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell1);
 
-            PdfPCell viaCell2 = new PdfPCell(new Phrase("VAL DUA: " + LicenseFields.vencimento, FontePadrao));
+            PdfPCell viaCell2 = new PdfPCell(new Phrase("VAL DUA: " + Format.Output.reverseDate(LicenseFields.vencimento.ToString()), FontePadrao));
             viaCell2.HorizontalAlignment = 0;
             tableVia.AddCell(viaCell2);
 

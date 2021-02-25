@@ -3,6 +3,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Fields;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 
@@ -10,7 +11,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class CancelAndHelpDialog : ComponentDialog
     {
-        LicenseDialogDetails LicenseDialogDetails;
+        //LicenseFields LicenseFields;
+        LicenseFields LicenseFields;
         public CancelAndHelpDialog(string id)
             : base(id)
         {
@@ -55,7 +57,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     case "sair":
                     case "cancelar":
                     case "quit":
-                        return await innerDc.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                        return await innerDc.ReplaceDialogAsync(nameof(MainDialog), LicenseFields, cancellationToken);
                     //await innerDc.Context.SendActivityAsync($"Cancelando", cancellationToken: cancellationToken);
                     //return await innerDc.CancelAllDialogsAsync();
 
@@ -63,7 +65,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     case "voltar":
                     case "reiniciar":
                         //await innerDc.Context.SendActivityAsync($"Exibir Ajuda...", cancellationToken: cancellationToken);
-                        return await innerDc.ReplaceDialogAsync(nameof(MainDialog), LicenseDialogDetails, cancellationToken);
+                        return await innerDc.ReplaceDialogAsync(nameof(MainDialog), LicenseFields, cancellationToken);
 
                 }
             }

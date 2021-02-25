@@ -39,7 +39,7 @@ namespace CoreBot.Services.WSDLService.efetuarServicoLicenciamento
 
             var result = soap.efetuarServicoLicenciamentoResult;
 
-            History(result);
+            //History(result);
 
             return soap.efetuarServicoLicenciamentoResult;
         }

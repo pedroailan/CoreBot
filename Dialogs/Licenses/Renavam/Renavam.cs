@@ -98,10 +98,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var webResult = await vehicle.ValidationRenavam(LicenseFields.renavamIn, LicenseFields.tipoDocumentoIn);
 
                 LicenseFields.codigoRetorno = webResult.codigoRetorno;
-                LicenseFields.Erro erro = new LicenseFields.Erro();
-                erro.codigo = webResult.erro.codigo;
-                erro.mensagem = webResult.erro.mensagem;
-                erro.trace = webResult.erro.trace;
+                //LicenseFields.Erro erro = new LicenseFields.Erro();
+                LicenseFields.erroCodigo = webResult.erro.codigo;
+                LicenseFields.erroMensagem = webResult.erro.mensagem;
+                LicenseFields.erroTrace = webResult.erro.trace;
                 LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
                 LicenseFields.renavamOut = webResult.renavamOut.ToString();
                 LicenseFields.placa = webResult.placa;
@@ -118,15 +118,15 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
                 LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
 
-                if (erro.codigo == 1)
+                if (LicenseFields.erroCodigo == 1)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + erro.mensagem);
+                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseFields.erroMensagem);
                     if (LicenseFields.SecureCodeBool == true || LicenseFields.Count < 3)
                     {
                         LicenseFields.Count += 1;
                         if (LicenseFields.Count < 3)
                         {
-                            erro.codigo = 0;
+                            LicenseFields.erroCodigo = 0;
                             return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
                         }
                         else
@@ -143,9 +143,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     }
                 }
                 // Caso erro 2 <= x <= 900
-                else if (erro.codigo >= 2 && erro.codigo <= 900)
+                else if (LicenseFields.erroCodigo >= 2 && LicenseFields.erroCodigo <= 900)
                 {
-                    await stepContext.Context.SendActivityAsync("Erro: " + erro.mensagem);
+                    await stepContext.Context.SendActivityAsync("Erro: " + LicenseFields.erroMensagem);
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
                 //else if (erro.codigo == 0)

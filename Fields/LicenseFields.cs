@@ -14,12 +14,11 @@ namespace CoreBot.Fields
         public string renavamOut;
         public bool secureCodeBool;
 
-        public class Erro
-        {
-            public int codigo;
-            public string mensagem;
-            public string trace;
-        }
+
+        public int erroCodigo;
+        public string erroMensagem;
+        public string erroTrace;
+      
 
         public string codSegurancaIn;
         public string renavamIn;

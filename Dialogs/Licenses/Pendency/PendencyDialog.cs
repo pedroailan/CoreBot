@@ -147,10 +147,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var webResult = await vehicle.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.tipoDocumentoIn, LicenseFields.exercicio);
 
                 LicenseFields.codigoRetorno = webResult.codigoRetorno;
-                LicenseFields.Erro erro = new LicenseFields.Erro();
-                erro.codigo = webResult.erro.codigo;
-                erro.mensagem = webResult.erro.mensagem;
-                erro.trace = webResult.erro.trace;
+                //LicenseFields.Erro erro = new LicenseFields.Erro();
+                LicenseFields.erroCodigo = webResult.erro.codigo;
+                LicenseFields.erroMensagem = webResult.erro.mensagem;
+                LicenseFields.erroTrace = webResult.erro.trace;
                 LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
                 LicenseFields.renavamOut = webResult.renavamOut.ToString();
                 LicenseFields.placa = webResult.placa;
@@ -208,10 +208,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var webResult = await vehicle.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.tipoDocumentoIn, LicenseFields.exercicio);
 
                 LicenseFields.codigoRetorno = webResult.codigoRetorno;
-                LicenseFields.Erro erro = new LicenseFields.Erro();
-                erro.codigo = webResult.erro.codigo;
-                erro.mensagem = webResult.erro.mensagem;
-                erro.trace = webResult.erro.trace;
+                //LicenseFields.Erro erro = new LicenseFields.Erro();
+                LicenseFields.erroCodigo = webResult.erro.codigo;
+                LicenseFields.erroMensagem = webResult.erro.mensagem;
+                LicenseFields.erroTrace = webResult.erro.trace;
                 LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
                 LicenseFields.renavamOut = webResult.renavamOut.ToString();
                 LicenseFields.placa = webResult.placa;

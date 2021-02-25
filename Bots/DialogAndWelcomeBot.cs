@@ -31,7 +31,7 @@ namespace Microsoft.BotBuilderSamples.Bots
                     var welcomeCard = CreateAdaptiveCardAttachment();
                     var response = CreateResponse(turnContext.Activity, welcomeCard);
                     //await turnContext.SendActivityAsync(response, cancellationToken);
-                    await turnContext.SendActivityAsync("Seja bem-vindo ao portal do Detran! Sou Detina, me mande um 'oi' caso precise de algo :)");
+                    await turnContext.SendActivityAsync("Seja bem-vindo ao portal do Detran! Sou Detina, me mande um 'oi' caso precise de algo :) " + member.Id );
                 }
             }
         }

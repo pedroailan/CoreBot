@@ -157,7 +157,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 // Caso não haja erros
                 else
                 {
-                    if(LicenseFields.codSegurancaOut != null)
+                    if(LicenseFields.codSegurancaOut != "0")
                     {
                         await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo.");
 
@@ -201,7 +201,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 // Se a string for inválida
-                await stepContext.Context.SendActivityAsync("Este código de segurança é inválido!");
+                await stepContext.Context.SendActivityAsync("Este Renavam é inválido!");
                 LicenseFields.Count += 1;
                 if (LicenseFields.Count < 3)
                 {
@@ -209,7 +209,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 }
                 else
                 {
-                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
+                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o Renavam!\r\n" +
                                                                 "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
                                                                 "ou entre em contato com o DETRAN, para obter mais informações");
                     return await stepContext.EndDialogAsync(cancellationToken);

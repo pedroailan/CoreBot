@@ -71,7 +71,22 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(/*$"Marca/Modelo: " + LicenseDialogDetails.marcaModelo*/
                                                                             "\r\nPlaca: " + LicenseFields.placa +
-                                                                            "\r\nProprietário: " + LicenseFields.nomeProprietario),
+                                                                            "\r\nProprietário: " + LicenseFields.nomeProprietario +
+                                                                            "\r\nErro Mensagem: " + LicenseFields.erroMensagem  +
+                                                                            "\r\nErro Código: " + LicenseFields.erroCodigo +
+                                                                            "\r\nCod Segurança (Saída): " + LicenseFields.codSegurancaOut +
+                                                                            "\r\nRenavam (Saída): " + LicenseFields.renavamOut +
+                                                                            "\r\nRNTRC: " + LicenseFields.temRNTRC +
+                                                                            "\r\nTipo Autorização: " + LicenseFields.tipoAutorizacaoRNTRCOut +
+                                                                            "\r\nNumero Autorização: " + LicenseFields.nroAutorizacaoRNTRCOut +
+                                                                            "\r\nIsenção: " + LicenseFields.temIsençãoIPVA +
+                                                                            "\r\nRestrição: " + LicenseFields.restricao +
+                                                                            "\r\nAno Licenciamento 1: " + LicenseFields.anoLicenciamento[0] +
+                                                                            "\r\nAno Licenciamento 2: " + LicenseFields.anoLicenciamento[1] +
+                                                                            "\r\nValor: " + LicenseFields.totalCotaUnica +
+                                                                            "\r\nQuantidade de anos pendentes: " + LicenseFields.contadorAnoLicenciamento
+
+                                                                            ),
                                                                             cancellationToken);
             var promptOptions = new PromptOptions
             {

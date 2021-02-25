@@ -80,8 +80,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     LicenseFields.Banco = "Banese";
                     return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseFields, cancellationToken);
                 case "licenciamento anual (outros bancos)":
-                    LicenseDialogDetails.tipoDocumentoIn = "F";
-                    LicenseDialogDetails.Banco = "Outros Bancos";
+                    LicenseFields.tipoDocumentoIn = "F";
+                    LicenseFields.Banco = "Outros Bancos";
                     return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
                     return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);

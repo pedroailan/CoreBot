@@ -45,23 +45,37 @@ namespace CoreBot.Models
             return null;
         }
 
-        public async static Task<bool> ValidationSecureCodeLicenciamento(string SecureCode, double year)
+        public async Task<wsDetranChatBot.validarServicoLicenciamentoResult> ValidationSecureCodeLicenciamento(string SecureCode, string tipoDocumentoIn, double year)
         {
-            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
+            try
             {
-                //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, year);
-                if (LicenseDialogDetails.Erro.codigo == 0)
-                {
-                    return true;
-                }
+                var result = await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), tipoDocumentoIn, year);
+                return result;
             }
-            return false;
-            //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
+            catch (Exception err)
+            {
+                //erro de conexao
+                // atribuir erro
+                return null;
+            }
+
+            return null;
+            //if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
             //{
-            //    return true;
+            //    //16736005660
+            //    ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
+            //    await obter.validarServicoLicenciamento(0, Convert.ToDouble(SecureCode), LicenseDialogDetails.tipoDocumentoIn, year);
+            //    if (LicenseDialogDetails.Erro.codigo == 0)
+            //    {
+            //        return true;
+            //    }
             //}
+            //return false;
+            ////if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
+            ////{
+            ////    return true;
+            ////}
         }
 
         /// <summary>

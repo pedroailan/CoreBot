@@ -141,9 +141,32 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             LicenseFields = (LicenseFields)stepContext.Options;
 
+            VehicleLicense vehicle = new VehicleLicense();
             if (LicenseFields.exercicio == LicenseFields.anoLicenciamento[1])
             {
-                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.exercicio);
+                var webResult = await vehicle.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.tipoDocumentoIn, LicenseFields.exercicio);
+
+                LicenseFields.codigoRetorno = webResult.codigoRetorno;
+                LicenseFields.Erro erro = new LicenseFields.Erro();
+                erro.codigo = webResult.erro.codigo;
+                erro.mensagem = webResult.erro.mensagem;
+                erro.trace = webResult.erro.trace;
+                LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
+                LicenseFields.renavamOut = webResult.renavamOut.ToString();
+                LicenseFields.placa = webResult.placa;
+                LicenseFields.nomeProprietario = webResult.nomeProprietario;
+                LicenseFields.temRNTRC = webResult.temRNTRC;
+                LicenseFields.tipoAutorizacaoRNTRCOut = webResult.tipoAutorizacaoRNTRC;
+                LicenseFields.nroAutorizacaoRNTRCOut = webResult.nroAutorizacaoRNTRC;
+                LicenseFields.temIsençãoIPVA = webResult.temIsencaoIPVA;
+                LicenseFields.restricao = webResult.restricao;
+                LicenseFields.anoLicenciamento = webResult.anoLicenciamento;
+                LicenseFields.totalCotaUnica = webResult.totalCotaUnica;
+                LicenseFields.contadorAnoLicenciamento = webResult.contadorAnoLicenciamento;
+                LicenseFields.recallCodigo = webResult.recallPendente.codigo;
+                LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
+                LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
+
                 await stepContext.Context.SendActivityAsync("Ano: " + LicenseFields.anoLicenciamento[0] + "\r\n" +
                                                             "Valor a ser pago: R$ " + LicenseFields.totalCotaUnica);
                 var Options = new PromptOptions
@@ -180,7 +203,31 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             else
             {
                 LicenseFields.exercicio -= 1;
-                await VehicleLicense.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.exercicio);
+                VehicleLicense vehicle = new VehicleLicense();
+
+                var webResult = await vehicle.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaOut, LicenseFields.tipoDocumentoIn, LicenseFields.exercicio);
+
+                LicenseFields.codigoRetorno = webResult.codigoRetorno;
+                LicenseFields.Erro erro = new LicenseFields.Erro();
+                erro.codigo = webResult.erro.codigo;
+                erro.mensagem = webResult.erro.mensagem;
+                erro.trace = webResult.erro.trace;
+                LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
+                LicenseFields.renavamOut = webResult.renavamOut.ToString();
+                LicenseFields.placa = webResult.placa;
+                LicenseFields.nomeProprietario = webResult.nomeProprietario;
+                LicenseFields.temRNTRC = webResult.temRNTRC;
+                LicenseFields.tipoAutorizacaoRNTRCOut = webResult.tipoAutorizacaoRNTRC;
+                LicenseFields.nroAutorizacaoRNTRCOut = webResult.nroAutorizacaoRNTRC;
+                LicenseFields.temIsençãoIPVA = webResult.temIsencaoIPVA;
+                LicenseFields.restricao = webResult.restricao;
+                LicenseFields.anoLicenciamento = webResult.anoLicenciamento;
+                LicenseFields.totalCotaUnica = webResult.totalCotaUnica;
+                LicenseFields.contadorAnoLicenciamento = webResult.contadorAnoLicenciamento;
+                LicenseFields.recallCodigo = webResult.recallPendente.codigo;
+                LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
+                LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
+
                 return await stepContext.ReplaceDialogAsync(nameof(PendencyDialog), LicenseFields, cancellationToken);
             }
 

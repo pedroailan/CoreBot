@@ -26,11 +26,11 @@ namespace CoreBot.Models.MethodsValidation.License
             //return false;
         }
 
-        public static bool ValidationTypeAuthorization(string tipo)
+        public static bool ValidationTypeAuthorization(string tipo, string tipoAutorizacaoRNTRCOut)
         {
-            if (tipo == "1" && LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "ETC") return true;
-            else if (tipo == "2" && LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "CTC") return true;
-            else if (tipo == "3" && LicenseDialogDetails.tipoAutorizacaoRNTRCOut == "TAC") return true;
+            if (tipo == "1" && tipoAutorizacaoRNTRCOut == "ETC") return true;
+            else if (tipo == "2" && tipoAutorizacaoRNTRCOut == "CTC") return true;
+            else if (tipo == "3" && tipoAutorizacaoRNTRCOut == "TAC") return true;
             else return false;
         }
 
@@ -57,11 +57,11 @@ namespace CoreBot.Models.MethodsValidation.License
             }
         }
 
-        public static bool ValidationNumber(string nroAutorizacaoRNTRCIn)
+        public static bool ValidationNumber(string nroAutorizacaoRNTRCIn, string nroAutorizacaoRNTRCOut)
         {
             if (Format.Input.ValidationFormat.IsNumber(nroAutorizacaoRNTRCIn) == true)
             {
-                if (nroAutorizacaoRNTRCIn == LicenseDialogDetails.nroAutorizacaoRNTRCOut)
+                if (nroAutorizacaoRNTRCIn == nroAutorizacaoRNTRCOut)
                 {
                     return true;
                 }

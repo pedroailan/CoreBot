@@ -20,6 +20,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     {
         //private LicenseFields LicenseFields;
         LicenseFields LicenseFields;
+         
         public PendencyDialog()
             : base(nameof(PendencyDialog))
         {

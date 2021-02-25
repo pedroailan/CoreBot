@@ -69,11 +69,11 @@ namespace CoreBot.Models
         /// AUTOR(ES): Pedro Ailan
         /// </summary>
         /// <returns></returns>
-        public static bool ExistSecureCode()
+        public static bool ExistSecureCode(string codSegurancaOut)
         {
             if (Convert.ToDouble(LicenseDialogDetails.codSegurancaOut) > 0)
             {
-                LicenseDialogDetails.secureCodeBool = true;
+                //LicenseDialogDetails.secureCodeBool = true;
                 return true;
             }
             return false;
@@ -86,19 +86,34 @@ namespace CoreBot.Models
         /// </summary>
         /// <param name="Renavam"></param>
         /// <returns></returns>
-        public async static Task<bool> ValidationRenavam(string Renavam)
+        public async Task<wsDetranChatBot.validarServicoLicenciamentoResult> ValidationRenavam(string Renavam, string tipoDocumentoIn)
         {
-            if (Renavam.Length > 0 && Format.Input.ValidationFormat.IsNumber(Renavam) == true)
+
+            try
             {
-                //16736005660
                 ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
-                await obter.validarServicoLicenciamento(Convert.ToDouble(Renavam), 0, LicenseDialogDetails.tipoDocumentoIn, 0);
-                if (LicenseDialogDetails.Erro.codigo == 0)
-                {
-                    return true;
-                }
+                var result = await obter.validarServicoLicenciamento(Convert.ToDouble(Renavam), 0, tipoDocumentoIn, 0);
+                return result;
             }
-            return false;
+            catch (Exception err)
+            {
+                //erro de conexao
+                // atribuir erro
+                return null;
+            }
+
+            return null;
+            //if (Renavam.Length > 0 && Format.Input.ValidationFormat.IsNumber(Renavam) == true)
+            //{
+            //    //16736005660
+            //    ValidarServicoLicenciamento obter = new ValidarServicoLicenciamento();
+            //    await obter.validarServicoLicenciamento(Convert.ToDouble(Renavam), 0, tipoDocumentoIn, 0);
+            //    if (LicenseDialogDetails.Erro.codigo == 0)
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
             //if (Renavam == "1234") return true;
             //return false;
         }

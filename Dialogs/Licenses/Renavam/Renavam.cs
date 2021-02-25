@@ -23,7 +23,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RenavamDialog : CancelAndHelpDialog
     {
 
-        private LicenseDialogDetails LicenseDialogDetails;
+        //private LicenseFields LicenseFields;
+        LicenseFields LicenseFields;
 
         public RenavamDialog()
             : base(nameof(RenavamDialog))
@@ -71,7 +72,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             ), cancellationToken);
 
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Por favor, informe o RENAVAM do seu veículo"), cancellationToken);
             var renavam = MessageFactory.Text(null, InputHints.ExpectingInput);
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = renavam }, cancellationToken);
@@ -79,7 +80,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ValidationRenavamStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
@@ -87,90 +88,46 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
-            LicenseDialogDetails.renavamIn = stepContext.Result.ToString();
+            LicenseFields.renavamIn = stepContext.Result.ToString();
 
-            if (await VehicleLicense.ValidationRenavam(LicenseDialogDetails.renavamIn) == true)
+
+            VehicleLicense vehicle = new VehicleLicense();
+
+            if (vehicle.ValidationString(LicenseFields.renavamIn) == true)
             {
-                if (VehicleLicense.ExistSecureCode() == true)
+                var webResult = await vehicle.ValidationRenavam(LicenseFields.renavamIn, LicenseFields.tipoDocumentoIn);
+
+                LicenseFields.codigoRetorno = webResult.codigoRetorno;
+                LicenseFields.Erro erro = new LicenseFields.Erro();
+                erro.codigo = webResult.erro.codigo;
+                erro.mensagem = webResult.erro.mensagem;
+                erro.trace = webResult.erro.trace;
+                LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
+                LicenseFields.renavamOut = webResult.renavamOut.ToString();
+                LicenseFields.placa = webResult.placa;
+                LicenseFields.nomeProprietario = webResult.nomeProprietario;
+                LicenseFields.temRNTRC = webResult.temRNTRC;
+                LicenseFields.tipoAutorizacaoRNTRCOut = webResult.tipoAutorizacaoRNTRC;
+                LicenseFields.nroAutorizacaoRNTRCOut = webResult.nroAutorizacaoRNTRC;
+                LicenseFields.temIsençãoIPVA = webResult.temIsencaoIPVA;
+                LicenseFields.restricao = webResult.restricao;
+                LicenseFields.anoLicenciamento = webResult.anoLicenciamento;
+                LicenseFields.totalCotaUnica = webResult.totalCotaUnica;
+                LicenseFields.contadorAnoLicenciamento = webResult.contadorAnoLicenciamento;
+                LicenseFields.recallCodigo = webResult.recallPendente.codigo;
+                LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
+                LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
+
+                if (erro.codigo == 1)
                 {
-                    LicenseDialogDetails.SecureCodeBool = true;
-                    await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo.");
-
-                    AdaptiveCard card = new AdaptiveCard("1.0")
+                    await stepContext.Context.SendActivityAsync("Erro: " + erro.mensagem);
+                    if (LicenseFields.SecureCodeBool == true || LicenseFields.Count < 3)
                     {
-                        Body =
-                    {
-                        new AdaptiveImage()
+                        LicenseFields.Count += 1;
+                        if (LicenseFields.Count < 3)
                         {
-                            Type = "Image",
-                            Size = AdaptiveImageSize.Auto,
-                            Style = AdaptiveImageStyle.Default,
-                            HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
-                            Separator = true,
-                            Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
-                        }
-                    }
-                    };
-
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
-                    {
-                        Content = card,
-                        ContentType = "application/vnd.microsoft.card.adaptive",
-                        Name = "cardName"
-                    }
-                    ), cancellationToken);
-
-                    var promptOptions = new PromptOptions
-                    {
-                        Prompt = MessageFactory.Text("Você localizou?" + TextGlobal.Choice),
-                        RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você localizou?" + TextGlobal.ChoiceDig),
-                        Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
-                    };
-
-                    return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
-                }
-                else
-                {
-                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseDialogDetails, cancellationToken);
-                }
-            }
-            // Caso o Renavam seja inválido
-            else
-            {
-                switch (LicenseDialogDetails.Erro.codigo == 1 ? "Incorreto" :
-                           LicenseDialogDetails.Erro.codigo >= 2 && LicenseDialogDetails.Erro.codigo <= 900 ? "Sistema" :
-                           LicenseDialogDetails.Erro.codigo == 0 && Format.Input.ValidationFormat.IsNumber(LicenseDialogDetails.renavamIn) ? "Conexao" :
-                           LicenseDialogDetails.Erro.codigo == 0 && !Format.Input.ValidationFormat.IsNumber(LicenseDialogDetails.renavamIn) ? "Invalido" : null)
-                {
-                    case "Incorreto":
-                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
-
-                        LicenseDialogDetails.Count += 1;
-                        if (LicenseDialogDetails.Count < 3)
-                        {
-                            LicenseDialogDetails.Erro.codigo = 0;
-                            return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
-                        }
-                        else
-                        {
-                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
-                                                                        "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
-                                                                        "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
-                            return await stepContext.EndDialogAsync(cancellationToken);
-                        }
-                    case "Sistema":
-                        await stepContext.Context.SendActivityAsync("Erro: " + LicenseDialogDetails.Erro.mensagem);
-                        return await stepContext.EndDialogAsync(cancellationToken);
-                    case "Conexao":
-                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                        return await stepContext.EndDialogAsync(cancellationToken);
-                    case "Invalido":
-                        await stepContext.Context.SendActivityAsync("Este RENAVAM é inválido!");
-                        LicenseDialogDetails.Count += 1;
-                        if (LicenseDialogDetails.Count < 3)
-                        {
-                            return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseDialogDetails, cancellationToken);
+                            erro.codigo = 0;
+                            return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
                         }
                         else
                         {
@@ -179,23 +136,193 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                                                         "ou entre em contato com o DETRAN, para obter mais informações");
                             return await stepContext.EndDialogAsync(cancellationToken);
                         }
-                    default:
-                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                        return await stepContext.EndDialogAsync(cancellationToken);
+                    }
+                    else
+                    {
+                        return await stepContext.ReplaceDialogAsync(nameof(MainDialog), LicenseFields, cancellationToken);
+                    }
+                }
+                // Caso erro 2 <= x <= 900
+                else if (erro.codigo >= 2 && erro.codigo <= 900)
+                {
+                    await stepContext.Context.SendActivityAsync("Erro: " + erro.mensagem);
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
+                //else if (erro.codigo == 0)
+                //{
+                //    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                //                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                //    return await stepContext.EndDialogAsync(cancellationToken);
+                //}
+                // Caso não haja erros
+                else
+                {
+                    if(LicenseFields.codSegurancaOut != null)
+                    {
+                        await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo.");
+
+                        AdaptiveCard card = new AdaptiveCard("1.0")
+                        {
+                            Body =
+                                        {
+                                        new AdaptiveImage()
+                                            {
+                                                Type = "Image",
+                                                Size = AdaptiveImageSize.Auto,
+                                                Style = AdaptiveImageStyle.Default,
+                                                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                                                Separator = true,
+                                                Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+                                            }
+                                        }
+                        };
+
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
+                        {
+                            Content = card,
+                            ContentType = "application/vnd.microsoft.card.adaptive",
+                            Name = "cardName"
+                        }
+                        ), cancellationToken);
+
+                        var promptOptions = new PromptOptions
+                        {
+                            Prompt = MessageFactory.Text("Você localizou?" + TextGlobal.Choice),
+                            RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você localizou?" + TextGlobal.ChoiceDig),
+                            Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
+                        };
+
+                        return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+                    }
+                    return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseFields, cancellationToken);
+                }
+
+            }
+            else
+            {
+                // Se a string for inválida
+                await stepContext.Context.SendActivityAsync("Este código de segurança é inválido!");
+                LicenseFields.Count += 1;
+                if (LicenseFields.Count < 3)
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeDialog), LicenseFields, cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
+                                                                "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                "ou entre em contato com o DETRAN, para obter mais informações");
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
             }
+
+            //if (await VehicleLicense.ValidationRenavam(LicenseFields.renavamIn, LicenseFields.tipoDocumentoIn) == true)
+            //{
+            //    if (VehicleLicense.ExistSecureCode(LicenseFields.tipoDocumentoIn) == true)
+            //    {
+            //        LicenseFields.SecureCodeBool = true;
+            //        await stepContext.Context.SendActivityAsync("Em nossos sistemas você possui código de segurança, para prosseguir será necessário informá-lo.");
+
+            //        AdaptiveCard card = new AdaptiveCard("1.0")
+            //        {
+            //            Body =
+            //                {
+            //                new AdaptiveImage()
+            //                    {
+            //                        Type = "Image",
+            //                        Size = AdaptiveImageSize.Auto,
+            //                        Style = AdaptiveImageStyle.Default,
+            //                        HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+            //                        Separator = true,
+            //                        Url = new Uri("https://www.detran.se.gov.br/portal/images/codigoseg_crlve.jpeg")
+            //                    }
+            //                }
+            //        };
+
+            //        await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(new Attachment
+            //        {
+            //            Content = card,
+            //            ContentType = "application/vnd.microsoft.card.adaptive",
+            //            Name = "cardName"
+            //        }
+            //        ), cancellationToken);
+
+            //        var promptOptions = new PromptOptions
+            //        {
+            //            Prompt = MessageFactory.Text("Você localizou?" + TextGlobal.Choice),
+            //            RetryPrompt = MessageFactory.Text(TextGlobal.Desculpe + "Você localizou?" + TextGlobal.ChoiceDig),
+            //            Choices = ChoiceFactory.ToChoices(new List<string> { "Sim", "Não" }),
+            //        };
+
+            //        return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
+            //    }
+            //    else
+            //    {
+            //        return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseFields, cancellationToken);
+            //    }
+            //}
+            //// Caso o Renavam seja inválido
+            //else
+            //{
+            //    switch (LicenseFields.Erro.codigo == 1 ? "Incorreto" :
+            //               LicenseFields.Erro.codigo >= 2 && LicenseFields.Erro.codigo <= 900 ? "Sistema" :
+            //               LicenseFields.Erro.codigo == 0 && Format.Input.ValidationFormat.IsNumber(LicenseFields.renavamIn) ? "Conexao" :
+            //               LicenseFields.Erro.codigo == 0 && !Format.Input.ValidationFormat.IsNumber(LicenseFields.renavamIn) ? "Invalido" : null)
+            //    {
+            //        case "Incorreto":
+            //            await stepContext.Context.SendActivityAsync("Erro: " + LicenseFields.Erro.mensagem);
+
+            //            LicenseFields.Count += 1;
+            //            if (LicenseFields.Count < 3)
+            //            {
+            //                LicenseFields.Erro.codigo = 0;
+            //                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseFields, cancellationToken);
+            //            }
+            //            else
+            //            {
+            //                await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o numero do Renavam!\r\n" +
+            //                                                            "Nesse caso, vou pedir para que procure melhor e volte a falar comigo novamente depois " +
+            //                                                            "ou entre em contato com o DETRAN, para obter mais informações\r\nObrigada!");
+            //                return await stepContext.EndDialogAsync(cancellationToken);
+            //            }
+            //        case "Sistema":
+            //            await stepContext.Context.SendActivityAsync("Erro: " + LicenseFields.Erro.mensagem);
+            //            return await stepContext.EndDialogAsync(cancellationToken);
+            //        case "Conexao":
+            //            await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+            //                                                        ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+            //            return await stepContext.EndDialogAsync(cancellationToken);
+            //        case "Invalido":
+            //            await stepContext.Context.SendActivityAsync("Este RENAVAM é inválido!");
+            //            LicenseFields.Count += 1;
+            //            if (LicenseFields.Count < 3)
+            //            {
+            //                return await stepContext.ReplaceDialogAsync(nameof(RenavamDialog), LicenseFields, cancellationToken);
+            //            }
+            //            else
+            //            {
+            //                await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o Renavam!\r\n" +
+            //                                                            "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+            //                                                            "ou entre em contato com o DETRAN, para obter mais informações");
+            //                return await stepContext.EndDialogAsync(cancellationToken);
+            //            }
+            //        default:
+            //            await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+            //                                                        ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+            //            return await stepContext.EndDialogAsync(cancellationToken);
+            //    }
+            //}
         }
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
+            LicenseFields = (LicenseFields)stepContext.Options;
 
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
                 // SecureCodeDialog
-                return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeLicenseDialog), LicenseDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeLicenseDialog), LicenseFields, cancellationToken);
 
             }
             else

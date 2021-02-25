@@ -85,7 +85,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 case "licenciamento anual (outros bancos)":
                     LicenseFields.tipoDocumentoIn = "F";
                     LicenseFields.Banco = "Outros Bancos";
-                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseDialogDetails, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(RootLicenseDialog), LicenseFields, cancellationToken);
                 case "emitir documento de circulação (crlv-e)":
                     return await stepContext.BeginDialogAsync(nameof(RootCRLVeDialog), CRLVDialogDetails, cancellationToken);
                 default:

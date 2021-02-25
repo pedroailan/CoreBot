@@ -45,9 +45,6 @@ namespace CoreBot.Models
             //FieldsGenerate data = new FieldsGenerate();
 
             WriteDocument(document, writer, LicenseFields);
-            //document.Open();
-            //document.Add(new Paragraph(new Phrase("TESTE")));
-            //document.Close();
 
             byte[] bytes = memoryStream.ToArray();
 
@@ -68,8 +65,6 @@ namespace CoreBot.Models
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(pathImageDetran);
 
             doc.Add(Header());
-            //doc.Add(new Paragraph(new Phrase(Environment.CurrentDirectory)));
-            //doc.Add(new Paragraph(new Phrase(Directory.GetCurrentDirectory())));
             doc.Add(parag);
             doc.Add(tableAlerta(FontePadrao));
             doc.Add(parag);
@@ -307,26 +302,40 @@ namespace CoreBot.Models
             cellDisc0.Colspan = 2;
             tableObs.AddCell(cellDisc0);
 
-            List<string> obs = new List<string>();
-            obs.Add("- " + LicenseFields.mensagem1 + " " + LicenseFields.mensagem2);
-
-            if (obs.Count > 0)
+            if (LicenseFields.mensagem1 != "")
             {
-                for (int i = 0; i < obs.Count; i++)
-                {
-                    PdfPCell cellDisc1 = new PdfPCell(new Phrase(obs[i], FontePadrao));
-                    cellDisc1.HorizontalAlignment = 0;
-                    cellDisc1.Border = 0;
-                    tableObs.AddCell(cellDisc1);
-
-                }
+                PdfPCell cellDisc11 = new PdfPCell(new Phrase(LicenseFields.mensagem1, FontePadrao));
+                cellDisc11.Border = 0;
+                tableObs.AddCell(cellDisc11);
             }
-            else
+            if (LicenseFields.mensagem2 != "")
             {
-                PdfPCell cellDisc1 = new PdfPCell(new Phrase("\r\n", FontePadrao));
-                cellDisc1.Border = 0;
-                tableObs.AddCell(cellDisc1);
+                PdfPCell cellDisc2 = new PdfPCell(new Phrase(LicenseFields.mensagem2, FontePadrao));
+                cellDisc2.Border = 0;
+                tableObs.AddCell(cellDisc2);
             }
+            if (LicenseFields.mensagem3 != "")
+            {
+                PdfPCell cellDisc3 = new PdfPCell(new Phrase(LicenseFields.mensagem3, FontePadrao));
+                cellDisc3.Border = 0;
+                tableObs.AddCell(cellDisc3);
+            }
+            if (LicenseFields.mensagem4 != "")
+            {
+                PdfPCell cellDisc4 = new PdfPCell(new Phrase(LicenseFields.mensagem4, FontePadrao));
+                cellDisc4.Border = 0;
+                tableObs.AddCell(cellDisc4);
+            }
+            if (LicenseFields.mensagem5 != "")
+            {
+                PdfPCell cellDisc5 = new PdfPCell(new Phrase(LicenseFields.mensagem5, FontePadrao));
+                cellDisc5.Border = 0;
+                tableObs.AddCell(cellDisc5);
+            }
+
+            PdfPCell cellDisc1 = new PdfPCell(new Phrase("\r\n", FontePadrao));
+            cellDisc1.Border = 0;
+            tableObs.AddCell(cellDisc1);
 
             return tableObs;
         }

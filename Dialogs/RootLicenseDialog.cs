@@ -49,7 +49,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             //LicenseDialogDetails = (LicenseDialogDetails)stepContext.Options;
             LicenseFields = (LicenseFields)stepContext.Options;
-            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! " + Emojis.Veiculos.Carro);
+            await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual! \r\n" + Emojis.Veiculos.Carro + stepContext.Context.Activity.ChannelData);
             await stepContext.Context.SendActivityAsync("Aqui você pode gerar o documento para pagar o licenciamento do seu veículo.\r\n" +
                                                         "O documento gerado aqui é o Documento de Arrecadação (DUA).");
             
@@ -81,6 +81,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 return await stepContext.ReplaceDialogAsync(nameof(MainDialog));
             }
         }
+
+        
 
         private async Task<DialogTurnResult> SecureCodeQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {

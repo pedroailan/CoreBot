@@ -326,7 +326,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (LicenseFields.tipoDocumentoOut == "F")
             {
                 var reply = MessageFactory.Text(info);
-                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(), "Ficha_de_compensacao") };
+                reply.Attachments = new List<Attachment>() { PdfProvider.Disponibilizer(GeneratePdfCompensacao.GenerateInvoice2(LicenseFields), "Ficha_de_compensacao") };
                 await stepContext.Context.SendActivityAsync(reply);
                 await stepContext.Context.SendActivityAsync(codeF);
                 return await stepContext.EndDialogAsync(cancellationToken);

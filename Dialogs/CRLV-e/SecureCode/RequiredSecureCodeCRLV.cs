@@ -20,7 +20,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RequiredSecureCodeCRLVeDialog : CancelAndHelpDialog
     {
 
-        private CRLVDialogDetails CRLVDialogDetails;
+        private CRLVeFields CRLVeFields;
 
         public RequiredSecureCodeCRLVeDialog()
             : base(nameof(RequiredSecureCodeCRLVeDialog))
@@ -66,7 +66,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             ), cancellationToken);
 
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe o CÓDIGO DE SEGURANÇA"), cancellationToken);
             var secureCode = MessageFactory.Text(null, InputHints.ExpectingInput);
@@ -75,21 +75,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
-            CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
+            CRLVeFields = (CRLVeFields)stepContext.Options;
+            CRLVeFields.codSegurancaIn = stepContext.Result.ToString();
 
-            if (CRLVDialogDetails.codSegurancaIn == CRLVDialogDetails.codSegurançaOut) // Se for verdade, as Fields do CRLV já estarão preenchidas em tempo de execução
+            if (CRLVeFields.codSegurancaIn == CRLVeFields.codSegurançaOut) // Se for verdade, as Fields do CRLV já estarão preenchidas em tempo de execução
             {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVeFields, cancellationToken);
             }
             else
             {
                 await stepContext.Context.SendActivityAsync("Este CÓDIGO DE SEGURANÇA é inválido!");
 
-                CRLVDialogDetails.Count += 1;
-                if (CRLVDialogDetails.Count < 3)
+                CRLVeFields.Count += 1;
+                if (CRLVeFields.Count < 3)
                 {
-                    return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
+                    return await stepContext.ReplaceDialogAsync(nameof(RequiredSecureCodeCRLVeDialog), CRLVeFields, cancellationToken);
                 }
                 else
                 {

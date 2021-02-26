@@ -97,26 +97,30 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 var webResult = await vehicle.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaIn, LicenseFields.tipoDocumentoIn);
 
-                LicenseFields.codigoRetorno = webResult.codigoRetorno;
-                //LicenseFields.Erro erro = new LicenseFields.Erro();
-                LicenseFields.erroCodigo = webResult.erro.codigo;
-                LicenseFields.erroMensagem = webResult.erro.mensagem;
-                LicenseFields.erroTrace = webResult.erro.trace;
-                LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
-                LicenseFields.renavamOut = webResult.renavamOut.ToString();
-                LicenseFields.placa = webResult.placa;
-                LicenseFields.nomeProprietario = webResult.nomeProprietario;
-                LicenseFields.temRNTRC = webResult.temRNTRC;
-                LicenseFields.tipoAutorizacaoRNTRCOut = webResult.tipoAutorizacaoRNTRC;
-                LicenseFields.nroAutorizacaoRNTRCOut = webResult.nroAutorizacaoRNTRC;
-                LicenseFields.temIsençãoIPVA = webResult.temIsencaoIPVA;
-                LicenseFields.restricao = webResult.restricao;
-                LicenseFields.anoLicenciamento = webResult.anoLicenciamento;
-                LicenseFields.totalCotaUnica = webResult.totalCotaUnica;
-                LicenseFields.contadorAnoLicenciamento = webResult.contadorAnoLicenciamento;
-                LicenseFields.recallCodigo = webResult.recallPendente.codigo;
-                LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
-                LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
+                lock (LicenseFields)
+                {
+                    LicenseFields.codigoRetorno = webResult.codigoRetorno;
+                    //LicenseFields.Erro erro = new LicenseFields.Erro();
+                    LicenseFields.erroCodigo = webResult.erro.codigo;
+                    LicenseFields.erroMensagem = webResult.erro.mensagem;
+                    LicenseFields.erroTrace = webResult.erro.trace;
+                    LicenseFields.codSegurancaOut = webResult.codSegurancaOut.ToString();
+                    LicenseFields.renavamOut = webResult.renavamOut.ToString();
+                    LicenseFields.placa = webResult.placa;
+                    LicenseFields.nomeProprietario = webResult.nomeProprietario;
+                    LicenseFields.temRNTRC = webResult.temRNTRC;
+                    LicenseFields.tipoAutorizacaoRNTRCOut = webResult.tipoAutorizacaoRNTRC;
+                    LicenseFields.nroAutorizacaoRNTRCOut = webResult.nroAutorizacaoRNTRC;
+                    LicenseFields.temIsençãoIPVA = webResult.temIsencaoIPVA;
+                    LicenseFields.restricao = webResult.restricao;
+                    LicenseFields.anoLicenciamento = webResult.anoLicenciamento;
+                    LicenseFields.totalCotaUnica = webResult.totalCotaUnica;
+                    LicenseFields.contadorAnoLicenciamento = webResult.contadorAnoLicenciamento;
+                    LicenseFields.recallCodigo = webResult.recallPendente.codigo;
+                    LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
+                    LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
+                }
+
 
                 if (LicenseFields.erroCodigo == 1)
                 {
@@ -156,9 +160,16 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     return await stepContext.EndDialogAsync(cancellationToken);
                 }
                 // Caso não haja erros
-                else
+                else if (LicenseFields.erroCodigo == 0 && LicenseFields.codigoRetorno == 1)
                 {
                     return await stepContext.BeginDialogAsync(nameof(SpecificationsDialog), LicenseFields, cancellationToken);
+                }
+                 // Erro crítico (Sistema fora)
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
 
             }
@@ -248,6 +259,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //        return await stepContext.EndDialogAsync(LicenseFields, cancellationToken);
             //    }
             //}
+
         }
     }
 }

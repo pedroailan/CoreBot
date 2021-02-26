@@ -17,7 +17,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class RootCRLVeDialog : CancelAndHelpDialog
     {
 
-        private CRLVDialogDetails CRLVDialogDetails;
+        //private CRLVDialogDetails CRLVDialogDetails;
+        CRLVeFields CRLVeFields;
 
         public RootCRLVeDialog()
             : base(nameof(RootCRLVeDialog))
@@ -47,7 +48,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            //CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
             await stepContext.Context.SendActivityAsync("Bem-vindo ao serviço de Licenciamento Anual!");
             await stepContext.Context.SendActivityAsync("Aqui você pode emitir o Documento de Circulação de Porte Obrigatório (CRLV-e).\r\n");
             
@@ -63,7 +65,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> OptionValidationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
@@ -121,17 +123,15 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> SecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
             stepContext.Values["choice"] = ((FoundChoice)stepContext.Result).Value;
             if (stepContext.Values["choice"].ToString().ToLower() == "sim")
             {
-
-                return await stepContext.BeginDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
-
+                return await stepContext.BeginDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVeFields, cancellationToken);
             }
             else
             {
-                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVDialogDetails, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(nameof(PlacaDialog), CRLVeFields, cancellationToken);
             }
         }
     }

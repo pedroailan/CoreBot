@@ -3,6 +3,7 @@
 
 using AdaptiveCards;
 using CoreBot.Fields;
+using CoreBot.Models;
 using CoreBot.Models.Methods;
 using CoreBot.Models.MethodsValidation.License;
 using Microsoft.Bot.Builder;
@@ -18,7 +19,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     public class SecureCodeCRLVeDialog : CancelAndHelpDialog
     {
 
-        private CRLVDialogDetails CRLVDialogDetails;
+        // private CRLVDialogDetails CRLVDialogDetails;
+        CRLVeFields CRLVeFields;
 
         public SecureCodeCRLVeDialog()
             : base(nameof(SecureCodeCRLVeDialog))
@@ -65,7 +67,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
             ), cancellationToken);
 
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
+            CRLVeFields = (CRLVeFields)stepContext.Options;
 
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Informe o CÓDIGO DE SEGURANÇA"), cancellationToken);
             var secureCode = MessageFactory.Text(null, InputHints.ExpectingInput);
@@ -82,8 +84,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         /// <returns></returns>
         private async Task<DialogTurnResult> VerificationSecureCodeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            CRLVDialogDetails = (CRLVDialogDetails)stepContext.Options;
-            CRLVDialogDetails.codSegurancaIn = stepContext.Result.ToString();
+            CRLVeFields = (CRLVeFields)stepContext.Options;
+            CRLVeFields.codSegurancaIn = stepContext.Result.ToString();
 
             await stepContext.Context.SendActivitiesAsync(new Activity[]
             {
@@ -91,62 +93,142 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 //new Activity { Type = ActivityTypes.Typing },
             }, cancellationToken);
 
+            VehicleCRLV vehicle = new VehicleCRLV();
 
-            if (await VehicleCRLV.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
+            if (vehicle.ValidationString(CRLVeFields.codSegurancaIn) == true)
             {
-                return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
-            }
-            // Caso o Código de Segurança não seja válido
-            else
-            {
-                switch (CRLVDialogDetails.Erro.codigo == 1 ? "Incorreto" :
-                           CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900 ? "Sistema" :
-                           CRLVDialogDetails.Erro.codigo == 0 && Format.Input.ValidationFormat.IsNumber(CRLVDialogDetails.codSegurancaIn) ? "Conexao" :
-                           CRLVDialogDetails.Erro.codigo == 0 && !Format.Input.ValidationFormat.IsNumber(CRLVDialogDetails.codSegurancaIn) ? "Invalido" : null)
+                var webResult = await vehicle.ValidationSecureCode(CRLVeFields.codSegurancaIn);
+
+                CRLVeFields.codigoRetorno = webResult.codigoRetorno;
+                CRLVeFields.codSegurançaOut = webResult.codSegurancaOut.ToString();
+                CRLVeFields.renavam = webResult.renavam.ToString();
+                CRLVeFields.nomeProprietario = webResult.nomeProprietario;
+                CRLVeFields.placaOut = webResult.placaOut;
+                CRLVeFields.codigoRetorno = webResult.codigoRetorno;
+                CRLVeFields.documentoCRLVePdf = webResult.documentoCRLVePdf;
+                CRLVeFields.erroCodigo = webResult.erro.codigo;
+                CRLVeFields.erroMensagem = webResult.erro.mensagem;
+                CRLVeFields.erroTrace = webResult.erro.trace;
+
+
+                if (CRLVeFields.erroCodigo == 1)
                 {
-                    case "Incorreto":
-                        await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVeFields.erroMensagem);
 
-                        CRLVDialogDetails.Count += 1;
-                        if (CRLVDialogDetails.Count < 3)
-                        {
-                            CRLVDialogDetails.Erro.codigo = 0;
-                            return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
-                        }
-                        else
-                        {
-                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança\r\n" +
-                                                                        "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
-                                                                        "ou entre em contato com o DETRAN, para obter mais informações");
-                            return await stepContext.EndDialogAsync(cancellationToken);
-                        }
-                    case "Sistema":
-                        await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+                    CRLVeFields.Count += 1;
+                    if (CRLVeFields.Count < 3)
+                    {
+                        CRLVeFields.erroCodigo = 0;
+                        return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVeFields, cancellationToken);
+                    }
+                    else
+                    {
+                        await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança\r\n" +
+                                                                    "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                    "ou entre em contato com o DETRAN, para obter mais informações");
                         return await stepContext.EndDialogAsync(cancellationToken);
-                    case "Conexao":
-                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                        return await stepContext.EndDialogAsync(cancellationToken);
-                    case "Invalido":
-                        await stepContext.Context.SendActivityAsync("Este código de segurança é inválido!");
-                        CRLVDialogDetails.Count += 1;
-                        if (CRLVDialogDetails.Count < 3)
-                        {
-                            return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
-                        }
-                        else
-                        {
-                            await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
-                                                                        "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
-                                                                        "ou entre em contato com o DETRAN, para obter mais informações");
-                            return await stepContext.EndDialogAsync(cancellationToken);
-                        }
-                    default:
-                        await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
-                                                                    ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
-                        return await stepContext.EndDialogAsync(cancellationToken);
+                    }
+                }
+                // Caso erro 2 <= x <= 900
+                else if (CRLVeFields.erroCodigo >= 2 && CRLVeFields.erroCodigo <= 900)
+                {
+                    await stepContext.Context.SendActivityAsync("Erro: " + CRLVeFields.erroMensagem);
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
+                // Caso retorne nenhum erro, mas tenha falha na conexao
+                else if (CRLVeFields.erroCodigo == 0 && CRLVeFields.codigoRetorno == 0)
+                {
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
+                // Caso não haja erros
+                else if (CRLVeFields.erroCodigo == 0 && CRLVeFields.codigoRetorno == 1)
+                {
+                    return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVeFields, cancellationToken);
+                }
+                // Erro crítico (Sistema fora)
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+                                                                ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+                    return await stepContext.EndDialogAsync(cancellationToken);
                 }
             }
+            else
+            {
+                // Se a string for inválida
+                await stepContext.Context.SendActivityAsync("Este código de segurança é inválido!");
+                CRLVeFields.Count += 1;
+                if (CRLVeFields.Count < 3)
+                {
+                    return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVeFields, cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
+                                                                "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+                                                                "ou entre em contato com o DETRAN, para obter mais informações");
+                    return await stepContext.EndDialogAsync(cancellationToken);
+                }
+            }
+
+
+            //if (await VehicleCRLV.ValidationSecureCode(CRLVDialogDetails.codSegurancaIn) == true)
+            //{
+            //    return await stepContext.BeginDialogAsync(nameof(SpecificationsCRLVeDialog), CRLVDialogDetails, cancellationToken);
+            //}
+            //// Caso o Código de Segurança não seja válido
+            //else
+            //{
+            //    switch (CRLVDialogDetails.Erro.codigo == 1 ? "Incorreto" :
+            //               CRLVDialogDetails.Erro.codigo >= 2 && CRLVDialogDetails.Erro.codigo <= 900 ? "Sistema" :
+            //               CRLVDialogDetails.Erro.codigo == 0 && Format.Input.ValidationFormat.IsNumber(CRLVDialogDetails.codSegurancaIn) ? "Conexao" :
+            //               CRLVDialogDetails.Erro.codigo == 0 && !Format.Input.ValidationFormat.IsNumber(CRLVDialogDetails.codSegurancaIn) ? "Invalido" : null)
+            //    {
+            //        case "Incorreto":
+            //            await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+
+            //            CRLVDialogDetails.Count += 1;
+            //            if (CRLVDialogDetails.Count < 3)
+            //            {
+            //                CRLVDialogDetails.Erro.codigo = 0;
+            //                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
+            //            }
+            //            else
+            //            {
+            //                await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança\r\n" +
+            //                                                            "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+            //                                                            "ou entre em contato com o DETRAN, para obter mais informações");
+            //                return await stepContext.EndDialogAsync(cancellationToken);
+            //            }
+            //        case "Sistema":
+            //            await stepContext.Context.SendActivityAsync("Erro: " + CRLVDialogDetails.Erro.mensagem);
+            //            return await stepContext.EndDialogAsync(cancellationToken);
+            //        case "Conexao":
+            //            await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+            //                                                        ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+            //            return await stepContext.EndDialogAsync(cancellationToken);
+            //        case "Invalido":
+            //            await stepContext.Context.SendActivityAsync("Este código de segurança é inválido!");
+            //            CRLVDialogDetails.Count += 1;
+            //            if (CRLVDialogDetails.Count < 3)
+            //            {
+            //                return await stepContext.ReplaceDialogAsync(nameof(SecureCodeCRLVeDialog), CRLVDialogDetails, cancellationToken);
+            //            }
+            //            else
+            //            {
+            //                await stepContext.Context.SendActivityAsync("Acho que você não esta conseguindo encontrar o código de segurança!\r\n" +
+            //                                                            "Nesse caso, vou pedir para que procure e volte a falar comigo novamente depois " +
+            //                                                            "ou entre em contato com o DETRAN, para obter mais informações");
+            //                return await stepContext.EndDialogAsync(cancellationToken);
+            //            }
+            //        default:
+            //            await stepContext.Context.SendActivityAsync("Estou realizando correções em meu sistema. Por favor, volte mais tarde para efetuar seu serviço" +
+            //                                                        ", tente pelo nosso portal ou entre em contato com nossa equipe de atendimento.");
+            //            return await stepContext.EndDialogAsync(cancellationToken);
+            //    }
+            //}
         }
     }
 }

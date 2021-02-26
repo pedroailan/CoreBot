@@ -10,22 +10,54 @@ namespace CoreBot.Models.Methods
 {
     public class VehicleCRLV
     {
-        public async static Task<bool> ValidationSecureCode(string SecureCode)
+        //public async static Task<bool> ValidationSecureCode(string SecureCode)
+        //{
+        //    if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
+        //    {
+        //        ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
+        //        var crlv = await obter.obterEmissaoCRLV(Convert.ToDouble(SecureCode));
+        //        if (CRLVDialogDetails.Erro.codigo == 0)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //    //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
+        //    //{
+        //    //    return true;
+        //    //}
+        //}
+
+        public async Task<wsDetranChatBot.obterEmissaoCrlvResult> ValidationSecureCode(string SecureCode)
         {
-            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true)
+            try
             {
                 ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
-                var crlv = await obter.obterEmissaoCRLV(Convert.ToDouble(SecureCode));
-                if (CRLVDialogDetails.Erro.codigo == 0)
-                {
-                    return true;
-                }
+                var result = await obter.obterEmissaoCRLV(Convert.ToDouble(SecureCode));
+                return result;
             }
-            return false;
-            //if (Api.LerArquivoJson("codigodeseguranca", SecureCode) == true)
-            //{
-            //    return true;
-            //}
+            catch (Exception err)
+            {
+                //erro de conexao
+                // atribuir erro
+                return null;
+            }
+        }
+
+        public async Task<wsDetranChatBot.obterEmissaoCrlvResult> ValidationPlaca(string Placa)
+        {
+            try
+            {
+                ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
+                var result = await obter.obterEmissaoCRLV(Placa);
+                return result;
+            }
+            catch (Exception err)
+            {
+                //erro de conexao
+                // atribuir erro
+                return null;
+            }
         }
 
         /// <summary>
@@ -33,32 +65,44 @@ namespace CoreBot.Models.Methods
         /// </summary>
         /// <param name="placa"></param>
         /// <returns>True ou False, a depender do código de retorno do Webservice</returns>
-        public async static Task<bool> ValidationPlaca(string placa)
-        {
-            if (placa.Length > 0)
-            {
-                ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
-                var crlv = await obter.obterEmissaoCRLV(placa);
-                if (crlv.codigoRetorno != 0)
-                {
-                    return true;
-                }
-            }
+        //public async static Task<bool> ValidationPlaca(string placa)
+        //{
+        //    if (placa.Length > 0)
+        //    {
+        //        ObterEmissaoCRLV obter = new ObterEmissaoCRLV();
+        //        var crlv = await obter.obterEmissaoCRLV(placa);
+        //        if (crlv.codigoRetorno != 0)
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
         // <summary>
         /// OBJETIVO: Verificar se o veículo possui código de segurança.
         /// </summary>
         /// <returns>True ou False, a depender se o código de segurança em CRLVDialogDetails é maior que 0.</returns>
-        public static bool ExistSecureCodePlaca()
+        public static bool ExistSecureCodePlaca(string codSegurancaOut)
         {
-            if (Convert.ToDouble(CRLVDialogDetails.codSegurançaOut) > 0)
+            if (Convert.ToDouble(codSegurancaOut) > 0)
             {
-                CRLVDialogDetails.secureCodeBool = true;
+                //CRLVDialogDetails.secureCodeBool = true;
                 return true;
             }
+            return false;
+        }
+
+        public bool ValidationString(string SecureCode)
+        {
+            if (SecureCode.Length > 0 && Format.Input.ValidationFormat.IsNumber(SecureCode) == true) return true;
+            return false;
+        }
+
+        public bool ValidationStringPlaca(string placa)
+        {
+            if (placa != "") return true;
             return false;
         }
     }

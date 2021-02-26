@@ -96,6 +96,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             if (vehicle.ValidationString(LicenseFields.codSegurancaIn) == true)
             {
                 var webResult = await vehicle.ValidationSecureCodeLicenciamento(LicenseFields.codSegurancaIn, LicenseFields.tipoDocumentoIn);
+
                 lock (LicenseFields)
                 {
                     LicenseFields.codigoRetorno = webResult.codigoRetorno;
@@ -119,6 +120,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     LicenseFields.recallMensagem = webResult.recallPendente.mensagem;
                     LicenseFields.recallDescricao = new string[] { webResult.recallPendente.listaRecall.ToString() };
                 }
+
 
                 if (LicenseFields.erroCodigo == 1)
                 {
@@ -257,6 +259,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             //        return await stepContext.EndDialogAsync(LicenseFields, cancellationToken);
             //    }
             //}
+
         }
     }
 }
